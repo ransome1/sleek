@@ -3,17 +3,28 @@ const { store } = window.api;
 export type ColorTheme = "light" | "dark";
 
 export interface PriorityColor {
-  base: string;
-  selected: string;
+  background: string;
+  selected: {
+    background: string;
+  };
 }
 
 export interface AttributeColor {
   background: string;
   text: string;
+  chip?: {
+    background: string;
+    text: string;
+  };
   selected?: {
     text: string;
     background: string;
   };
+}
+
+export interface ChipColor {
+  background: string;
+  text: string;
 }
 
 export interface SemanticColors {
@@ -33,14 +44,10 @@ export interface ThemeColors {
   outlineVariant: string;
   onSurface: string;
   onBackground: string;
+  opacity: Opacity;
 }
 
-export interface Gradients {
-  logo: {
-    start: string;
-    end: string;
-  };
-}
+
 
 export interface Opacity {
   disabled: number;
@@ -49,16 +56,12 @@ export interface Opacity {
 }
 
 export interface PomodoroThemeColors {
-  base: {
-    text: string;
-    background: string;
-  };
+  text: string;
+  background: string;
   selected: {
     text: string;
     background: string;
   };
-  badgeText: string;
-  badgeBackground: string;
 }
 
 export interface NavigationThemeColors {
@@ -67,46 +70,35 @@ export interface NavigationThemeColors {
 }
 
 export interface ColorPalette {
-  metadata: {
-    version: string;
-    description: string;
-  };
+
   semantic: SemanticColors;
-  priority: {
-    A: PriorityColor;
-    B: PriorityColor;
-    C: PriorityColor;
-  };
-  pomodoro: {
-    light: PomodoroThemeColors;
-    dark: PomodoroThemeColors;
+  attributes: {
+    priority: {
+      A: PriorityColor;
+      B: PriorityColor;
+      C: PriorityColor;
+    };
+    pomodoro: {
+      light: PomodoroThemeColors;
+      dark: PomodoroThemeColors;
+    };
+    projects: { light: AttributeColor; dark: AttributeColor };
+    contexts: { light: AttributeColor; dark: AttributeColor };
+    due: { light: AttributeColor; dark: AttributeColor };
+    t: { light: AttributeColor; dark: AttributeColor };
+    generic: { light: AttributeColor; dark: AttributeColor };
   };
   navigation: {
+    logo: {
+      start: string;
+      end: string;
+    };
     light: NavigationThemeColors;
     dark: NavigationThemeColors;
   };
   theme: {
-    light: ThemeColors;
-    dark: ThemeColors;
-  };
-
-  attributes: {
-    projects: { light: AttributeColor; dark: AttributeColor };
-    contexts: { light: AttributeColor; dark: AttributeColor };
-    pomodoro: { light: AttributeColor; dark: AttributeColor };
-    generic: { light: AttributeColor; dark: AttributeColor };
-  };
-  gradients: Gradients;
-  opacity: Opacity;
-  chip: {
-    light: {
-      background: string;
-      text: string;
-    };
-    dark: {
-      background: string;
-      text: string;
-    };
+    light: ThemeColors & { opacity: Opacity };
+    dark: ThemeColors & { opacity: Opacity };
   };
 }
 
@@ -127,7 +119,7 @@ export function getThemeColors(theme: ColorTheme): ThemeColors {
  * Get priority color by priority letter (A, B, C)
  */
 export function getPriorityColor(priority: string): PriorityColor | undefined {
-  return colors.priority[priority as keyof typeof colors.priority];
+  return colors.attributes.priority[priority as keyof typeof colors.attributes.priority];
 }
 
 /**
@@ -162,7 +154,7 @@ export function getAttributeColors(
  */
 export function getCssVariables(theme: ColorTheme): Record<string, string> {
   const themeColors = colors.theme[theme];
-  const pomodoroColors = colors.pomodoro[theme];
+  const pomodoroColors = colors.attributes.pomodoro[theme];
   const navigationColors = colors.navigation[theme];
   const vars: Record<string, string> = {};
 
@@ -179,18 +171,19 @@ export function getCssVariables(theme: ColorTheme): Record<string, string> {
   });
 
   // Add priority colors and their selected states
-  Object.entries(colors.priority).forEach(([key, priorityColor]) => {
-    vars[`--priority-${key}`] = priorityColor.base;
-    vars[`--priority-${key}-selected`] = priorityColor.selected;
+  Object.entries(colors.attributes.priority).forEach(([key, priorityColor]) => {
+    vars[`--priority-${key}`] = priorityColor.background;
+    vars[`--priority-${key}-selected`] = priorityColor.selected.background;
+
+    // Add pomodoro colors for current theme
+vars["--pomodoro-text"] = pomodoroColors.text;
+      vars["--pomodoro-bg"] = pomodoroColors.background;
+      vars["--pomodoro-selected-text"] = pomodoroColors.selected.text;
+      vars["--pomodoro-selected-bg"] = pomodoroColors.selected.background;
   });
 
   // Add pomodoro colors for current theme
-  vars["--pomodoro-text"] = pomodoroColors.base.text;
-  vars["--pomodoro-bg"] = pomodoroColors.base.background;
-  vars["--pomodoro-selected-text"] = pomodoroColors.selected.text;
-  vars["--pomodoro-selected-bg"] = pomodoroColors.selected.background;
-  vars["--pomodoro-badge-text"] = pomodoroColors.badgeText;
-  vars["--pomodoro-badge-bg"] = pomodoroColors.badgeBackground;
+
 
   // Add navigation colors for current theme
   vars["--navigation-icon-color"] = navigationColors.iconColor;
@@ -200,24 +193,32 @@ export function getCssVariables(theme: ColorTheme): Record<string, string> {
   Object.entries(colors.attributes).forEach(([attrName, attrThemes]) => {
     const prefix = `--attribute-${attrName}`;
     const themeAttr = attrThemes[theme];
-
-    vars[`${prefix}-text`] = themeAttr.text;
-    vars[`${prefix}-bg`] = themeAttr.background;
-    if (themeAttr.selected) {
-      vars[`${prefix}-selected-text`] = themeAttr.selected.text;
-      vars[`${prefix}-selected-bg`] = themeAttr.selected.background;
+    if (themeAttr && typeof themeAttr === 'object' && 'text' in themeAttr && 'background' in themeAttr) {
+      vars[`${prefix}-text`] = themeAttr.text;
+      vars[`${prefix}-bg`] = themeAttr.background;
+      if (themeAttr.selected) {
+        vars[`${prefix}-selected-text`] = themeAttr.selected.text;
+        vars[`${prefix}-selected-bg`] = themeAttr.selected.background;
+      }
     }
   });
 
   // Add chip colors
-  vars["--chip-bg"] = colors.chip[theme].background;
-  vars["--chip-text"] = colors.chip[theme].text;
+// Add chip colors from generic attribute
+const genericThemeColors = colors.attributes.generic[theme];
+if (themeColors?.opacity) {
+  vars["--opacity-disabled"] = String(themeColors.opacity.disabled);
+  vars["--opacity-hover"] = String(themeColors.opacity.hover);
+  vars["--opacity-focus"] = String(themeColors.opacity.focus);
+}
+if (genericThemeColors && genericThemeColors.chip) {
+  vars["--chip-bg"] = genericThemeColors.chip.background;
+  vars["--chip-text"] = genericThemeColors.chip.text;
+}
 
   // Add gradients
-  Object.entries(colors.gradients).forEach(([name, gradient]) => {
-    vars[`--gradient-${name}-start`] = gradient.start;
-    vars[`--gradient-${name}-end`] = gradient.end;
-  });
+vars["--gradient-logo-start"] = colors.navigation.logo.start;
+vars["--gradient-logo-end"] = colors.navigation.logo.end;
 
   return vars;
 }

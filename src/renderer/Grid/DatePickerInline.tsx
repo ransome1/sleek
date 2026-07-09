@@ -81,21 +81,25 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
       >
         <button tabIndex={-1}>
           <Badge variant="dot" invisible={mustNotify}>
-            <Chip
-              onClick={(event) => {
-                event.stopPropagation();
-                HandleFilterSelect(
-                  type,
-                  date ? [date] : [],
-                  filters,
-                  false,
-                  null,
-                );
-              }}
-              label={chipText}
-              data-testid={`datagrid-button-${type}`}
-              tabIndex={0}
-            />
+<Chip
+  onClick={(event) => {
+    event.stopPropagation();
+    HandleFilterSelect(
+      type,
+      date ? [date] : [],
+      filters,
+      false,
+      null,
+    );
+  }}
+  label={chipText}
+  data-testid={`datagrid-button-${type}`}
+  tabIndex={0}
+  sx={{
+    backgroundColor: "var(--chip-bg)",
+    color: "var(--chip-text)",
+  }}
+/>
             <div
               ref={setDateButtonRef}
               onClick={toggleOpen}

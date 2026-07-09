@@ -12,7 +12,9 @@ sleek is available for Windows, macOS and Linux, and in several languages. [Scre
 
 ### ❤️ Sponsor sleek
 
-Pushing sleek to the Apple and Microsoft app stores creates annual costs. You can help covering these by [sponsoring the project](https://github.com/sponsors/ransome1).
+Pushing sleek to the Apple and Microsoft app stores creates annual costs. You can help covering these by sponsoring the project [here on GitHub](https://github.com/sponsors/ransome1) or by [donating using liberapay](https://liberapay.com/ransome1/donate)
+
+<noscript><a href="https://liberapay.com/ransome1/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a></noscript>
 
 ### 👩🏾‍💻 This project needs your support
 
