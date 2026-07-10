@@ -25,12 +25,6 @@ interface InputComponentProps {
   };
 }
 
-const handleAddTodo = (searchString: string): void => {
-  if (searchString) {
-    ipcRenderer.send("writeSingleTodoToFile", -1, searchString);
-  }
-};
-
 const InputComponent: React.FC<InputComponentProps> = memo(
   ({
     headers,
@@ -45,6 +39,13 @@ const InputComponent: React.FC<InputComponentProps> = memo(
     ...params
   }) => {
     const { t } = useTranslation();
+
+    const handleAddTodo = (searchString: string): void => {
+      if (searchString) {
+        ipcRenderer.send("writeSingleTodoToFile", -1, searchString);
+        setSearchString("");
+      }
+    };
 
     const inputRef = useForkRef(searchFieldRef, slotProps?.htmlInput?.ref);
     useEffect(() => {
