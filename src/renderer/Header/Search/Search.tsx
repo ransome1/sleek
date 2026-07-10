@@ -171,17 +171,21 @@ const SearchComponent: React.FC<SearchComponentProps> = memo(
                   );
                 }
               }}
-              renderOption={(props, option: string | SearchFilter) => (
-                <OptionComponent
-                  option={option}
-                  setPromptItem={setPromptItem}
-                  searchFilters={searchFilters}
-                  setSearchFilters={setSearchFilters}
-                  isAutocompleteOpen={isAutocompleteOpen}
-                  setIsAutocompleteOpen={setIsAutocompleteOpen}
-                  {...props}
-                />
-              )}
+renderOption={(props, option: string | SearchFilter) => {
+  const { key, ...restProps } = props;
+  return (
+    <OptionComponent
+      key={key}
+      option={option}
+      setPromptItem={setPromptItem}
+      searchFilters={searchFilters}
+      setSearchFilters={setSearchFilters}
+      isAutocompleteOpen={isAutocompleteOpen}
+      setIsAutocompleteOpen={setIsAutocompleteOpen}
+      {...restProps}
+    />
+  );
+}}
               renderInput={(params) => (
                 <InputComponent
                   headers={headers}
