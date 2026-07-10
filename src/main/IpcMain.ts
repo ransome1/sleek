@@ -1,4 +1,4 @@
-import { ipcMain, app, IpcMainEvent, clipboard, shell } from "electron";
+import { IpcMainEvent, clipboard, shell } from "electron";
 import { dataRequest } from "./DataRequest/DataRequest";
 import { changeCompleteState } from "./DataRequest/ChangeCompleteState";
 import { writeSingleTodoToFile, removeLineFromFile } from "./File/Write";
@@ -15,7 +15,7 @@ import { openFile, createFile } from "./File/Dialog";
 import { createTodoObject } from "./DataRequest/CreateTodoObjects";
 import i18n from "./i18n";
 
-function handleDataRequest(event: IpcMainEvent, searchString: string) {
+export function handleDataRequest(event: IpcMainEvent, searchString: string) {
   try {
     const requestedData = dataRequest(searchString);
     event.reply("requestData", requestedData);
@@ -24,7 +24,7 @@ function handleDataRequest(event: IpcMainEvent, searchString: string) {
   }
 }
 
-function handleUpdateAttributeFields(
+export function handleUpdateAttributeFields(
   event: IpcMainEvent,
   index: number,
   string: string,
@@ -37,7 +37,7 @@ function handleUpdateAttributeFields(
   }
 }
 
-function handleUpdateTodoObject(
+export function handleUpdateTodoObject(
   event: IpcMainEvent,
   index: number,
   string: string,
@@ -57,7 +57,7 @@ function handleUpdateTodoObject(
   }
 }
 
-function handleWriteTodoToFile(
+export function handleWriteTodoToFile(
   _: IpcMainEvent,
   index: number,
   string: string,
@@ -85,7 +85,7 @@ function handleWriteTodoToFile(
   }
 }
 
-function handleStoreGetConfig(event: IpcMainEvent, value: string) {
+export function handleStoreGetConfig(event: IpcMainEvent, value: string) {
   try {
     event.returnValue = SettingsStore.get(value);
   } catch (error) {
@@ -93,7 +93,7 @@ function handleStoreGetConfig(event: IpcMainEvent, value: string) {
   }
 }
 
-function handleStoreSetConfig(_: IpcMainEvent, key: string, value: unknown) {
+export function handleStoreSetConfig(_: IpcMainEvent, key: string, value: unknown) {
   try {
     SettingsStore.set(key, value);
     console.log(`Set ${key} to ${value}`);
@@ -102,7 +102,7 @@ function handleStoreSetConfig(_: IpcMainEvent, key: string, value: unknown) {
   }
 }
 
-function handleStoreSetFilters(
+export function handleStoreSetFilters(
   _: IpcMainEvent,
   key: string,
   value: unknown,
@@ -114,7 +114,7 @@ function handleStoreSetFilters(
   }
 }
 
-function handleStoreGetFilters(event: IpcMainEvent, value: string): void {
+export function handleStoreGetFilters(event: IpcMainEvent, value: string): void {
   try {
     event.returnValue = FiltersStore.get(value);
   } catch (error) {
@@ -122,7 +122,7 @@ function handleStoreGetFilters(event: IpcMainEvent, value: string): void {
   }
 }
 
-function handleStoreSetNotifiedTodoObjects(
+export function handleStoreSetNotifiedTodoObjects(
   _: IpcMainEvent,
   value: unknown,
 ): void {
@@ -133,7 +133,7 @@ function handleStoreSetNotifiedTodoObjects(
   }
 }
 
-function handleStoreGetColors(event: IpcMainEvent, value: string) {
+export function handleStoreGetColors(event: IpcMainEvent, value: string) {
   try {
     event.returnValue = ColorsStore.get(value);
   } catch (error) {
@@ -141,7 +141,7 @@ function handleStoreGetColors(event: IpcMainEvent, value: string) {
   }
 }
 
-function handleSetFile(_: IpcMainEvent, index: number): void {
+export function handleSetFile(_: IpcMainEvent, index: number): void {
   try {
     activateFile(index);
   } catch (error) {
@@ -149,7 +149,7 @@ function handleSetFile(_: IpcMainEvent, index: number): void {
   }
 }
 
-function handleRemoveFile(_: IpcMainEvent, index: number): void {
+export function handleRemoveFile(_: IpcMainEvent, index: number): void {
   try {
     removeFile(index);
   } catch (error) {
@@ -157,7 +157,7 @@ function handleRemoveFile(_: IpcMainEvent, index: number): void {
   }
 }
 
-function handleAddFile(_: IpcMainEvent, filePath: string): void {
+export function handleAddFile(_: IpcMainEvent, filePath: string): void {
   try {
     registerTodoFile(filePath, null);
   } catch (error) {
@@ -165,7 +165,7 @@ function handleAddFile(_: IpcMainEvent, filePath: string): void {
   }
 }
 
-function handleRevealInFileManager(
+export function handleRevealInFileManager(
   _: IpcMainEvent,
   pathToReveal: string,
 ): void {
@@ -176,7 +176,7 @@ function handleRevealInFileManager(
   }
 }
 
-async function handleOpenFile(
+export async function handleOpenFile(
   _: IpcMainEvent,
   setDoneFile: boolean,
 ): Promise<void> {
@@ -187,7 +187,7 @@ async function handleOpenFile(
   }
 }
 
-async function handleCreateFile(
+export async function handleCreateFile(
   _: IpcMainEvent,
   setDoneFile: boolean,
 ): Promise<void> {
@@ -198,7 +198,7 @@ async function handleCreateFile(
   }
 }
 
-function handleRemoveLineFromFile(_: IpcMainEvent, index: number) {
+export function handleRemoveLineFromFile(_: IpcMainEvent, index: number) {
   try {
     removeLineFromFile(index);
   } catch (error) {
@@ -206,7 +206,7 @@ function handleRemoveLineFromFile(_: IpcMainEvent, index: number) {
   }
 }
 
-function handleArchiveTodos(event: IpcMainEvent): void {
+export function handleArchiveTodos(event: IpcMainEvent): void {
   try {
     const archivingResult = archiveTodos();
     event.reply("responseFromMainProcess", archivingResult);
@@ -215,7 +215,7 @@ function handleArchiveTodos(event: IpcMainEvent): void {
   }
 }
 
-function handleSaveToClipboard(event: IpcMainEvent, string: string): void {
+export function handleSaveToClipboard(event: IpcMainEvent, string: string): void {
   try {
     clipboard.writeText(string);
     event.reply(
@@ -229,7 +229,7 @@ function handleSaveToClipboard(event: IpcMainEvent, string: string): void {
   }
 }
 
-function handleOpenInBrowser(_: IpcMainEvent, url: string): void {
+export function handleOpenInBrowser(_: IpcMainEvent, url: string): void {
   try {
     shell?.openExternal(url);
   } catch (error) {
@@ -237,50 +237,8 @@ function handleOpenInBrowser(_: IpcMainEvent, url: string): void {
   }
 }
 
-function removeEventListeners(): void {
-  ipcMain.off("storeGetConfig", handleStoreGetConfig);
-  ipcMain.off("storeSetConfig", handleStoreSetConfig);
-  ipcMain.off("storeSetFilters", handleStoreSetFilters);
-  ipcMain.off("storeGetFilters", handleStoreGetFilters);
-  ipcMain.off("storeGetColors", handleStoreGetColors);
-  ipcMain.off("storeSetNotifiedTodoObjects", handleStoreSetNotifiedTodoObjects);
-  ipcMain.off("setFile", handleSetFile);
-  ipcMain.off("removeFile", handleRemoveFile);
-  ipcMain.off("openFile", handleOpenFile);
-  ipcMain.off("createFile", handleCreateFile);
-  ipcMain.off("updateAttributeFields", handleUpdateAttributeFields);
-  ipcMain.off("openInBrowser", handleOpenInBrowser);
-  ipcMain.off("requestData", handleDataRequest);
-  ipcMain.off("writeSingleTodoToFile", handleWriteTodoToFile);
-  ipcMain.off("archiveTodos", handleArchiveTodos);
-  ipcMain.off("addFile", handleAddFile);
-  ipcMain.off("saveToClipboard", handleSaveToClipboard);
-  ipcMain.off("revealInFileManager", handleRevealInFileManager);
-  ipcMain.off("removeLineFromFile", handleRemoveLineFromFile);
-  ipcMain.off("updateTodoObject", handleUpdateTodoObject);
-  ipcMain.off("requestArchive", checkArchiveReadiness);
-}
+// ─── IPC Handler Registration ──────────────────────────────────────
+// Handlers are registered via the registry in IpcHandlers.ts
+// Import and initialize in main/index.ts
 
-app.on("before-quit", () => removeEventListeners());
-
-ipcMain.on("storeGetConfig", handleStoreGetConfig);
-ipcMain.on("storeSetConfig", handleStoreSetConfig);
-ipcMain.on("storeSetFilters", handleStoreSetFilters);
-ipcMain.on("storeGetFilters", handleStoreGetFilters);
-ipcMain.on("storeGetColors", handleStoreGetColors);
-ipcMain.on("storeSetNotifiedTodoObjects", handleStoreSetNotifiedTodoObjects);
-ipcMain.on("setFile", handleSetFile);
-ipcMain.on("removeFile", handleRemoveFile);
-ipcMain.on("openFile", handleOpenFile);
-ipcMain.on("createFile", handleCreateFile);
-ipcMain.on("updateAttributeFields", handleUpdateAttributeFields);
-ipcMain.on("openInBrowser", handleOpenInBrowser);
-ipcMain.on("requestData", handleDataRequest);
-ipcMain.on("writeSingleTodoToFile", handleWriteTodoToFile);
-ipcMain.on("archiveTodos", handleArchiveTodos);
-ipcMain.on("addFile", handleAddFile);
-ipcMain.on("saveToClipboard", handleSaveToClipboard);
-ipcMain.on("revealInFileManager", handleRevealInFileManager);
-ipcMain.on("removeLineFromFile", handleRemoveLineFromFile);
-ipcMain.on("updateTodoObject", handleUpdateTodoObject);
-ipcMain.on("requestArchive", checkArchiveReadiness);
+export { registerAllHandlers, unregisterAllHandlers, checkArchiveReadiness } from "./IpcHandlers.js";

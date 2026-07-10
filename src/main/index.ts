@@ -14,6 +14,7 @@ import "./IpcMain.js";
 import { FSWatcher } from "chokidar";
 import { File } from "@sleek-types";
 import { setupI18n } from "./i18n.js";
+import { registerAllHandlers, unregisterAllHandlers } from "./IpcHandlers.js";
 
 const startTime = performance.now();
 const environment: string | undefined = process.env.NODE_ENV;
@@ -234,7 +235,10 @@ if (!gotTheLock) {
       }
     })
     .on("window-all-closed", handleWindowAllClosed)
-    .on("before-quit", handleBeforeQuit)
+    .on("before-quit", () => {
+  unregisterAllHandlers();
+  handleBeforeQuit();
+})
     .on("activate", HandleCreateWindow)
     .on("open-file", (event, path) => {
       event.preventDefault();
@@ -247,6 +251,7 @@ if (!gotTheLock) {
     .whenReady()
     .then(() => {
       setupI18n();
+    registerAllHandlers();
       const tray = SettingsStore.get("tray");
       const startMinimized = SettingsStore.get("startMinimized");
       if (tray) CreateTray();
