@@ -45,6 +45,10 @@ describe("changeCompleteState", () => {
       changeCompleteState(todo, true);
       expect(createRecurringTodo).toHaveBeenCalledWith(todo, "1b");
     });
+    it("removes inprogress extension when marking complete", () => {
+      const r = changeCompleteState("My todo inprogress:1", true);
+      expect(r).not.toContain("inprogress:1");
+    });
   });
 
   describe("change to uncompleted", () => {

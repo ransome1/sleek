@@ -1,4 +1,4 @@
-import { Sorting, TodoObject } from "@sleek-types";
+import { Sorting, TodoData, TodoObject } from "@sleek-types";
 
 const compareValues = (
   a: string | string[] | number | boolean | null,
@@ -36,4 +36,24 @@ const sortTodoObjects = (
   return 0;
 };
 
-export { sortTodoObjects };
+const sortInProgressFirst = (todoData: TodoData): void => {
+  for (const group of todoData) {
+    group.todoObjects.sort((a, b) => {
+      if (a.inprogress && !b.inprogress) return -1;
+      if (!a.inprogress && b.inprogress) return 1;
+      return 0;
+    });
+  }
+};
+
+const sortCompletedLast = (todoData: TodoData): void => {
+  for (const group of todoData) {
+    group.todoObjects.sort((a, b) => {
+      if (a.complete && !b.complete) return 1;
+      if (!a.complete && b.complete) return -1;
+      return 0;
+    });
+  }
+};
+
+export { sortTodoObjects, sortInProgressFirst, sortCompletedLast };

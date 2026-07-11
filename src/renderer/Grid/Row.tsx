@@ -3,6 +3,7 @@ import Checkbox from "@mui/material/Checkbox";
 import Tooltip from "@mui/material/Tooltip";
 import CircleChecked from "@mui/icons-material/CheckCircle";
 import CircleUnchecked from "@mui/icons-material/RadioButtonUnchecked";
+import IndeterminateCheckBox from "@mui/icons-material/IndeterminateCheckBox";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventNoteIcon from "@mui/icons-material/EventNote";
@@ -41,6 +42,7 @@ const Row: React.FC<RowProps> = memo(
     settings,
   }) => {
     const { t } = useTranslation();
+    const skipNextOnChange = React.useRef(false);
 
     const handleConfirmDelete = (): void => {
       if (todoObject)
@@ -81,12 +83,29 @@ const Row: React.FC<RowProps> = memo(
     const handleCheckboxChange = (
       event: React.ChangeEvent<HTMLInputElement>,
     ): void => {
+      if (skipNextOnChange.current) {
+        skipNextOnChange.current = false;
+        return;
+      }
       ipcRenderer.send(
         "writeSingleTodoToFile",
         todoObject.lineNumber,
         todoObject.string,
         event.target.checked,
         false,
+      );
+    };
+
+    const handleInprogressToggle = (): void => {
+      if (todoObject.complete) return;
+      const attributeValue = todoObject.inprogress ? "" : "1";
+      ipcRenderer.send(
+        "writeSingleTodoToFile",
+        todoObject.lineNumber,
+        todoObject.string,
+        false,
+        "inprogress",
+        attributeValue,
       );
     };
 
@@ -170,6 +189,7 @@ const Row: React.FC<RowProps> = memo(
           className="row"
           data-complete={todoObject.complete}
           data-hidden={todoObject.hidden}
+          data-inprogress={todoObject.inprogress}
           onClick={(event) => handleRowClick(event)}
           onKeyDown={(event) => handleRowClick(event)}
           onContextMenu={(event) => handleContextMenu(event, todoObject.string)}
@@ -180,9 +200,30 @@ const Row: React.FC<RowProps> = memo(
           <Checkbox
             icon={<CircleUnchecked />}
             checkedIcon={<CircleChecked />}
+            indeterminateIcon={<IndeterminateCheckBox />}
             tabIndex={0}
             checked={todoObject.complete}
+            indeterminate={todoObject.inprogress}
             onChange={handleCheckboxChange}
+            slotProps={{
+              input: {
+                onClick: (event: React.MouseEvent<HTMLInputElement>) => {
+                  if (event.ctrlKey) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                  }
+                },
+              },
+            }}
+            onMouseDown={(event) => {
+              if (event.button === 1 || event.ctrlKey) {
+                event.preventDefault();
+                skipNextOnChange.current = true;
+                handleInprogressToggle();
+              } else {
+                skipNextOnChange.current = false;
+              }
+            }}
           />
 
           {(settings.sorting[0].value != "priority" || settings.fileSorting) &&
@@ -238,7 +279,7 @@ const Row: React.FC<RowProps> = memo(
           )}
 
           {todoObject.hidden && (
-            <VisibilityOffIcon data-todotxt-attribute="hidden " />
+            <VisibilityOffIcon data-todotxt-attribute="hidden" />
           )}
 
           <RendererComponent

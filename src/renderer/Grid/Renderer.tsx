@@ -39,6 +39,7 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
         { pattern: /@(\S+)/, type: "contexts", key: "@" },
         { pattern: /(?:^|\s)\+(\S+)/, type: "projects", key: "+" },
         { pattern: /\bh:1\b/, type: "hidden", key: "h:1" },
+        { pattern: /\binprogress:1\b/, type: "inprogress", key: "inprogress:1" },
         { pattern: /\bpm:(\d+)/, type: "pm", key: "pm:" },
         { pattern: /\brec:([^ ]+)/, type: "rec", key: "rec:" },
       ];
@@ -108,6 +109,7 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
         </button>
       ),
       hidden: () => null as React.ReactNode,
+      inprogress: () => null as React.ReactNode,
     };
 
     const transformURL = (uri: string): string => {
