@@ -107,11 +107,8 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
           {value}
         </button>
       ),
-      hidden: () => null as React.ReactNode,
-    };
 
-    const transformURL = (uri: string): string => {
-      return uri;
+      hidden: () => null as React.ReactNode,
     };
 
     const options: Components = {
@@ -179,13 +176,20 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
       },
     };
 
+    const preprocessBody = (body: string): string => {
+      // Convert custom protocol URLs to markdown link syntax
+      // Match patterns like joplin://..., cbthunderlink://..., file://...
+      // Non-markdown URLs get wrapped in [url](url)
+      const customProtocolRegex =
+        /([a-zA-Z][a-zA-Z0-9+.-]*:\/\/\S+)(?![\]\)])/g;
+      return body.replace(customProtocolRegex, (match) => {
+        return `[${match}](${match})`;
+      });
+    };
+
     return (
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        components={options}
-        urlTransform={transformURL}
-      >
-        {todoObject.body}
+      <ReactMarkdown remarkPlugins={[remarkGfm]} components={options}>
+        {preprocessBody(todoObject.body)}
       </ReactMarkdown>
     );
   },

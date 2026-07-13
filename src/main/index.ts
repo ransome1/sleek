@@ -183,20 +183,6 @@ const createMainWindow = () => {
   eventListeners.handleMaximize = handleMaximize;
   eventListeners.handleUnmaximize = handleUnmaximize;
 
-  const customStylesPath: string = SettingsStore.get("customStylesPath");
-  if (customStylesPath) {
-    fs.readFile(customStylesPath, "utf8", (error: Error | null, data) => {
-      if (!error) {
-        mainWindow?.webContents.insertCSS(data);
-        console.error("Styles injected found in CSS file:", customStylesPath);
-      } else {
-        console.error(
-          "Could not read custom CSS file. More info: https://github.com/ransome1/sleek/wiki/Custom-CSS",
-        );
-      }
-    });
-  }
-
   if (environment === "development") {
     mainWindow.webContents.openDevTools();
   }
@@ -236,9 +222,9 @@ if (!gotTheLock) {
     })
     .on("window-all-closed", handleWindowAllClosed)
     .on("before-quit", () => {
-  unregisterAllHandlers();
-  handleBeforeQuit();
-})
+      unregisterAllHandlers();
+      handleBeforeQuit();
+    })
     .on("activate", HandleCreateWindow)
     .on("open-file", (event, path) => {
       event.preventDefault();
@@ -251,7 +237,7 @@ if (!gotTheLock) {
     .whenReady()
     .then(() => {
       setupI18n();
-    registerAllHandlers();
+      registerAllHandlers();
       const tray = SettingsStore.get("tray");
       const startMinimized = SettingsStore.get("startMinimized");
       if (tray) CreateTray();

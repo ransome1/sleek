@@ -18,9 +18,10 @@ import {
   handleCreateFile,
   handleRemoveLineFromFile,
   handleArchiveTodos,
+  handleRequestArchive,
   handleSaveToClipboard,
   handleOpenInBrowser,
-, checkArchiveReadiness } from "./IpcMain.js";
+} from "./IpcMain";
 
 /**
  * IPC Handler Registry
@@ -50,7 +51,10 @@ export const ipcHandlers: IpcHandlerEntry[] = [
   { channel: "storeSetFilters", handler: handleStoreSetFilters },
   { channel: "storeGetFilters", handler: handleStoreGetFilters },
   { channel: "storeGetColors", handler: handleStoreGetColors },
-  { channel: "storeSetNotifiedTodoObjects", handler: handleStoreSetNotifiedTodoObjects },
+  {
+    channel: "storeSetNotifiedTodoObjects",
+    handler: handleStoreSetNotifiedTodoObjects,
+  },
   { channel: "setFile", handler: handleSetFile },
   { channel: "removeFile", handler: handleRemoveFile },
   { channel: "openFile", handler: handleOpenFile },
@@ -60,11 +64,11 @@ export const ipcHandlers: IpcHandlerEntry[] = [
   { channel: "requestData", handler: handleDataRequest },
   { channel: "writeSingleTodoToFile", handler: handleWriteTodoToFile },
   { channel: "archiveTodos", handler: handleArchiveTodos },
+  { channel: "requestArchive", handler: handleRequestArchive },
   { channel: "addFile", handler: handleAddFile },
   { channel: "saveToClipboard", handler: handleSaveToClipboard },
   { channel: "revealInFileManager", handler: handleRevealInFileManager },
   { channel: "removeLineFromFile", handler: handleRemoveLineFromFile },
-  { channel: "requestArchive", handler: checkArchiveReadiness },
   { channel: "updateTodoObject", handler: handleUpdateTodoObject },
 ];
 

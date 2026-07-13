@@ -18,6 +18,17 @@
 import { AttributeGroup, Attributes, Sorting, TodoObject } from "@sleek-types";
 
 let attributes: Attributes = {
+  customProtocol: {},
+  priority: {},
+  projects: {},
+  contexts: {},
+  due: {},
+  t: {},
+  rec: {},
+  pm: {},
+  hidden: {},
+  created: {},
+  completed: {},
   priority: {},
   projects: {},
   contexts: {},

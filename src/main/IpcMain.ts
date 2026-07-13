@@ -93,7 +93,11 @@ export function handleStoreGetConfig(event: IpcMainEvent, value: string) {
   }
 }
 
-export function handleStoreSetConfig(_: IpcMainEvent, key: string, value: unknown) {
+export function handleStoreSetConfig(
+  _: IpcMainEvent,
+  key: string,
+  value: unknown,
+) {
   try {
     SettingsStore.set(key, value);
     console.log(`Set ${key} to ${value}`);
@@ -114,7 +118,10 @@ export function handleStoreSetFilters(
   }
 }
 
-export function handleStoreGetFilters(event: IpcMainEvent, value: string): void {
+export function handleStoreGetFilters(
+  event: IpcMainEvent,
+  value: string,
+): void {
   try {
     event.returnValue = FiltersStore.get(value);
   } catch (error) {
@@ -215,7 +222,18 @@ export function handleArchiveTodos(event: IpcMainEvent): void {
   }
 }
 
-export function handleSaveToClipboard(event: IpcMainEvent, string: string): void {
+export function handleRequestArchive(event: IpcMainEvent): void {
+  try {
+    checkArchiveReadiness();
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
+  }
+}
+
+export function handleSaveToClipboard(
+  event: IpcMainEvent,
+  string: string,
+): void {
   try {
     clipboard.writeText(string);
     event.reply(
@@ -229,11 +247,18 @@ export function handleSaveToClipboard(event: IpcMainEvent, string: string): void
   }
 }
 
-export function handleOpenInBrowser(_: IpcMainEvent, url: string): void {
+export async function handleOpenInBrowser(
+  _: IpcMainEvent,
+  url: string,
+): Promise<void> {
   try {
-    shell?.openExternal(url);
+    await shell.openExternal(url);
   } catch (error) {
-    if (error instanceof Error) HandleError(error);
+    const protocol = url.split("://")[0];
+    const friendlyError = new Error(
+      `No application found for protocol '${protocol}'. Please install or register the application.`,
+    );
+    HandleError(friendlyError);
   }
 }
 
@@ -241,4 +266,4 @@ export function handleOpenInBrowser(_: IpcMainEvent, url: string): void {
 // Handlers are registered via the registry in IpcHandlers.ts
 // Import and initialize in main/index.ts
 
-export { registerAllHandlers, unregisterAllHandlers, checkArchiveReadiness } from "./IpcHandlers.js";
+export { registerAllHandlers, unregisterAllHandlers } from "./IpcHandlers";
