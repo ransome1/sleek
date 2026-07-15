@@ -19,7 +19,8 @@ const Group: React.FC<GroupProps> = memo(({ attributeKey, value, filters }) => {
     );
   }
 
-  const groupElements = typeof value === "string" ? [value] : value;
+  const groupElements =
+    typeof value === "string" || typeof value === "number" ? [value] : value;
 
   return (
     <ListItem className="row group">

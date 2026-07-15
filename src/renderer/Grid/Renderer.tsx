@@ -143,10 +143,16 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
         });
         return mappedChildren ? <>{mappedChildren}</> : null;
       },
-      a: ({ children, href, ...props }): JSX.Element | null => {
+      a: ({ children, href: hrefFromDestructure, ...props }): JSX.Element | null => {
         if (!children) return null;
         const childrenStr =
           typeof children === "string" ? children : String(children);
+        
+
+        // Use href from destructure first, then from props, then fall back
+        // Treat empty strings as missing - trim whitespace and use if available
+        const href = (hrefFromDestructure?.trim() || props.href?.trim()) || childrenStr;
+
         const match = /([a-zA-Z]+:\/\/\S+)/g.exec(childrenStr);
         const maxChars = 40;
         const truncatedChildren =
@@ -157,8 +163,9 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
         const link = (
           <a
             {...props}
+            href={href}
             onClick={(event) =>
-              handleLinkClick(event, match ? childrenStr : href || childrenStr)
+              handleLinkClick(event, match ? childrenStr : (href || childrenStr))
             }
           >
             {truncatedChildren}
@@ -166,22 +173,21 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
           </a>
         );
 
-        return childrenStr.length > maxChars ? (
-          <Tooltip title={childrenStr} arrow>
-            {link}
-          </Tooltip>
-        ) : (
-          link
-        );
+        return link;
       },
     };
 
     const preprocessBody = (body: string): string => {
+      // Skip processing if text already contains markdown links
+      // (contains patterns like [text](url))
+      if (body.includes("](")) {
+        return body;
+      }
+
       // Convert custom protocol URLs to markdown link syntax
       // Match patterns like joplin://..., cbthunderlink://..., file://...
-      // Non-markdown URLs get wrapped in [url](url)
       const customProtocolRegex =
-        /([a-zA-Z][a-zA-Z0-9+.-]*:\/\/\S+)(?![\]\)])/g;
+        /([a-zA-Z][a-zA-Z0-9+.-]*:\/\/[^\s\[\]()]+)/g;
       return body.replace(customProtocolRegex, (match) => {
         return `[${match}](${match})`;
       });
