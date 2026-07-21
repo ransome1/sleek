@@ -3,7 +3,6 @@ import { activateFile } from "./File/File";
 import { mainWindow, HandleCreateWindow } from "./index";
 import { openFile, createFile } from "./File/Dialog";
 
-
 import { SettingsStore, FiltersStore } from "./Stores";
 import { File } from "../@types";
 import appPackage from "../../package.json";
@@ -192,13 +191,13 @@ const GetMenuTemplate = (
                   FiltersStore.set("attributes", {});
                 },
               },
-               {
-                 label: i18n.t("menu.archiveCompletedTodos"),
-                 accelerator: "Ctrl+Alt+A",
-                 click: () => {
-                   mainWindow?.webContents.send("requestArchive");
-                 },
-               },
+              {
+                label: i18n.t("menu.archiveCompletedTodos"),
+                accelerator: "Ctrl+Alt+A",
+                click: () => {
+                  mainWindow?.webContents.send("requestArchive");
+                },
+              },
             ],
           },
         ]

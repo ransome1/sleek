@@ -2,6 +2,28 @@
 
 All notable changes to sleek will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.26] - 2026-07-21
+
+### Added
+
+- Added support for custom link protocols (https://github.com/ransome1/sleek/issues/900)
+- Added i18n to the main process (by @Lezurex in https://github.com/ransome1/sleek/issues/897)
+- [Added support for customizable colors](https://github.com/ransome1/sleek/wiki/Customizable-colors-in-sleek) (https://github.com/ransome1/sleek/issues/695) and removed old custom CSS functionality
+- Add proper TypeScript typings (by @Lezurex in https://github.com/ransome1/sleek/issues/875)
+
+### Enhanced
+
+- Refactored archiving function
+- Enhanced highlighting of elements and made it consistant
+- Increased number of test cases
+- Reduced amounts of IPC calls
+- Updated all dependencies
+
+### Fixed
+
+- Fixed broken positioning of date picker in todo grid view
+- Fixed minor issue in search module
+
 ## [2.0.25] - 2026-04-14
 
 ### Added
