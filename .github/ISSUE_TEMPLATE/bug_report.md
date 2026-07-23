@@ -19,6 +19,8 @@ Reports that do not adhere to this template will not be addressed and will be cl
 
 **Installation Method:** App Store / Direct Download / Other
 
+**Location of todo.txt files:** Local on the machine / network drive
+
 **Expected Behavior:**
 Explain what you expected to happen.
 

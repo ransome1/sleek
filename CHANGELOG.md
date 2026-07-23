@@ -23,6 +23,8 @@ All notable changes to sleek will be documented in this file. The format is base
 
 - Fixed broken positioning of date picker in todo grid view
 - Fixed minor issue in search module
+- Fix auto-insertion of creation date on completion (https://github.com/ransome1/sleek/issues/885)
+- Preserve due-threshold gap in non-strict recurrence (https://github.com/ransome1/sleek/issues/889)
 
 ## [2.0.25] - 2026-04-14
 
