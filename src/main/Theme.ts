@@ -18,7 +18,7 @@ nativeTheme.on("updated", (): void => {
   }
 });
 
-export function HandleTheme(colorTheme): void {
+export function HandleTheme(colorTheme: string): void {
   if (colorTheme != "dark" && colorTheme != "light" && colorTheme != "system") {
     nativeTheme.themeSource = "system";
   } else {

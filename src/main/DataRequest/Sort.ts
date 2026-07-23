@@ -1,4 +1,5 @@
-import { Sorting, TodoObject } from "@sleek-types";
+import { TodoObject } from "@sleek-types";
+import { Sorting } from "../../@types/Settings";
 
 const compareValues = (
   a: string | string[] | number | boolean | null,

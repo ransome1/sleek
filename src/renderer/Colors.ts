@@ -179,6 +179,8 @@ export function getCssVariables(theme: ColorTheme): Record<string, string> {
     vars["--pomodoro-bg"] = pomodoroColors.background;
     vars["--pomodoro-selected-text"] = pomodoroColors.selected.text;
     vars["--pomodoro-selected-bg"] = pomodoroColors.selected.background;
+    vars["--pomodoro-badge-text"] = pomodoroColors.background;
+    vars["--pomodoro-badge-bg"] = pomodoroColors.text;
   });
 
   // Add pomodoro colors for current theme

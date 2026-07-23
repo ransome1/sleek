@@ -25,6 +25,9 @@ import {
   Filters,
   AttributeKey,
   SettingStore,
+  ContextMenu,
+  ContextMenuItem,
+  PromptItem,
 } from "@sleek-types";
 import { i18n } from "../Settings/LanguageSelector";
 
@@ -36,6 +39,8 @@ interface DrawerAttributesComponentProps {
   settings: SettingStore;
   attributes: Attributes | null;
   filters: Filters | null;
+  setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
+  setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
 }
 
 // Merges raw attribute entries into display-ready buckets.
@@ -113,7 +118,7 @@ function buildDisplayBuckets(
 }
 
 const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> =
-  memo(({ settings, attributes, filters }) => {
+  memo(({ settings, attributes, filters, setContextMenu, setPromptItem }) => {
     const [hovered, setHovered] = useState<string | null>(null);
 
     const { t } = useTranslation();
@@ -133,6 +138,74 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> =
       updated[index] = !updated[index];
       store.setConfig("accordionOpenState", updated);
     };
+
+const handleContextMenu = (
+  event: React.MouseEvent,
+  categoryKey: AttributeKey,
+  bucketName: string,
+  attribute: { value: string[] },
+) => {
+  event.preventDefault();
+
+  // Disable date attributes if speaking dates are enabled
+  const DATE_ATTRIBUTE_KEYS = ['due', 't', 'created', 'completed'];
+  const disabledForSpeakingDates = DATE_ATTRIBUTE_KEYS.includes(categoryKey) && settings?.useHumanFriendlyDates;
+  if (disabledForSpeakingDates) return;
+
+  // Also disable certain attributes that don't support rename/delete
+  const fullyDisabled = ['hidden', 'customProtocol'];
+  if (fullyDisabled.includes(categoryKey)) return;
+
+  const menuItems: ContextMenuItem[] = [
+    // Show rename for all allowed attributes
+    {
+      id: 'rename',
+      label: t("drawer.attributes.rename"),
+      promptItem: {
+        headline: t("drawer.attributes.renameValue"),
+        text: t("drawer.attributes.renameDescription") + " <code>" + bucketName + "</code>",
+        button1: t("drawer.attributes.rename"),
+        input: {
+          label: t("drawer.attributes.newValue"),
+          defaultValue: bucketName.replace(/^[@+]/, ''),
+          validate: (val: string) => {
+            if (!val.trim()) return t("drawer.attributes.emptyError");
+            if (/	s/.test(val)) return t("drawer.attributes.spacesError");
+             if (val === bucketName.replace(/^[@+]/, '')) return t("drawer.attributes.sameValueError");
+            return true;
+          },
+        },
+        onButton1: (inputValue?: string) => {
+          if (inputValue) {
+            window.api.renameFilterValue({
+              attrType: categoryKey,
+              oldValue: attribute.value[0],
+              newValue: inputValue,
+            });
+          }
+        },
+      },
+    },
+    // Delete available for all
+    {
+      id: 'delete',
+      label: t("drawer.attributes.delete"),
+      promptItem: {
+        headline: t("drawer.attributes.deleteValue"),
+        text: t("drawer.attributes.deleteDescription") + " <code>" + bucketName + "</code>",
+        button1: t("drawer.attributes.delete"),
+        onButton1: () => {
+          window.api.deleteFilterValue({
+            attrType: categoryKey,
+            valueToDelete: attribute.value[0],
+          });
+        },
+      },
+    },
+  ];
+
+  setContextMenu({ event, items: menuItems });
+};
 
     const renderFilterChips = (
       categoryKey: AttributeKey,
@@ -157,6 +230,7 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> =
               data-todotxt-value={bucketName}
               onMouseEnter={() => setHovered(chipId)}
               onMouseLeave={() => setHovered(null)}
+              onContextMenu={(event) => handleContextMenu(event, categoryKey, bucketName, attribute)}
               className={`filter ${selected ? "selected" : ""} ${excluded ? "excluded" : ""}`}
             >
               <Badge

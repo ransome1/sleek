@@ -15,20 +15,11 @@
 //   Pass 2 (reset = false) — update counts to reflect only the filtered/searched
 //                            subset so the UI can show match counts per attribute.
 
-import { AttributeGroup, Attributes, Sorting, TodoObject } from "@sleek-types";
+import { AttributeGroup, Attributes, TodoObject } from "@sleek-types";
+import { Sorting } from "../@types/Settings";
 
 let attributes: Attributes = {
   customProtocol: {},
-  priority: {},
-  projects: {},
-  contexts: {},
-  due: {},
-  t: {},
-  rec: {},
-  pm: {},
-  hidden: {},
-  created: {},
-  completed: {},
   priority: {},
   projects: {},
   contexts: {},
@@ -60,7 +51,7 @@ function incrementCount(
     count: hidden ? previous : previous + 1,
     notify,
     hide,
-    value: [],
+    
   };
 }
 

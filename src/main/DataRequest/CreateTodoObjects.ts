@@ -8,7 +8,8 @@ import {
 } from "../Date";
 import { lineBreakPlaceholder } from "../Shared";
 import { DateTime } from "luxon";
-import { Badge, TodoObject } from "@sleek-types";
+import { TodoObject } from "@sleek-types";
+import { Badge } from "@sleek-types";
 
 let linesInFile: string[];
 const badge: Badge = { count: 0 };

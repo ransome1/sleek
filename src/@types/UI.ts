@@ -1,41 +1,18 @@
-import React from "react";
-import { AttributeKey } from ".";
+import type React from "react";
 
-export interface SearchFilter {
-  label?: string;
-  inputValue?: string;
-  title?: string;
-  suppress?: boolean;
-}
-
-export interface Badge {
-  count: number;
-}
-
-export interface HeadersObject {
-  availableObjects: number;
-  completedObjects: number;
-  visibleObjects: number;
-}
-
-export type Filters = {
-  [key in AttributeKey]: Filter[];
-};
-
-export interface Filter {
-  value: string[];
-  exclude: boolean;
-  groupedName: string | null;
-}
-
-export interface Sorting {
-  invert: boolean;
-  value: AttributeKey;
-}
-
-export interface ContextMenu {
-  event: React.MouseEvent<Element, MouseEvent>;
-  items: ContextMenuItem[];
+export interface PromptItem {
+  id?: string;
+  headline: string;
+  text: string;
+  button1: string;
+  onButton1: (inputValue?: string) => void;
+  button2?: string;
+  onButton2?: (inputValue?: string) => void;
+  input?: {
+    label: string;
+    defaultValue?: string;
+    validate: (val: string) => string | true;
+  };
 }
 
 export interface ContextMenuItem {
@@ -45,12 +22,7 @@ export interface ContextMenuItem {
   function?: () => void;
 }
 
-export interface PromptItem {
-  id?: string;
-  headline?: string;
-  text?: string;
-  button1?: string;
-  onButton1?: React.MouseEventHandler<HTMLButtonElement>;
-  button2?: string;
-  onButton2?: React.MouseEventHandler<HTMLButtonElement>;
+export interface ContextMenu {
+  event: React.MouseEvent;
+  items: ContextMenuItem[];
 }

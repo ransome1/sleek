@@ -12,6 +12,6 @@ export const lineBreakPlaceholder: string = String.fromCharCode(16);
 export function HandleError(error: Error): void {
   console.error(error);
   if (mainWindow && mainWindow.webContents) {
-    mainWindow.webContents.send("responseFromMainProcess", error);
+    mainWindow.webContents.send("responseFromMainProcess", error.message || "An unknown error occurred");
   }
 }

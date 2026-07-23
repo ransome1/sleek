@@ -1,5 +1,10 @@
 import { ChokidarOptions } from "chokidar";
-import { File, Sorting } from ".";
+import { File } from ".";
+
+export interface Sorting {
+  key: string;
+  direction: "asc" | "desc";
+}
 
 export interface SettingStore {
   appendCreationDate: boolean;

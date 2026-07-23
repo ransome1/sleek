@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { attributes, updateAttributes } from "./Attributes";
-import { Sorting, TodoObject } from "@sleek-types";
+import { Sorting } from "../@types/Settings";
+import { TodoObject } from "@sleek-types";
 
 // ---------------------------------------------------------------------------
 // Helpers

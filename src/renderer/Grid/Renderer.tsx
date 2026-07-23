@@ -95,18 +95,18 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
           <div>{value}</div>
         </button>
       ),
-      pm: (value, type) => (
-        <button
-          className="pomodoro"
-          onClick={() =>
-            HandleFilterSelect(type, [value], filters, false, null)
-          }
-          data-testid={`datagrid-button-${type}`}
-        >
-          <img src={PomodoroIcon} alt="Pomodoro" />
-          {value}
-        </button>
-      ),
+pm: (value, type) => (
+    <button
+      className="pomodoro"
+      onClick={() =>
+        HandleFilterSelect(type, [value], filters, false, null)
+      }
+      data-testid={`datagrid-button-${type}`}
+    >
+      <img src={PomodoroIcon} alt="Pomodoro" />
+      {value}
+    </button>
+  ),
 
       hidden: () => null as React.ReactNode,
     };

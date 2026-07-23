@@ -1,6 +1,6 @@
 import { app, BrowserWindow, nativeImage } from "electron";
 import { fileURLToPath } from "url";
-import fs from "fs";
+
 import { SettingsStore, ColorsStore } from "./Stores.js";
 import { CreateMenu } from "./Menu.js";
 import { createFileWatcher, watcher } from "./File/Watcher";

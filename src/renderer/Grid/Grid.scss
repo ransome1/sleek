@@ -9,7 +9,7 @@
   }
   &::-webkit-scrollbar-thumb:window-inactive,
   &::-webkit-scrollbar-thumb {
-    background: var(--color-surfaceVariant);
+    background: var(--color-outlineVariant);
     border-radius: 0.3em;
   }
 }
@@ -24,7 +24,7 @@
   #grid {
     &::-webkit-scrollbar-thumb:window-inactive,
     &::-webkit-scrollbar-thumb {
-      background: var(--color-outline);
+      background: var(--color-outlineVariant);
       border-radius: 0.3em;
     }
   }

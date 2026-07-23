@@ -12,11 +12,11 @@ import { createTodoObjects } from "./CreateTodoObjects";
 import { sortTodoObjects } from "./Sort";
 import { groupTodoObjects } from "./Group";
 import {
-  Filters,
-  HeadersObject,
   RequestedData,
   Sorting,
   TodoObject,
+  Filters,
+  HeadersObject,
 } from "@sleek-types";
 
 let searchString: string;

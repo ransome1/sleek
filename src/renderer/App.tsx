@@ -116,12 +116,14 @@ const App = (): JSX.Element => {
               headers={headers}
             />
             {settings?.files?.length > 0 && (
-              <DrawerComponent
-                settings={settings}
-                attributes={attributes}
-                filters={filters}
-                searchFieldRef={searchFieldRef}
-              />
+<DrawerComponent
+  settings={settings}
+  attributes={attributes}
+  filters={filters}
+  searchFieldRef={searchFieldRef}
+  setContextMenu={setContextMenu}
+  setPromptItem={setPromptItem}
+/>
             )}
             <div className="flexItems">
               {settings.files?.length > 0 && (

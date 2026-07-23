@@ -42,6 +42,7 @@ export type Attributes = {
 
 export type AttributeKey =
   | "priority"
+  | "customProtocol"
   | "due"
   | "t"
   | "contexts"
@@ -60,7 +61,7 @@ export interface AttributeEntry {
   count: number;
   notify: boolean;
   hide: boolean;
-  value: string[];
+  value?: string[];
 }
 
 export interface File {
