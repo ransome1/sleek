@@ -124,6 +124,9 @@ const GridComponent: React.FC<GridComponentProps> = memo(
                   attributeKey={settings.sorting[0].value}
                   value={group.title}
                   filters={filters}
+                  setContextMenu={setContextMenu}
+                  setPromptItem={setPromptItem}
+                  settings={settings}
                 />,
               );
 
@@ -140,7 +143,10 @@ const GridComponent: React.FC<GridComponentProps> = memo(
                   <Row
                     key={`row-${todoObject.lineNumber}`}
                     todoObject={todoObject}
-                    filters={filters}
+filters={filters}
+                  setContextMenu={setContextMenu}
+                  setPromptItem={setPromptItem}
+                  settings={settings}
                     setTodoObject={setTodoObject}
                     setDialogOpen={setDialogOpen}
                     setContextMenu={setContextMenu}

@@ -7,6 +7,7 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import { useTranslation } from "react-i18next";
+import { useAttributeContextMenu } from "../hooks/useAttributeContextMenu";
 import RendererComponent from "./Renderer";
 import { HandleFilterSelect, IsSelected } from "../Shared";
 import "./Row.scss";
@@ -41,6 +42,7 @@ const Row: React.FC<RowProps> = memo(
     settings,
   }) => {
     const { t } = useTranslation();
+const { handleContextMenu: handleAttributeContextMenu } = useAttributeContextMenu({ setContextMenu, setPromptItem });
 
     const handleConfirmDelete = (): void => {
       if (todoObject)
@@ -55,6 +57,15 @@ const Row: React.FC<RowProps> = memo(
       event: React.MouseEvent,
       todoString: string,
     ): void => {
+      // Check if the right-click target is an attribute button
+      const target = event.target as HTMLElement;
+      const isAttributeButton = target.closest('button[data-testid^="datagrid-button-"]');
+      
+      // If right-clicked on an attribute button, let the button's handler take precedence
+      if (isAttributeButton) {
+        return;
+      }
+      
       setContextMenu({
         event: event,
         items: [
@@ -207,6 +218,7 @@ const Row: React.FC<RowProps> = memo(
                       null,
                     )
                   }
+                  onContextMenu={(e) => handleAttributeContextMenu(e, todoObject.priority || "", "priority")}
                 >
                   {todoObject.priority}
                 </button>
@@ -245,6 +257,8 @@ const Row: React.FC<RowProps> = memo(
             todoObject={todoObject}
             filters={filters ? filters : ({} as Filters)}
             settings={settings}
+            setContextMenu={setContextMenu}
+            setPromptItem={setPromptItem}
           />
         </li>
       </>

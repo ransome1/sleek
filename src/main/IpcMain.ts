@@ -13,13 +13,13 @@ export function handleRenameFilterValue(
   newValue: string
 ): void {
   try {
-    console.log(`[IPC] handleRenameFilterValue called: attrType="${attrType}", oldValue="${oldValue}", newValue="${newValue}"`);
+    
     const activeFile = getActiveFile();
     if (!activeFile) throw new Error("No active file");
 
-    console.log(`[IPC] linesInFile.length: ${linesInFile.length}`);
+    
     const { count } = renameAttributeValue(linesInFile, attrType, oldValue, newValue);
-    console.log(`[IPC] renameAttributeValue returned count: ${count}`);
+    
 
     if (count === 0) {
       event.reply("responseFromMainProcess", `No todos found with "${oldValue}"`);

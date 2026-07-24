@@ -9,15 +9,20 @@ import DatePickerInline from "./DatePickerInline";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { handleLinkClick, HandleFilterSelect, IsSelected } from "../Shared";
 import { TodoObject, Filters, SettingStore, AttributeKey } from "@sleek-types";
+import { ContextMenu, ContextMenuItem, PromptItem } from "@sleek-types";
+import { useTranslation } from "react-i18next";
+import { useAttributeContextMenu } from "../hooks/useAttributeContextMenu";
 
 interface RendererComponentProps {
   todoObject: TodoObject;
   filters: Filters;
   settings: SettingStore;
+  setContextMenu?: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
+  setPromptItem?: React.Dispatch<React.SetStateAction<PromptItem | null>>;
 }
 
 const RendererComponent: React.FC<RendererComponentProps> = memo(
-  ({ todoObject, filters, settings }) => {
+  ({ todoObject, filters, settings, setContextMenu, setPromptItem }) => {
     const expressions: { pattern: RegExp; type: AttributeKey; key: string }[] =
       [
         {
@@ -43,32 +48,45 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
         { pattern: /\brec:([^ ]+)/, type: "rec", key: "rec:" },
       ];
 
+    const { t } = useTranslation();
+
+  const { handleContextMenu } = useAttributeContextMenu({ setContextMenu, setPromptItem, settings });
+
     const replacements: {
       [key: string]: (value: string, type: AttributeKey) => React.ReactNode;
     } = {
       due: (_, type) => (
-        <DatePickerInline
-          type={type}
-          todoObject={todoObject}
-          date={todoObject.due}
-          filters={filters}
-          settings={settings}
-        />
+        <div
+          onContextMenu={(e) => todoObject.due && handleContextMenu(e, todoObject.due, type)}
+        >
+          <DatePickerInline
+            type={type}
+            todoObject={todoObject}
+            date={todoObject.due}
+            filters={filters}
+            settings={settings}
+          />
+        </div>
       ),
       t: (_, type) => (
-        <DatePickerInline
-          type={type}
-          todoObject={todoObject}
-          date={todoObject.t}
-          filters={filters}
-          settings={settings}
-        />
+        <div
+          onContextMenu={(e) => todoObject.t && handleContextMenu(e, todoObject.t, type)}
+        >
+          <DatePickerInline
+            type={type}
+            todoObject={todoObject}
+            date={todoObject.t}
+            filters={filters}
+            settings={settings}
+          />
+        </div>
       ),
       contexts: (value, type) => (
         <button
           onClick={() =>
             HandleFilterSelect(type, [value], filters, false, null)
           }
+          onContextMenu={(e) => handleContextMenu(e, value, type)}
           data-testid={`datagrid-button-${type}`}
         >
           {value}
@@ -79,6 +97,7 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
           onClick={() =>
             HandleFilterSelect(type, [value], filters, false, null)
           }
+          onContextMenu={(e) => handleContextMenu(e, value, type)}
           data-testid={`datagrid-button-${type}`}
         >
           {value}
@@ -89,24 +108,26 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
           onClick={() =>
             HandleFilterSelect(type, [value], filters, false, null)
           }
+          onContextMenu={(e) => handleContextMenu(e, value, type)}
           data-testid={`datagrid-button-${type}`}
         >
           <Chip label="rec:" />
           <div>{value}</div>
         </button>
       ),
-pm: (value, type) => (
-    <button
-      className="pomodoro"
-      onClick={() =>
-        HandleFilterSelect(type, [value], filters, false, null)
-      }
-      data-testid={`datagrid-button-${type}`}
-    >
-      <img src={PomodoroIcon} alt="Pomodoro" />
-      {value}
-    </button>
-  ),
+      pm: (value, type) => (
+        <button
+          className="pomodoro"
+          onClick={() =>
+            HandleFilterSelect(type, [value], filters, false, null)
+          }
+          onContextMenu={(e) => handleContextMenu(e, value, type)}
+          data-testid={`datagrid-button-${type}`}
+        >
+          <img src={PomodoroIcon} alt="Pomodoro" />
+          {value}
+        </button>
+      ),
 
       hidden: () => null as React.ReactNode,
     };

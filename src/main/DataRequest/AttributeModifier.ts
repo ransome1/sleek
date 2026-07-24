@@ -13,7 +13,7 @@ export function renameAttributeValue(
   oldValue: string,
   newValue: string
 ): { count: number } {
-  console.log(`[RENAME] attrType: "${attrType}", oldValue: "${oldValue}", newValue: "${newValue}"`);
+  
   if (linesInFile.length === 0) return { count: 0 };
 
   let count = 0;
@@ -68,9 +68,9 @@ case 'completed': {
     const createdDateStr = createdDate ? 
       `${createdDate.getFullYear()}-${String(createdDate.getMonth() + 1).padStart(2, '0')}-${String(createdDate.getDate()).padStart(2, '0')}` 
       : null;
-    console.log(`[DEBUG-CREATED] Line ${i}: createdDate="${createdDate}", createdDateStr="${createdDateStr}", looking for="${oldValueClean}"`);
+    
     if (createdDateStr === oldValueClean) {
-      console.log(`[DEBUG-CREATED-MATCH] Found match! Setting to "${newValueClean}"`);
+      
       item.setCreated(new Date(newValueClean));
       newLine = item.toString();
       modified = true;
@@ -80,9 +80,9 @@ case 'completed': {
     const completedDateStr = completedDate ? 
       `${completedDate.getFullYear()}-${String(completedDate.getMonth() + 1).padStart(2, '0')}-${String(completedDate.getDate()).padStart(2, '0')}` 
       : null;
-    console.log(`[DEBUG-COMPLETED] Line ${i}: completedDate="${completedDate}", completedDateStr="${completedDateStr}", looking for="${oldValueClean}"`);
+    
     if (completedDateStr === oldValueClean) {
-      console.log(`[DEBUG-COMPLETED-MATCH] Found match! Setting to "${newValueClean}"`);
+      
       item.setCompleted(new Date(newValueClean));
       newLine = item.toString();
       modified = true;
@@ -91,7 +91,7 @@ case 'completed': {
   break;
 }
       default: {
-        console.log(`[RENAME] No handler for attrType: "${attrType}"`);
+        
         break;
       }
     }
