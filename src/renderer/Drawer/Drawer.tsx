@@ -12,7 +12,13 @@ import DrawerFilters from "./Filters";
 import { handleReset } from "../Shared";
 import { useTranslation } from "react-i18next";
 import "./Drawer.scss";
-import { Attributes, Filters, SettingStore, ContextMenu, PromptItem } from "@sleek-types";
+import {
+  Attributes,
+  Filters,
+  SettingStore,
+  ContextMenu,
+  PromptItem,
+} from "@sleek-types";
 
 const { store } = window.api;
 
@@ -26,7 +32,14 @@ interface DrawerComponentProps {
 }
 
 const DrawerComponent: React.FC<DrawerComponentProps> = memo(
-  ({ settings, attributes, filters, searchFieldRef, setContextMenu, setPromptItem }) => {
+  ({
+    settings,
+    attributes,
+    filters,
+    searchFieldRef,
+    setContextMenu,
+    setPromptItem,
+  }) => {
     const [activeTab, setActiveTab] = useState<string>("attributes");
     const [drawerWidth, setDrawerWidth] = useState<number>(
       store.getConfig("drawerWidth") || 500,
@@ -130,13 +143,13 @@ const DrawerComponent: React.FC<DrawerComponentProps> = memo(
           />
         </Tabs>
         {settings.isDrawerOpen && activeTab === "attributes" && (
-<DrawerAttributes
-  settings={settings}
-  attributes={attributes}
-  filters={filters}
-  setContextMenu={setContextMenu}
-  setPromptItem={setPromptItem}
-/>
+          <DrawerAttributes
+            settings={settings}
+            attributes={attributes}
+            filters={filters}
+            setContextMenu={setContextMenu}
+            setPromptItem={setPromptItem}
+          />
         )}
         {settings.isDrawerOpen && activeTab === "filters" && (
           <DrawerFilters settings={settings} />

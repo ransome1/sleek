@@ -52,7 +52,7 @@ const PromptComponent: React.FC<PromptComponentProps> = ({
       // Focus the input field after state is updated
       setTimeout(() => {
         if (inputRef.current) {
-          const input = inputRef.current.querySelector('input');
+          const input = inputRef.current.querySelector("input");
           if (input) {
             input.focus();
             input.select();
@@ -73,7 +73,7 @@ const PromptComponent: React.FC<PromptComponentProps> = ({
             )}
             {promptItem?.input && (
               <TextField
-              ref={inputRef}
+                ref={inputRef}
                 autoFocus
                 margin="dense"
                 label={promptItem.input.label}

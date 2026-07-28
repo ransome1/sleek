@@ -7,7 +7,9 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import { useTranslation } from "react-i18next";
-import { useAttributeContextMenu } from "../hooks/useAttributeContextMenu";
+import { useAttributeContextMenu } from "../Shared/useAttributeContextMenu";
+import { useRowContextMenu } from "../Shared/useRowContextMenu";
+
 import RendererComponent from "./Renderer";
 import { HandleFilterSelect, IsSelected } from "../Shared";
 import "./Row.scss";
@@ -42,7 +44,14 @@ const Row: React.FC<RowProps> = memo(
     settings,
   }) => {
     const { t } = useTranslation();
-const { handleContextMenu: handleAttributeContextMenu } = useAttributeContextMenu({ setContextMenu, setPromptItem });
+    const { handleContextMenu: handleAttributeContextMenu } =
+      useAttributeContextMenu({ setContextMenu, setPromptItem });
+    const { handleRowContextMenu } = useRowContextMenu({
+      setContextMenu,
+      setPromptItem,
+      t,
+      ipcRenderer,
+    });
 
     const handleConfirmDelete = (): void => {
       if (todoObject)
@@ -53,51 +62,14 @@ const { handleContextMenu: handleAttributeContextMenu } = useAttributeContextMen
       if (todoObject) ipcRenderer.send("saveToClipboard", todoObject.string);
     };
 
-    const handleContextMenu = (
-      event: React.MouseEvent,
-      todoString: string,
-    ): void => {
-      // Check if the right-click target is an attribute button
-      const target = event.target as HTMLElement;
-      const isAttributeButton = target.closest('button[data-testid^="datagrid-button-"]');
-      
-      // If right-clicked on an attribute button, let the button's handler take precedence
-      if (isAttributeButton) {
-        return;
-      }
-      
-      setContextMenu({
-        event: event,
-        items: [
-          {
-            id: "copy",
-            label: t("copy"),
-            function: handleSaveToClipboard,
-          },
-          {
-            id: "delete",
-            label: t("delete"),
-            promptItem: {
-              id: "delete",
-              headline: t("prompt.delete.headline"),
-              text: `${t("prompt.delete.text")}: <code>${todoString}</code>`,
-              button1: t("delete"),
-              onButton1: handleConfirmDelete,
-            },
-          },
-        ],
-      });
-    };
-
     const handleCheckboxChange = (
       event: React.ChangeEvent<HTMLInputElement>,
     ): void => {
       ipcRenderer.send(
-        "writeSingleTodoToFile",
+        "toggleTodoComplete",
         todoObject.lineNumber,
         todoObject.string,
         event.target.checked,
-        false,
       );
     };
 
@@ -183,7 +155,13 @@ const { handleContextMenu: handleAttributeContextMenu } = useAttributeContextMen
           data-hidden={todoObject.hidden}
           onClick={(event) => handleRowClick(event)}
           onKeyDown={(event) => handleRowClick(event)}
-          onContextMenu={(event) => handleContextMenu(event, todoObject.string)}
+          onContextMenu={(event) =>
+            handleRowContextMenu(
+              event,
+              todoObject.string,
+              todoObject.lineNumber,
+            )
+          }
           data-testid={`datagrid-row`}
           data-todotxt-attribute="priority"
           data-todotxt-value={todoObject.priority}
@@ -218,7 +196,13 @@ const { handleContextMenu: handleAttributeContextMenu } = useAttributeContextMen
                       null,
                     )
                   }
-                  onContextMenu={(e) => handleAttributeContextMenu(e, todoObject.priority || "", "priority")}
+                  onContextMenu={(e) =>
+                    handleAttributeContextMenu(
+                      e,
+                      todoObject.priority || "",
+                      "priority",
+                    )
+                  }
                 >
                   {todoObject.priority}
                 </button>

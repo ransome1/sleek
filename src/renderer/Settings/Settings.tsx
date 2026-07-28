@@ -56,6 +56,10 @@ const visibleSettings: VisibleSettings = {
     style: "toggle",
     dependsOn: ["tray"],
   },
+  enableSafeWrites: {
+    style: "toggle",
+    help: "https://github.com/ransome1/sleek/wiki/Safe-writes",
+  },
   startMinimized: {
     style: "toggle",
     dependsOn: ["tray"],
@@ -201,7 +205,9 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(
                     <Switch
                       data-testid={`setting-toggle-${settingName}`}
                       checked={
-                        settings[settingName as keyof SettingStore] as boolean
+                        (settings[
+                          settingName as keyof SettingStore
+                        ] as boolean) ?? false
                       }
                       onChange={(event) =>
                         store.setConfig(settingName, event.target.checked)

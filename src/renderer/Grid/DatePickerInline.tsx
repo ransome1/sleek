@@ -16,6 +16,7 @@ interface DatePickerInlineComponentProps {
   date: string | null;
   filters: Filters | null;
   settings: SettingStore;
+  onContextMenu?: (event: React.MouseEvent) => void;
 }
 
 const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
@@ -24,6 +25,7 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
   date,
   filters,
   settings,
+  onContextMenu,
 }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [open, setOpen] = useState(false);
@@ -45,10 +47,9 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
   const handleChange = (date: DateTime | null) => {
     try {
       ipcRenderer.send(
-        "writeSingleTodoToFile",
+        "updateTodoObject",
         todoObject.lineNumber,
         todoObject.string,
-        false,
         type,
         date ? date.toFormat("yyyy-MM-dd") : null,
       );
@@ -104,6 +105,11 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
               ref={setDateButtonRef}
               onClick={toggleOpen}
               onKeyDown={(event) => event.key === "Enter" && toggleOpen(event)}
+              onContextMenu={(event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                onContextMenu?.(event);
+              }}
               data-testid={`datagrid-picker-date-${type}`}
               tabIndex={0}
             >

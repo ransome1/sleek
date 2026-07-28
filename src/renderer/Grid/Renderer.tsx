@@ -3,22 +3,21 @@ import reactStringReplace from "react-string-replace";
 import ReactMarkdown, { Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Chip from "@mui/material/Chip";
-import Tooltip from "@mui/material/Tooltip";
+
 import PomodoroIcon from "../../../resources/pomodoro.svg?asset";
 import DatePickerInline from "./DatePickerInline";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { handleLinkClick, HandleFilterSelect, IsSelected } from "../Shared";
 import { TodoObject, Filters, SettingStore, AttributeKey } from "@sleek-types";
-import { ContextMenu, ContextMenuItem, PromptItem } from "@sleek-types";
-import { useTranslation } from "react-i18next";
-import { useAttributeContextMenu } from "../hooks/useAttributeContextMenu";
+import { ContextMenu, PromptItem } from "@sleek-types";
+import { useAttributeContextMenu } from "../Shared/useAttributeContextMenu";
 
 interface RendererComponentProps {
   todoObject: TodoObject;
   filters: Filters;
   settings: SettingStore;
-  setContextMenu?: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
-  setPromptItem?: React.Dispatch<React.SetStateAction<PromptItem | null>>;
+  setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
+  setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
 }
 
 const RendererComponent: React.FC<RendererComponentProps> = memo(
@@ -48,38 +47,37 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
         { pattern: /\brec:([^ ]+)/, type: "rec", key: "rec:" },
       ];
 
-    const { t } = useTranslation();
-
-  const { handleContextMenu } = useAttributeContextMenu({ setContextMenu, setPromptItem, settings });
+    const { handleContextMenu } = useAttributeContextMenu({
+      setContextMenu,
+      setPromptItem,
+    });
 
     const replacements: {
       [key: string]: (value: string, type: AttributeKey) => React.ReactNode;
     } = {
       due: (_, type) => (
-        <div
-          onContextMenu={(e) => todoObject.due && handleContextMenu(e, todoObject.due, type)}
-        >
-          <DatePickerInline
-            type={type}
-            todoObject={todoObject}
-            date={todoObject.due}
-            filters={filters}
-            settings={settings}
-          />
-        </div>
+        <DatePickerInline
+          type={type}
+          todoObject={todoObject}
+          date={todoObject.due}
+          filters={filters}
+          settings={settings}
+          onContextMenu={(e) =>
+            todoObject.due && handleContextMenu(e, todoObject.due, type)
+          }
+        />
       ),
       t: (_, type) => (
-        <div
-          onContextMenu={(e) => todoObject.t && handleContextMenu(e, todoObject.t, type)}
-        >
-          <DatePickerInline
-            type={type}
-            todoObject={todoObject}
-            date={todoObject.t}
-            filters={filters}
-            settings={settings}
-          />
-        </div>
+        <DatePickerInline
+          type={type}
+          todoObject={todoObject}
+          date={todoObject.t}
+          filters={filters}
+          settings={settings}
+          onContextMenu={(e) =>
+            todoObject.t && handleContextMenu(e, todoObject.t, type)
+          }
+        />
       ),
       contexts: (value, type) => (
         <button
@@ -211,7 +209,7 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
 
       // Convert custom protocol URLs to markdown link syntax
       // Match patterns like joplin://..., cbthunderlink://..., file://...
-      const customProtocolRegex = /([a-zA-Z][a-zA-Z0-9+.-]*:\/\/[^\s\[\]()]+)/g;
+      const customProtocolRegex = /([a-zA-Z][a-zA-Z0-9+.-]*:\/\/[^\s[]()]+)/g;
       return body.replace(customProtocolRegex, (match) => {
         return `[${match}](${match})`;
       });

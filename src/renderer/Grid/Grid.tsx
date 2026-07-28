@@ -143,10 +143,10 @@ const GridComponent: React.FC<GridComponentProps> = memo(
                   <Row
                     key={`row-${todoObject.lineNumber}`}
                     todoObject={todoObject}
-filters={filters}
-                  setContextMenu={setContextMenu}
-                  setPromptItem={setPromptItem}
-                  settings={settings}
+                    filters={filters}
+                    setContextMenu={setContextMenu}
+                    setPromptItem={setPromptItem}
+                    settings={settings}
                     setTodoObject={setTodoObject}
                     setDialogOpen={setDialogOpen}
                     setContextMenu={setContextMenu}

@@ -25,12 +25,13 @@ import { lineBreakPlaceholder } from "../Shared";
  * @throws Error if write operation fails (original file remains unchanged)
  */
 const writeToFile = (string: string, filePath: string): void => {
+  const enableAtomicWrite = SettingsStore.get("enableAtomicWrite");
   const tempFilePath = `${filePath}.tmp`;
   const backupFilePath = `${filePath}.bak`;
 
   try {
-    if (process.mas) {
-      // MAS: Direct write without temp files (less safe but required by sandbox)
+    if (!enableAtomicWrite || process.mas) {
+      // Direct write: no atomic write enabled or MAS sandbox (less safe but required by sandbox)
       fs.writeFileSync(filePath, string + "\n", "utf-8");
     } else {
       // Step 1: Write to temporary file

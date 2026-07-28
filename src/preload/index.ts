@@ -24,12 +24,25 @@ contextBridge.exposeInMainWorld("api", {
     notifiedTodoObjects(value) {
       return ipcRenderer.send("storeSetNotifiedTodoObjects", value);
     },
-   },
-  deleteFilterValue(params: { attrType: string; valueToDelete: string }) {
-    return ipcRenderer.send("deleteFilterValue", params.attrType, params.valueToDelete);
   },
-  renameFilterValue(params: { attrType: string; oldValue: string; newValue: string }) {
-    return ipcRenderer.send("renameFilterValue", params.attrType, params.oldValue, params.newValue);
+  deleteFilterValue(params: { attrType: string; valueToDelete: string }) {
+    return ipcRenderer.send(
+      "deleteFilterValue",
+      params.attrType,
+      params.valueToDelete,
+    );
+  },
+  renameFilterValue(params: {
+    attrType: string;
+    oldValue: string;
+    newValue: string;
+  }) {
+    return ipcRenderer.send(
+      "renameFilterValue",
+      params.attrType,
+      params.oldValue,
+      params.newValue,
+    );
   },
   ipcRenderer: {
     send(channel, ...args) {

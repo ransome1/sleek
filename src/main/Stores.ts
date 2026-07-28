@@ -145,6 +145,14 @@ const migrations = {
     console.log("Migrating settings store from 2.0.19 → 2.0.26");
     config.delete("customStylesPath");
   },
+  "2.0.27-rc.2": (config) => {
+    console.log("Migrating settings store from 2.0.26 → 2.0.27-rc.2");
+    config.set("enableSafeWrites", true);
+  },
+  "2.0.27": (config) => {
+    console.log("Migrating settings store from 2.0.26 → 2.0.27");
+    config.set("enableSafeWrites", true);
+  },
 };
 
 const rerenderDefinition = {

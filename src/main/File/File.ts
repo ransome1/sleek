@@ -54,8 +54,6 @@ function registerTodoFile(filePath: string, bookmark: string | null) {
   }
 
   SettingsStore.set("files", files);
-
-  return "File added";
 }
 
 function linkDoneFile(filePath: string, bookmark: string | null) {
@@ -87,8 +85,6 @@ function removeFile(index: number) {
   }
 
   SettingsStore.set("files", files);
-
-  return "File removed";
 }
 
 function activateFile(index: number) {
@@ -103,8 +99,6 @@ function activateFile(index: number) {
   files[index].active = true;
 
   SettingsStore.set("files", files);
-
-  return "File changed";
 }
 
 export {

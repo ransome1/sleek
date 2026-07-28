@@ -122,13 +122,43 @@ const DialogComponent: React.FC<DialogComponentProps> = memo(
         } else {
           updatedValue = value;
         }
-        ipcRenderer.send(
-          "updateTodoObject",
-          todoObject?.lineNumber,
-          textFieldValue,
-          type,
-          updatedValue,
-        );
+        // Build the updated todo string with the new attribute value
+        let updatedString = textFieldValue;
+        const pattern = new RegExp(`${type}:\\S+`);
+        if (pattern.test(textFieldValue)) {
+          if (updatedValue) {
+            updatedString = textFieldValue.replace(
+              pattern,
+              `${type}:${updatedValue}`,
+            );
+          } else {
+            updatedString = textFieldValue.replace(
+              new RegExp(`${type}:\\S+\\s*`),
+              "",
+            );
+          }
+        } else if (updatedValue) {
+          // Special handling for priority to place it at the beginning
+          if (type === "priority") {
+            updatedString = `(${updatedValue}) ${textFieldValue}`;
+          } else {
+            updatedString = `${textFieldValue} ${type}:${updatedValue}`;
+          }
+        }
+        // Update the text field with the new attribute value
+        setTextFieldValue(updatedString);
+        // Update local state to reflect the change for UI preview
+        if (type === "due") {
+          setDueDate(updatedValue as string | null);
+        } else if (type === "t") {
+          setThresholdDate(updatedValue as string | null);
+        } else if (type === "priority") {
+          setPriority(updatedValue as string);
+        } else if (type === "rec") {
+          setRecurrence(updatedValue as string | null);
+        } else if (type === "pm") {
+          setPomodoro(updatedValue as string | number);
+        }
       } catch (error: unknown) {
         console.error(error);
       }

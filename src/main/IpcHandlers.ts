@@ -1,5 +1,11 @@
 import { ipcMain, IpcMainEvent, shell, clipboard } from "electron";
-import { SettingsStore, FiltersStore, NotificationsStore, ColorsStore } from "./Stores";
+import { changeCompleteState } from "./DataRequest/ChangeCompleteState";
+import {
+  SettingsStore,
+  FiltersStore,
+  NotificationsStore,
+  ColorsStore,
+} from "./Stores";
 import { dataRequest } from "./DataRequest/DataRequest";
 import { createTodoObject } from "./DataRequest/CreateTodoObjects";
 import { writeSingleTodoToFile, removeLineFromFile } from "./File/Write";
@@ -30,7 +36,11 @@ function handleStoreGetConfig(event: IpcMainEvent, key?: string): void {
   }
 }
 
-function handleStoreSetConfig(event: IpcMainEvent, key: string, value: unknown): void {
+function handleStoreSetConfig(
+  event: IpcMainEvent,
+  key: string,
+  value: unknown,
+): void {
   try {
     SettingsStore.set(key, value);
   } catch (error) {
@@ -38,7 +48,11 @@ function handleStoreSetConfig(event: IpcMainEvent, key: string, value: unknown):
   }
 }
 
-function handleStoreSetFilters(event: IpcMainEvent, key: string, value: unknown): void {
+function handleStoreSetFilters(
+  event: IpcMainEvent,
+  key: string,
+  value: unknown,
+): void {
   try {
     FiltersStore.set(key, value);
   } catch (error) {
@@ -64,7 +78,10 @@ function handleStoreGetColors(event: IpcMainEvent, key: string): void {
   }
 }
 
-function handleStoreSetNotifiedTodoObjects(event: IpcMainEvent, value: unknown): void {
+function handleStoreSetNotifiedTodoObjects(
+  event: IpcMainEvent,
+  value: unknown,
+): void {
   try {
     NotificationsStore.set("notificationHashes", value);
   } catch (error) {
@@ -77,7 +94,6 @@ function handleStoreSetNotifiedTodoObjects(event: IpcMainEvent, value: unknown):
 function handleSetFile(event: IpcMainEvent, index: number): void {
   try {
     activateFile(index);
-    event.reply("responseFromMainProcess", "File activated");
   } catch (error) {
     if (error instanceof Error) {
       HandleError(error);
@@ -98,7 +114,10 @@ function handleRemoveFile(event: IpcMainEvent, index: number): void {
   }
 }
 
-async function handleOpenFile(event: IpcMainEvent, setDoneFile: boolean): Promise<void> {
+async function handleOpenFile(
+  event: IpcMainEvent,
+  setDoneFile: boolean,
+): Promise<void> {
   try {
     await openFile(setDoneFile || false);
   } catch (error) {
@@ -109,7 +128,10 @@ async function handleOpenFile(event: IpcMainEvent, setDoneFile: boolean): Promis
   }
 }
 
-async function handleCreateFile(event: IpcMainEvent, setDoneFile: boolean): Promise<void> {
+async function handleCreateFile(
+  event: IpcMainEvent,
+  setDoneFile: boolean,
+): Promise<void> {
   try {
     await createFile(setDoneFile || false);
   } catch (error) {
@@ -120,7 +142,11 @@ async function handleCreateFile(event: IpcMainEvent, setDoneFile: boolean): Prom
   }
 }
 
-function handleAddFile(event: IpcMainEvent, filePath: string, bookmark: string | null): void {
+function handleAddFile(
+  event: IpcMainEvent,
+  filePath: string,
+  bookmark: string | null,
+): void {
   try {
     const result = registerTodoFile(filePath, bookmark || null);
     event.reply("responseFromMainProcess", result);
@@ -134,7 +160,11 @@ function handleAddFile(event: IpcMainEvent, filePath: string, bookmark: string |
 
 // ─── Data handlers ──────────────────────────────────────────────────────────
 
-function handleUpdateAttributeFields(event: IpcMainEvent, lineNumber: number, string: string): void {
+function handleUpdateAttributeFields(
+  event: IpcMainEvent,
+  lineNumber: number,
+  string: string,
+): void {
   try {
     const todoObject = createTodoObject(lineNumber, string);
     event.reply("updateAttributeFields", todoObject);
@@ -158,7 +188,12 @@ function handleDataRequest(event: IpcMainEvent, searchString: string): void {
   }
 }
 
-function handleWriteTodoToFile(event: IpcMainEvent, lineNumber: number, content: string, isEditMode: boolean): void {
+function handleWriteTodoToFile(
+  event: IpcMainEvent,
+  lineNumber: number,
+  content: string,
+  isEditMode: boolean,
+): void {
   try {
     writeSingleTodoToFile(lineNumber, content, isEditMode);
   } catch (error) {
@@ -169,7 +204,10 @@ function handleWriteTodoToFile(event: IpcMainEvent, lineNumber: number, content:
   }
 }
 
-function handleRemoveLineFromFile(event: IpcMainEvent, lineNumber: number): void {
+function handleRemoveLineFromFile(
+  event: IpcMainEvent,
+  lineNumber: number,
+): void {
   try {
     removeLineFromFile(lineNumber);
   } catch (error) {
@@ -180,9 +218,20 @@ function handleRemoveLineFromFile(event: IpcMainEvent, lineNumber: number): void
   }
 }
 
-function handleUpdateTodoObject(event: IpcMainEvent, lineNumber: number, string: string, attributeType: string, attributeValue: string): void {
+function handleUpdateTodoObject(
+  event: IpcMainEvent,
+  lineNumber: number,
+  string: string,
+  attributeType: string,
+  attributeValue: string,
+): void {
   try {
-    const todoObject = createTodoObject(lineNumber, string, attributeType, attributeValue);
+    const todoObject = createTodoObject(
+      lineNumber,
+      string,
+      attributeType,
+      attributeValue,
+    );
     if (lineNumber >= 0) {
       writeSingleTodoToFile(lineNumber, todoObject.string, true);
     }
@@ -242,7 +291,10 @@ function handleSaveToClipboard(event: IpcMainEvent, content: string): void {
   }
 }
 
-function handleRevealInFileManager(event: IpcMainEvent, filePath: string): void {
+function handleRevealInFileManager(
+  event: IpcMainEvent,
+  filePath: string,
+): void {
   try {
     shell.showItemInFolder(path.normalize(filePath));
   } catch (error) {
@@ -252,7 +304,25 @@ function handleRevealInFileManager(event: IpcMainEvent, filePath: string): void 
 
 // ─── Handler registry ────────────────────────────────────────────────────
 
+function handleToggleTodoComplete(
+  event: IpcMainEvent,
+  lineNumber: number,
+  todoString: string,
+  completeState: boolean,
+): void {
+  try {
+    const updatedString = changeCompleteState(todoString, completeState);
+    writeSingleTodoToFile(lineNumber, updatedString, false);
+  } catch (error) {
+    if (error instanceof Error) {
+      HandleError(error);
+      event.reply("responseFromMainProcess", error);
+    }
+  }
+}
+
 export const ipcHandlers: IpcHandlerEntry[] = [
+  { channel: "toggleTodoComplete", handler: handleToggleTodoComplete },
   { channel: "storeGetConfig", handler: handleStoreGetConfig },
   { channel: "storeSetConfig", handler: handleStoreSetConfig },
   { channel: "storeSetFilters", handler: handleStoreSetFilters },

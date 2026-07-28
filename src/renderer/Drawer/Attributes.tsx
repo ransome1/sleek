@@ -18,7 +18,7 @@ import {
   handleLinkClick,
 } from "../Shared";
 import { useTranslation } from "react-i18next";
-import { useAttributeContextMenu } from "../hooks/useAttributeContextMenu";
+import { useAttributeContextMenu } from "../Shared/useAttributeContextMenu";
 import "./Attributes.scss";
 import {
   AttributeGroup,
@@ -27,7 +27,6 @@ import {
   AttributeKey,
   SettingStore,
   ContextMenu,
-  ContextMenuItem,
   PromptItem,
 } from "@sleek-types";
 import { i18n } from "../Settings/LanguageSelector";
@@ -140,7 +139,11 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> =
       store.setConfig("accordionOpenState", updated);
     };
 
-  const { handleContextMenu } = useAttributeContextMenu({ setContextMenu, setPromptItem, settings });
+    const { handleContextMenu } = useAttributeContextMenu({
+      setContextMenu,
+      setPromptItem,
+      settings,
+    });
 
     const renderFilterChips = (
       categoryKey: AttributeKey,
@@ -165,7 +168,9 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> =
               data-todotxt-value={bucketName}
               onMouseEnter={() => setHovered(chipId)}
               onMouseLeave={() => setHovered(null)}
-              onContextMenu={(event) => handleContextMenu(event, bucketName, categoryKey)}
+              onContextMenu={(event) =>
+                handleContextMenu(event, bucketName, categoryKey)
+              }
               className={`filter ${selected ? "selected" : ""} ${excluded ? "excluded" : ""}`}
             >
               <Badge
