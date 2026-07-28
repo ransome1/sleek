@@ -6,7 +6,7 @@ import {
   NotificationsStore,
   ColorsStore,
 } from "./Stores";
-import { dataRequest } from "./DataRequest/DataRequest";
+import { dataRequest, searchString } from "./DataRequest/DataRequest";
 import { createTodoObject } from "./DataRequest/CreateTodoObjects";
 import { writeSingleTodoToFile, removeLineFromFile } from "./File/Write";
 import { archiveTodos, checkArchiveReadiness } from "./File/Archive";
@@ -188,6 +188,11 @@ function handleDataRequest(event: IpcMainEvent, searchString: string): void {
   }
 }
 
+function refreshRequestedData(event: IpcMainEvent): void {
+  const requestedData = dataRequest(searchString);
+  event.reply("requestData", requestedData);
+}
+
 function handleWriteTodoToFile(
   event: IpcMainEvent,
   lineNumber: number,
@@ -196,6 +201,7 @@ function handleWriteTodoToFile(
 ): void {
   try {
     writeSingleTodoToFile(lineNumber, content, isEditMode);
+    refreshRequestedData(event);
   } catch (error) {
     if (error instanceof Error) {
       HandleError(error);
@@ -210,6 +216,7 @@ function handleRemoveLineFromFile(
 ): void {
   try {
     removeLineFromFile(lineNumber);
+    refreshRequestedData(event);
   } catch (error) {
     if (error instanceof Error) {
       HandleError(error);
@@ -235,6 +242,7 @@ function handleUpdateTodoObject(
     );
     if (lineNumber >= 0 && shouldWrite) {
       writeSingleTodoToFile(lineNumber, todoObject.string, true);
+      refreshRequestedData(event);
     }
     event.reply("updateTodoObject", todoObject);
   } catch (error) {
@@ -250,6 +258,7 @@ function handleUpdateTodoObject(
 function handleArchiveTodos(event: IpcMainEvent): void {
   try {
     const result = archiveTodos();
+    refreshRequestedData(event);
     event.reply("responseFromMainProcess", result);
   } catch (error) {
     if (error instanceof Error) {
@@ -311,6 +320,7 @@ function handleToggleTodoComplete(
   try {
     const updatedString = changeCompleteState(todoString, completeState);
     writeSingleTodoToFile(lineNumber, updatedString, false);
+    refreshRequestedData(event);
   } catch (error) {
     if (error instanceof Error) {
       HandleError(error);
