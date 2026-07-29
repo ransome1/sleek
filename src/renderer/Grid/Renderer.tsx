@@ -1,5 +1,4 @@
 import React, { JSX, memo } from "react";
-import reactStringReplace from "react-string-replace";
 import ReactMarkdown, { Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Chip from "@mui/material/Chip";
@@ -134,7 +133,7 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
 
       hidden: () => null as React.ReactNode,
 
-      url: (value, _type) => (
+      url: (value) => (
         <a
           href={value}
           onClick={(event) => handleLinkClick(event, value)}
@@ -154,7 +153,6 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
         const mappedChildren = React.Children.map(children, (child) => {
           if (typeof child !== "string") return child;
           let modifiedChild: React.ReactNode = child;
-          let index = 0;
           // Step 1: Find all matches with their positions
           const allMatches: Array<{
             start: number;

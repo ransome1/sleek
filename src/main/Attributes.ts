@@ -17,6 +17,7 @@
 
 import { AttributeGroup, Attributes, TodoObject } from "@sleek-types";
 import { Sorting } from "../@types/Settings";
+import { parseRecurrenceSortKey } from "./DataRequest/Sort";
 
 let attributes: Attributes = {
   customProtocol: {},
@@ -97,11 +98,24 @@ function tallyAttribute(
   }
 }
 
-// Sorts a group's entries alphabetically by key so the sidebar renders
-// attribute values in a consistent order.
-function sortGroupKeys(group: AttributeGroup): AttributeGroup {
+// Sorts a group's entries by key so the sidebar renders attribute values
+// in a consistent order. For most attributes, this is alphabetical.
+// For recurrence (rec), this uses semantic duration ordering (daily < weekly < monthly).
+function sortGroupKeys(
+  group: AttributeGroup,
+  attributeName: string,
+): AttributeGroup {
   return Object.fromEntries(
-    Object.entries(group).sort(([a], [b]) => a.localeCompare(b)),
+    Object.entries(group).sort(([a], [b]) => {
+      // Special handling for recurrence: sort by semantic frequency
+      if (attributeName === "rec") {
+        const keyA = parseRecurrenceSortKey(a);
+        const keyB = parseRecurrenceSortKey(b);
+        return keyA - keyB;
+      }
+      // Default: alphabetical sort
+      return a.localeCompare(b);
+    }),
   );
 }
 
@@ -121,7 +135,10 @@ function updateAttributes(
   for (const attributeName of Object.keys(attributes)) {
     resetGroup(attributes[attributeName], reset);
     tallyAttribute(attributes[attributeName], attributeName, todoObjects);
-    attributes[attributeName] = sortGroupKeys(attributes[attributeName]);
+    attributes[attributeName] = sortGroupKeys(
+      attributes[attributeName],
+      attributeName,
+    );
   }
 
   // Reorder attribute categories to match the user-defined sort order.

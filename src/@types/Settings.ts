@@ -2,8 +2,8 @@ import { ChokidarOptions } from "chokidar";
 import { File } from ".";
 
 export interface Sorting {
-  key: string;
-  direction: "asc" | "desc";
+  value: string;
+  invert: boolean;
 }
 
 export interface SettingStore {

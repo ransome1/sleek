@@ -3,14 +3,7 @@ import { DateTime } from "luxon";
 import { writeSingleTodoToFile } from "../File/Write";
 import { lineBreakPlaceholder } from "../Shared";
 import { SettingsStore } from "../Stores";
-
-enum RecurrenceInterval {
-  Daily = "d",
-  BusinessDays = "b",
-  Weekly = "w",
-  Monthly = "m",
-  Annually = "y",
-}
+import { RecurrenceInterval } from "./RecurrenceInterval";
 
 const addBusinessDays = (date: Date, days: number): Date => {
   let result = new Date(date);
