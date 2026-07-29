@@ -45,6 +45,11 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
         { pattern: /\bh:1\b/, type: "hidden", key: "h:1" },
         { pattern: /\bpm:(\d+)/, type: "pm", key: "pm:" },
         { pattern: /\brec:([^ ]+)/, type: "rec", key: "rec:" },
+        {
+          pattern: /([a-zA-Z][a-zA-Z0-9+.-]*:\/\/\S+)/,
+          type: "url",
+          key: "url",
+        },
       ];
 
     const { handleContextMenu } = useAttributeContextMenu({
@@ -128,6 +133,20 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
       ),
 
       hidden: () => null as React.ReactNode,
+
+      url: (value, _type) => (
+        <a
+          href={value}
+          onClick={(event) => handleLinkClick(event, value)}
+          target="_blank"
+          rel="noopener noreferrer"
+          title={value}
+          data-testid={`datagrid-link-url`}
+        >
+          {value.length > 30 ? value.slice(0, 30) + "..." : value}
+          <OpenInNewIcon />
+        </a>
+      ),
     };
 
     const options: Components = {
@@ -136,28 +155,77 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
           if (typeof child !== "string") return child;
           let modifiedChild: React.ReactNode = child;
           let index = 0;
+          // Step 1: Find all matches with their positions
+          const allMatches: Array<{
+            start: number;
+            end: number;
+            type: AttributeKey;
+            value: string;
+            pattern: RegExp;
+          }> = [];
+
           expressions.forEach(({ pattern, type }) => {
-            modifiedChild = reactStringReplace(
-              modifiedChild as string,
-              pattern,
-              (match) => {
-                index++;
-                return (
-                  <span
-                    key={`${type}-${match}-${index}`}
-                    className={
-                      IsSelected(type, filters, [match])
-                        ? "selected filter"
-                        : "filter"
-                    }
-                    data-todotxt-attribute={type}
-                  >
-                    {replacements[type](match, type)}
-                  </span>
-                );
-              },
+            let match;
+            const patternWithGlobal = new RegExp(
+              pattern.source,
+              pattern.flags.includes("g") ? pattern.flags : pattern.flags + "g",
             );
+            while (
+              (match = patternWithGlobal.exec(modifiedChild as string)) !== null
+            ) {
+              // Use capture group (match[1]) if it exists, otherwise use full match (match[0])
+              const captureGroup = match[1] !== undefined ? match[1] : match[0];
+              allMatches.push({
+                start: match.index,
+                end: match.index + match[0].length,
+                type,
+                value: captureGroup,
+                pattern,
+              });
+            }
           });
+
+          // Step 2: Sort by position
+          allMatches.sort((a, b) => a.start - b.start);
+
+          // Step 3: Build result array with interleaved text and React elements
+          const result: React.ReactNode[] = [];
+          let lastEnd = 0;
+          let elementIndex = 0;
+
+          allMatches.forEach((matchInfo) => {
+            // Add text before the match
+            if (matchInfo.start > lastEnd) {
+              result.push(
+                (modifiedChild as string).substring(lastEnd, matchInfo.start),
+              );
+            }
+
+            // Add the match as a React element
+            elementIndex++;
+            result.push(
+              <span
+                key={`${matchInfo.type}-${matchInfo.value}-${elementIndex}`}
+                className={
+                  IsSelected(matchInfo.type, filters, [matchInfo.value])
+                    ? "selected filter"
+                    : "filter"
+                }
+                data-todotxt-attribute={matchInfo.type}
+              >
+                {replacements[matchInfo.type](matchInfo.value, matchInfo.type)}
+              </span>,
+            );
+
+            lastEnd = matchInfo.end;
+          });
+
+          // Add any remaining text after the last match
+          if (lastEnd < (modifiedChild as string).length) {
+            result.push((modifiedChild as string).substring(lastEnd));
+          }
+
+          modifiedChild = result;
           return modifiedChild;
         });
         return mappedChildren ? <>{mappedChildren}</> : null;
@@ -217,7 +285,7 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
 
     return (
       <ReactMarkdown remarkPlugins={[remarkGfm]} components={options}>
-        {preprocessBody(todoObject.body)}
+        {preprocessBody(todoObject.string)}
       </ReactMarkdown>
     );
   },

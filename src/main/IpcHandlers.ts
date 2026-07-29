@@ -329,7 +329,10 @@ export const ipcHandlers: IpcHandlerEntry[] = [
   { channel: "storeSetFilters", handler: handleStoreSetFilters },
   { channel: "storeGetFilters", handler: handleStoreGetFilters },
   { channel: "storeGetColors", handler: handleStoreGetColors },
-  { channel: "storeSetNotifiedTodoObjects", handler: handleStoreSetNotifiedTodoObjects },
+  {
+    channel: "storeSetNotifiedTodoObjects",
+    handler: handleStoreSetNotifiedTodoObjects,
+  },
   { channel: "setFile", handler: handleSetFile },
   { channel: "removeFile", handler: handleRemoveFile },
   { channel: "openFile", handler: handleOpenFile },
