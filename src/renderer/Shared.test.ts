@@ -115,8 +115,12 @@ describe("friendlyDate", () => {
 
   describe("Next month", () => {
     it("should return 'Next month' for dates in the following month", () => {
-      const dateInNextMonth = getRelativeDate(35); // ~35 days away will likely be in next month
+      // Calculate days until end of current month, then add a few days into next month
       const now = DateTime.now().startOf("day");
+      const daysUntilEndOfMonth = now.endOf("month").diff(now, "days").days;
+      const dateInNextMonth = getRelativeDate(
+        Math.ceil(daysUntilEndOfMonth) + 2,
+      );
       const dateObj = DateTime.fromISO(dateInNextMonth);
 
       // Only test if the date is actually in a different month

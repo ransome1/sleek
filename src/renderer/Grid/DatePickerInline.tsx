@@ -52,6 +52,7 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
         todoObject.string,
         type,
         date ? date.toFormat("yyyy-MM-dd") : null,
+        true, // Write immediately for inline pickers
       );
     } catch (error) {
       console.error(error);

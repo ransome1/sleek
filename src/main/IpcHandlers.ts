@@ -224,6 +224,7 @@ function handleUpdateTodoObject(
   string: string,
   attributeType: string,
   attributeValue: string,
+  shouldWrite: boolean = true,
 ): void {
   try {
     const todoObject = createTodoObject(
@@ -232,7 +233,7 @@ function handleUpdateTodoObject(
       attributeType,
       attributeValue,
     );
-    if (lineNumber >= 0) {
+    if (lineNumber >= 0 && shouldWrite) {
       writeSingleTodoToFile(lineNumber, todoObject.string, true);
     }
     event.reply("updateTodoObject", todoObject);
@@ -328,10 +329,7 @@ export const ipcHandlers: IpcHandlerEntry[] = [
   { channel: "storeSetFilters", handler: handleStoreSetFilters },
   { channel: "storeGetFilters", handler: handleStoreGetFilters },
   { channel: "storeGetColors", handler: handleStoreGetColors },
-  {
-    channel: "storeSetNotifiedTodoObjects",
-    handler: handleStoreSetNotifiedTodoObjects,
-  },
+  { channel: "storeSetNotifiedTodoObjects", handler: handleStoreSetNotifiedTodoObjects },
   { channel: "setFile", handler: handleSetFile },
   { channel: "removeFile", handler: handleRemoveFile },
   { channel: "openFile", handler: handleOpenFile },
