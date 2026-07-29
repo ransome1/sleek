@@ -36,7 +36,6 @@ interface RecurrencePickerComponentProps {
 const RecurrencePickerComponent: React.FC<RecurrencePickerComponentProps> = ({
   recurrence,
   handleChange,
-  open,
   anchorEl: externalAnchorEl,
   onClose,
 }) => {

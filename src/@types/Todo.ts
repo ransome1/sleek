@@ -51,9 +51,7 @@ export type AttributeKey =
   | "pm"
   | "hidden"
   | "created"
-  | "completed"
-  | "url"
-  | "custom-tag";
+  | "completed";
 
 export interface AttributeGroup {
   [key: string]: AttributeEntry;
@@ -63,7 +61,7 @@ export interface AttributeEntry {
   count: number;
   notify: boolean;
   hide: boolean;
-  value?: string[];
+  value: string[];
 }
 
 export interface File {

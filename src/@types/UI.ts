@@ -26,3 +26,7 @@ export interface ContextMenu {
   event: React.MouseEvent;
   items: ContextMenuItem[];
 }
+
+export interface Badge {
+  count: number;
+}

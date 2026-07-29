@@ -18,7 +18,7 @@ import path from "path";
 
 interface IpcHandlerEntry {
   channel: string;
-  handler: (event: IpcMainEvent, ...args: unknown[]) => void;
+  handler: Parameters<typeof ipcMain.on>[1];
 }
 
 // ─── Store handlers ──────────────────────────────────────────────────────────
@@ -37,7 +37,7 @@ function handleStoreGetConfig(event: IpcMainEvent, key?: string): void {
 }
 
 function handleStoreSetConfig(
-  event: IpcMainEvent,
+  _: IpcMainEvent,
   key: string,
   value: unknown,
 ): void {
@@ -49,7 +49,7 @@ function handleStoreSetConfig(
 }
 
 function handleStoreSetFilters(
-  event: IpcMainEvent,
+  _: IpcMainEvent,
   key: string,
   value: unknown,
 ): void {
@@ -79,7 +79,7 @@ function handleStoreGetColors(event: IpcMainEvent, key: string): void {
 }
 
 function handleStoreSetNotifiedTodoObjects(
-  event: IpcMainEvent,
+  _: IpcMainEvent,
   value: unknown,
 ): void {
   try {
@@ -272,7 +272,7 @@ function handleRequestArchive(event: IpcMainEvent): void {
 
 // ─── System handlers ─────────────────────────────────────────────────────
 
-function handleOpenInBrowser(event: IpcMainEvent, url: string): void {
+function handleOpenInBrowser(_: IpcMainEvent, url: string): void {
   try {
     shell.openExternal(url);
   } catch (error) {
@@ -292,10 +292,7 @@ function handleSaveToClipboard(event: IpcMainEvent, content: string): void {
   }
 }
 
-function handleRevealInFileManager(
-  event: IpcMainEvent,
-  filePath: string,
-): void {
+function handleRevealInFileManager(_: IpcMainEvent, filePath: string): void {
   try {
     shell.showItemInFolder(path.normalize(filePath));
   } catch (error) {
@@ -325,100 +322,99 @@ function handleToggleTodoComplete(
 export const ipcHandlers: IpcHandlerEntry[] = [
   {
     channel: "toggleTodoComplete",
-    handler: (event, ...args) => handleToggleTodoComplete(event, ...args),
+    handler: handleToggleTodoComplete,
   },
   {
     channel: "storeGetConfig",
-    handler: (event, ...args) => handleStoreGetConfig(event, ...args),
+    handler: handleStoreGetConfig,
   },
   {
     channel: "storeSetConfig",
-    handler: (event, ...args) => handleStoreSetConfig(event, ...args),
+    handler: handleStoreSetConfig,
   },
   {
     channel: "storeSetFilters",
-    handler: (event, ...args) => handleStoreSetFilters(event, ...args),
+    handler: handleStoreSetFilters,
   },
   {
     channel: "storeGetFilters",
-    handler: (event, ...args) => handleStoreGetFilters(event, ...args),
+    handler: handleStoreGetFilters,
   },
   {
     channel: "storeGetColors",
-    handler: (event, ...args) => handleStoreGetColors(event, ...args),
+    handler: handleStoreGetColors,
   },
   {
     channel: "storeSetNotifiedTodoObjects",
-    handler: (event, ...args) =>
-      handleStoreSetNotifiedTodoObjects(event, ...args),
+    handler: handleStoreSetNotifiedTodoObjects,
   },
   {
     channel: "setFile",
-    handler: (event, ...args) => handleSetFile(event, ...args),
+    handler: handleSetFile,
   },
   {
     channel: "removeFile",
-    handler: (event, ...args) => handleRemoveFile(event, ...args),
+    handler: handleRemoveFile,
   },
   {
     channel: "openFile",
-    handler: (event, ...args) => handleOpenFile(event, ...args),
+    handler: handleOpenFile,
   },
   {
     channel: "createFile",
-    handler: (event, ...args) => handleCreateFile(event, ...args),
+    handler: handleCreateFile,
   },
   {
     channel: "updateAttributeFields",
-    handler: (event, ...args) => handleUpdateAttributeFields(event, ...args),
+    handler: handleUpdateAttributeFields,
   },
   {
     channel: "openInBrowser",
-    handler: (event, ...args) => handleOpenInBrowser(event, ...args),
+    handler: handleOpenInBrowser,
   },
   {
     channel: "requestData",
-    handler: (event, ...args) => handleDataRequest(event, ...args),
+    handler: handleDataRequest,
   },
   {
     channel: "writeSingleTodoToFile",
-    handler: (event, ...args) => handleWriteTodoToFile(event, ...args),
+    handler: handleWriteTodoToFile,
   },
   {
     channel: "archiveTodos",
-    handler: (event, ...args) => handleArchiveTodos(event, ...args),
+    handler: handleArchiveTodos,
   },
   {
     channel: "requestArchive",
-    handler: (event, ...args) => handleRequestArchive(event, ...args),
+    handler: handleRequestArchive,
   },
   {
     channel: "addFile",
-    handler: (event, ...args) => handleAddFile(event, ...args),
+    handler: handleAddFile,
   },
   {
     channel: "saveToClipboard",
-    handler: (event, ...args) => handleSaveToClipboard(event, ...args),
+    handler: handleSaveToClipboard,
   },
   {
     channel: "revealInFileManager",
-    handler: (event, ...args) => handleRevealInFileManager(event, ...args),
+    handler: handleRevealInFileManager,
   },
   {
     channel: "removeLineFromFile",
-    handler: (event, ...args) => handleRemoveLineFromFile(event, ...args),
+    handler: handleRemoveLineFromFile,
   },
   {
     channel: "updateTodoObject",
-    handler: (event, ...args) => handleUpdateTodoObject(event, ...args),
+    handler: handleUpdateTodoObject,
   },
   {
     channel: "renameFilterValue",
-    handler: (event, ...args) => handleRenameFilterValue(event, ...args),
+    handler: handleRenameFilterValue,
   },
   {
     channel: "deleteFilterValue",
-    handler: (event, ...args) => handleDeleteFilterValue(event, ...args),
+    handler: handleDeleteFilterValue,
   },
 ];
 

@@ -52,6 +52,7 @@ function incrementCount(
     count: hidden ? previous : previous + 1,
     notify,
     hide,
+    value: [],
   };
 }
 

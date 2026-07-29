@@ -84,6 +84,7 @@ export interface ColorPalette {
     due: { light: AttributeColor; dark: AttributeColor };
     t: { light: AttributeColor; dark: AttributeColor };
     "custom-tag": { light: AttributeColor; dark: AttributeColor };
+    generic: { light: AttributeColor; dark: AttributeColor };
   };
   navigation: {
     logo: {

@@ -1,8 +1,8 @@
 import { ChokidarOptions } from "chokidar";
-import { File } from ".";
+import { AttributeKey, File } from ".";
 
 export interface Sorting {
-  value: string;
+  value: AttributeKey;
   invert: boolean;
 }
 

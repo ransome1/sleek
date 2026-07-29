@@ -18,7 +18,9 @@ export interface Filters {
 }
 
 export interface HeadersObject {
-  [key: string]: string | number;
+  availableObjects: number;
+  completedObjects: number;
+  visibleObjects: number;
 }
 
 export interface RequestedData {

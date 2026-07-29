@@ -1,19 +1,6 @@
 import React from "react";
 import { IpcRenderer } from "electron";
-import { AttributeKey } from "@sleek-types";
-
-type ContextMenuItem = {
-  id: string;
-  label: string;
-  function?: () => void;
-  promptItem?: {
-    id: string;
-    headline: string;
-    text: string;
-    button1: string;
-    onButton1: () => void;
-  };
-};
+import { AttributeKey, ContextMenuItem, PromptItem } from "@sleek-types";
 
 type ContextMenuProps = {
   event: React.MouseEvent;
@@ -22,7 +9,7 @@ type ContextMenuProps = {
 
 type UseRowContextMenuProps = {
   setContextMenu: (menu: ContextMenuProps) => void;
-  setPromptItem: (item: ContextMenuItem["promptItem"]) => void;
+  setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
   t: (key: string) => string;
   ipcRenderer: IpcRenderer;
 };
@@ -53,7 +40,6 @@ export const useRowContextMenu = (
     event: React.MouseEvent,
     todoString: string,
     lineNumber: number,
-    attributeType?: AttributeKey,
   ): void => {
     // Check if the right-click target is an attribute button
     const target = event.target as HTMLElement;
@@ -65,17 +51,6 @@ export const useRowContextMenu = (
     if (isAttributeButton) {
       return;
     }
-
-    // Date and recurrence attributes in grid should only show delete (no rename)
-    const disableRenameForAttributes = [
-      "due",
-      "t",
-      "created",
-      "completed",
-      "rec",
-    ];
-    const shouldDisableRename =
-      attributeType && disableRenameForAttributes.includes(attributeType);
 
     const items: ContextMenuItem[] = [
       {

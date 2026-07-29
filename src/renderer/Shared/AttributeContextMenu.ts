@@ -12,8 +12,20 @@ export function createAttributeContextMenuItems(
     ? value.replace(/^[@+]/, "")
     : value;
 
-  return [
-    {
+  // Date and recurrence attributes in grid should only show delete (no rename)
+  const disableRenameForAttributes = [
+    "due",
+    "t",
+    "created",
+    "completed",
+    "rec",
+  ];
+  const shouldDisableRename =
+    attributeKey && disableRenameForAttributes.includes(attributeKey);
+
+  const items: ContextMenuItem[] = [];
+  if (!shouldDisableRename) {
+    items.push({
       id: "rename",
       label: t("drawer.attributes.rename.button"),
       promptItem: {
@@ -47,26 +59,29 @@ export function createAttributeContextMenuItems(
           }
         },
       },
-    },
-    {
-      id: "delete",
-      label: t("remove"),
-      promptItem: {
-        headline: t("drawer.attributes.remove.headline"),
-        text:
-          t("drawer.attributes.remove.description") +
-          " <code>" +
-          value +
-          "</code>",
-        button1: t("remove"),
-        onButton1: () => {
-          // Send value as-is, including + prefix for recurrence
-          window.api.deleteFilterValue({
-            attrType: attributeKey,
-            valueToDelete: value,
-          });
-        },
+    });
+  }
+
+  items.push({
+    id: "delete",
+    label: t("remove"),
+    promptItem: {
+      headline: t("drawer.attributes.remove.headline"),
+      text:
+        t("drawer.attributes.remove.description") +
+        " <code>" +
+        value +
+        "</code>",
+      button1: t("remove"),
+      onButton1: () => {
+        // Send value as-is, including + prefix for recurrence
+        window.api.deleteFilterValue({
+          attrType: attributeKey,
+          valueToDelete: value,
+        });
       },
     },
-  ];
+  });
+
+  return items;
 }

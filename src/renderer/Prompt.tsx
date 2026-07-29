@@ -28,7 +28,7 @@ const PromptComponent: React.FC<PromptComponentProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const onClick = (
-    e: React.MouseEvent<HTMLButtonElement>,
+    _: React.MouseEvent<HTMLButtonElement>,
     handler?: (inputValue?: string) => void,
   ): void => {
     if (handler) {

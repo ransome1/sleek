@@ -18,7 +18,10 @@ i18n
       store.setConfig("language", navigator.language.toLowerCase().slice(0, 2));
     }
     i18n.on("missingKey", (key: string) => {
-      if (!i18n.options.supportedLngs?.includes(key)) {
+      if (
+        typeof i18n.options.supportedLngs != "boolean" &&
+        !i18n.options.supportedLngs?.includes(key)
+      ) {
         console.warn(`Missing translation key: ${key}`);
       }
     });

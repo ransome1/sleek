@@ -22,42 +22,47 @@ interface RendererComponentProps {
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
 }
 
+type ReplacementsKey = AttributeKey | "url" | "custom-tag";
+
 const RendererComponent: React.FC<RendererComponentProps> = memo(
   ({ todoObject, filters, settings, setContextMenu, setPromptItem }) => {
-    const expressions: { pattern: RegExp; type: AttributeKey; key: string }[] =
-      [
-        {
-          pattern: new RegExp(
-            `t:${todoObject.tString?.replace(/\s/g, "\\s")}`,
-            "g",
-          ),
-          type: "t",
-          key: "t:",
-        },
-        {
-          pattern: new RegExp(
-            `due:${todoObject.dueString?.replace(/\s/g, "\\s")}`,
-            "g",
-          ),
-          type: "due",
-          key: "due:",
-        },
-        { pattern: /@(\S+)/, type: "contexts", key: "@" },
-        { pattern: /(?:^|\s)\+(\S+)/, type: "projects", key: "+" },
-        { pattern: /\bh:1\b/, type: "hidden", key: "h:1" },
-        { pattern: /\bpm:(\d+)/, type: "pm", key: "pm:" },
-        { pattern: /\brec:([^ ]+)/, type: "rec", key: "rec:" },
-        {
-          pattern: /([a-zA-Z][a-zA-Z0-9+.-]*:\/\/\S+)/,
-          type: "url",
-          key: "url",
-        },
-        {
-          pattern: /\b(?!(?:due|t|pm|rec|h|pri):)\w+:[^\s)]+/,
-          type: "custom-tag",
-          key: "custom-tag",
-        },
-      ];
+    const expressions: {
+      pattern: RegExp;
+      type: ReplacementsKey;
+      key: string;
+    }[] = [
+      {
+        pattern: new RegExp(
+          `t:${todoObject.tString?.replace(/\s/g, "\\s")}`,
+          "g",
+        ),
+        type: "t",
+        key: "t:",
+      },
+      {
+        pattern: new RegExp(
+          `due:${todoObject.dueString?.replace(/\s/g, "\\s")}`,
+          "g",
+        ),
+        type: "due",
+        key: "due:",
+      },
+      { pattern: /@(\S+)/, type: "contexts", key: "@" },
+      { pattern: /(?:^|\s)\+(\S+)/, type: "projects", key: "+" },
+      { pattern: /\bh:1\b/, type: "hidden", key: "h:1" },
+      { pattern: /\bpm:(\d+)/, type: "pm", key: "pm:" },
+      { pattern: /\brec:([^ ]+)/, type: "rec", key: "rec:" },
+      {
+        pattern: /([a-zA-Z][a-zA-Z0-9+.-]*:\/\/\S+)/,
+        type: "url",
+        key: "url",
+      },
+      {
+        pattern: /\b(?!(?:due|t|pm|rec|h|pri):)\w+:[^\s)]+/,
+        type: "custom-tag",
+        key: "custom-tag",
+      },
+    ];
 
     const { handleContextMenu } = useAttributeContextMenu({
       setContextMenu,
@@ -65,38 +70,48 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
     });
 
     const replacements: {
-      [key: string]: (value: string, type: AttributeKey) => React.ReactNode;
+      [key: string]: (value: string, type: ReplacementsKey) => React.ReactNode;
     } = {
       due: (_, type) => (
         <DatePickerInline
-          type={type}
+          type={type as AttributeKey}
           todoObject={todoObject}
           date={todoObject.due}
           filters={filters}
           settings={settings}
           onContextMenu={(e) =>
-            todoObject.due && handleContextMenu(e, todoObject.due, type)
+            todoObject.due &&
+            handleContextMenu(e, todoObject.due, type as AttributeKey)
           }
         />
       ),
       t: (_, type) => (
         <DatePickerInline
-          type={type}
+          type={type as AttributeKey}
           todoObject={todoObject}
           date={todoObject.t}
           filters={filters}
           settings={settings}
           onContextMenu={(e) =>
-            todoObject.t && handleContextMenu(e, todoObject.t, type)
+            todoObject.t &&
+            handleContextMenu(e, todoObject.t, type as AttributeKey)
           }
         />
       ),
       contexts: (value, type) => (
         <button
           onClick={() =>
-            HandleFilterSelect(type, [value], filters, false, null)
+            HandleFilterSelect(
+              type as AttributeKey,
+              [value],
+              filters,
+              false,
+              null,
+            )
           }
-          onContextMenu={(e) => handleContextMenu(e, value, type)}
+          onContextMenu={(e) =>
+            handleContextMenu(e, value, type as AttributeKey)
+          }
           data-testid={`datagrid-button-${type}`}
         >
           {value}
@@ -105,9 +120,17 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
       projects: (value, type) => (
         <button
           onClick={() =>
-            HandleFilterSelect(type, [value], filters, false, null)
+            HandleFilterSelect(
+              type as AttributeKey,
+              [value],
+              filters,
+              false,
+              null,
+            )
           }
-          onContextMenu={(e) => handleContextMenu(e, value, type)}
+          onContextMenu={(e) =>
+            handleContextMenu(e, value, type as AttributeKey)
+          }
           data-testid={`datagrid-button-${type}`}
         >
           {value}
@@ -117,7 +140,7 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
         const [recOpen, setRecOpen] = React.useState(false);
         const triggerRef = React.useRef<HTMLDivElement>(null);
 
-        const handleRecChange = (key: string, newValue: string) => {
+        const handleRecChange = (_: string, newValue: string) => {
           ipcRenderer.send(
             "updateTodoObject",
             todoObject.lineNumber,
@@ -132,9 +155,17 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
           <>
             <button
               onClick={() =>
-                HandleFilterSelect(type, [value], filters, false, null)
+                HandleFilterSelect(
+                  type as AttributeKey,
+                  [value],
+                  filters,
+                  false,
+                  null,
+                )
               }
-              onContextMenu={(e) => handleContextMenu(e, value, type)}
+              onContextMenu={(e) =>
+                handleContextMenu(e, value, type as AttributeKey)
+              }
               data-testid={`datagrid-button-${type}`}
             >
               <Chip label="rec:" />
@@ -164,9 +195,17 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
         <button
           className="pomodoro"
           onClick={() =>
-            HandleFilterSelect(type, [value], filters, false, null)
+            HandleFilterSelect(
+              type as AttributeKey,
+              [value],
+              filters,
+              false,
+              null,
+            )
           }
-          onContextMenu={(e) => handleContextMenu(e, value, type)}
+          onContextMenu={(e) =>
+            handleContextMenu(e, value, type as AttributeKey)
+          }
           data-testid={`datagrid-button-${type}`}
         >
           <img src={PomodoroIcon} alt="Pomodoro" />
@@ -202,7 +241,7 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
           const allMatches: Array<{
             start: number;
             end: number;
-            type: AttributeKey;
+            type: ReplacementsKey;
             value: string;
             pattern: RegExp;
           }> = [];
@@ -280,19 +319,15 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
         });
         return mappedChildren ? <>{mappedChildren}</> : null;
       },
-      a: ({
-        children,
-        href: hrefFromDestructure,
-        ...props
-      }): JSX.Element | null => {
+      a: (props: JSX.IntrinsicElements["a"]): JSX.Element | null => {
+        const { children, href: hrefFromDestructure, ...restProps } = props;
         if (!children) return null;
         const childrenStr =
           typeof children === "string" ? children : String(children);
 
-        // Use href from destructure first, then from props, then fall back
+        // Use href from destructure first, then fall back
         // Treat empty strings as missing - trim whitespace and use if available
-        const href =
-          hrefFromDestructure?.trim() || props.href?.trim() || childrenStr;
+        const href = hrefFromDestructure?.trim() || childrenStr;
 
         const match = /([a-zA-Z]+:\/\/\S+)/g.exec(childrenStr);
         const maxChars = 40;
@@ -303,7 +338,7 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
 
         const link = (
           <a
-            {...props}
+            {...restProps}
             href={href}
             onClick={(event) =>
               handleLinkClick(event, match ? childrenStr : href || childrenStr)
