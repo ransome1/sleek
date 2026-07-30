@@ -9,7 +9,7 @@
   "fileTabs.revealArchivingFile": "Показать архивный файл в файловом менеджере",
   "fileTabs.removeFileHeadline": "Удалить файл из sleek?",
   "fileTabs.removeFileText": "Он не будет удален с вашего жесткого диска",
-  "fileTabs.removeFileLabel": "Удалить",
+
   "settings": "Настройки",
   "settings.appendCreationDate": "Добавить дату создания при создании задачи",
   "settings.convertRelativeToAbsoluteDates": "Преобразовать относительные даты в абсолютные",
@@ -54,12 +54,23 @@
   "drawer.attributes.nextMonth": "следующий месяц",
   "drawer.attributes.overdue": "просроченный",
   "drawer.attributes.elapsed": "прошедший",
-  "drawer.attributes.rename": "Переименовать",
-  "drawer.attributes.delete": "Удалить",
-  "drawer.attributes.renameValue": "Переименовать атрибут",
+  "remove": "Удалить",
+  "drawer.attributes.remove": {
+    "headline": "Удалить атрибут",
+    "description": "Удалить атрибут из всех задач:"
+  },
+  "drawer.attributes.rename": {
+    "headline": "Переименовать атрибут",
+    "description": "Новое имя для: Действие затронет все задачи",
+    "button": "Переименовать",
+    "newValue": "Новое значение",
+    "emptyError": "Значение не может быть пустым",
+    "spacesError": "Значение не может содержать пробелы",
+    "sameValueError": "Новое значение совпадает со старым значением"
+  },
   "drawer.attributes.renameDescription": "Новое имя для: Действие затронет все задачи",
-  "drawer.attributes.deleteValue": "Удалить атрибут",
-  "drawer.attributes.deleteDescription": "Затронутые задачи: Действие затронет все задачи",
+  "remove": "Удалить",
+  "drawer.attributes.deleteDescription": "Удалить атрибут из всех задач:",
   "drawer.attributes.newValue": "Новое значение",
   "drawer.attributes.emptyError": "Значение не может быть пустым",
   "drawer.attributes.spacesError": "Значение не может содержать пробелы",

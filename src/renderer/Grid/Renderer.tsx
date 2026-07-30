@@ -5,11 +5,14 @@ import Chip from "@mui/material/Chip";
 
 import PomodoroIcon from "../../../resources/pomodoro.svg?asset";
 import DatePickerInline from "./DatePickerInline";
+import RecurrencePicker from "../Picker/RecurrencePicker";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { handleLinkClick, HandleFilterSelect, IsSelected } from "../Shared";
 import { TodoObject, Filters, SettingStore, AttributeKey } from "@sleek-types";
 import { ContextMenu, PromptItem } from "@sleek-types";
 import { useAttributeContextMenu } from "../Shared/useAttributeContextMenu";
+
+const { ipcRenderer } = window.api;
 
 interface RendererComponentProps {
   todoObject: TodoObject;
@@ -105,18 +108,53 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
           {value}
         </button>
       ),
-      rec: (value, type) => (
-        <button
-          onClick={() =>
-            HandleFilterSelect(type, [value], filters, false, null)
-          }
-          onContextMenu={(e) => handleContextMenu(e, value, type)}
-          data-testid={`datagrid-button-${type}`}
-        >
-          <Chip label="rec:" />
-          <div>{value}</div>
-        </button>
-      ),
+      rec: (value, type) => {
+        const [recOpen, setRecOpen] = React.useState(false);
+        const triggerRef = React.useRef<HTMLDivElement>(null);
+
+        const handleRecChange = (key: string, newValue: string) => {
+          ipcRenderer.send(
+            "updateTodoObject",
+            todoObject.lineNumber,
+            todoObject.string,
+            "rec",
+            newValue,
+            true,
+          );
+        };
+
+        return (
+          <>
+            <button
+              onClick={() =>
+                HandleFilterSelect(type, [value], filters, false, null)
+              }
+              onContextMenu={(e) => handleContextMenu(e, value, type)}
+              data-testid={`datagrid-button-${type}`}
+            >
+              <Chip label="rec:" />
+              <div
+                ref={triggerRef}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setRecOpen(true);
+                }}
+              >
+                {value}
+              </div>
+            </button>
+            {recOpen && (
+              <RecurrencePicker
+                recurrence={value}
+                handleChange={handleRecChange}
+                open={recOpen}
+                anchorEl={triggerRef.current}
+                onClose={() => setRecOpen(false)}
+              />
+            )}
+          </>
+        );
+      },
       pm: (value, type) => (
         <button
           className="pomodoro"
@@ -283,7 +321,7 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
 
     return (
       <ReactMarkdown remarkPlugins={[remarkGfm]} components={options}>
-        {preprocessBody(todoObject.string)}
+        {preprocessBody(todoObject.body)}
       </ReactMarkdown>
     );
   },

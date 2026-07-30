@@ -9,7 +9,7 @@
   "fileTabs.revealArchivingFile": "ファイルマネージャーでアーカイブファイルを表示する",
   "fileTabs.removeFileHeadline": "sleek からファイルを削除しますか？",
   "fileTabs.removeFileText": "ハードディスクからは削除されません。",
-  "fileTabs.removeFileLabel": "削除",
+
   "settings": "設定",
   "settings.appendCreationDate": "タスク作成時に作成日を追加",
   "settings.convertRelativeToAbsoluteDates": "相対日付を絶対日付に変換",
@@ -54,12 +54,23 @@
   "drawer.attributes.nextMonth": "来月",
   "drawer.attributes.overdue": "期限切れ",
   "drawer.attributes.elapsed": "経過",
-  "drawer.attributes.rename": "名前を変更",
-  "drawer.attributes.delete": "削除",
-  "drawer.attributes.renameValue": "属性の名前を変更",
+  "remove": "削除",
+  "drawer.attributes.remove": {
+    "headline": "属性を削除",
+    "description": "すべてのタスクから属性を削除:"
+  },
+  "drawer.attributes.rename": {
+    "headline": "属性の名前を変更",
+    "description": "新しい名前: アクションはすべてのタスクに影響します",
+    "button": "名前を変更",
+    "newValue": "新しい値",
+    "emptyError": "値を空にすることはできません",
+    "spacesError": "値にスペースを含めることはできません",
+    "sameValueError": "新しい値が古い値と同じです"
+  },
   "drawer.attributes.renameDescription": "新しい名前: アクションはすべてのタスクに影響します",
-  "drawer.attributes.deleteValue": "属性を削除",
-  "drawer.attributes.deleteDescription": "影響を受けるタスク: アクションはすべてのタスクに影響します",
+  "remove": "削除",
+  "drawer.attributes.deleteDescription": "すべてのタスクから属性を削除:",
   "drawer.attributes.newValue": "新しい値",
   "drawer.attributes.emptyError": "値を空にすることはできません",
   "drawer.attributes.spacesError": "値にスペースを含めることはできません",

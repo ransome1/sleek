@@ -8,7 +8,7 @@
   "fileTabs.revealArchivingFile": "Archivdatei im Dateimanager anzeigen",
   "fileTabs.removeFileHeadline": "Datei aus sleek entfernen?",
   "fileTabs.removeFileText": "Die Datei wird nicht von Ihrer Festplatte gelöscht",
-  "fileTabs.removeFileLabel": "Entfernen",
+
   "settings": "Einstellungen",
   "settings.appendCreationDate": "Erstellungsdatum hinzufügen, wenn eine Aufgabe erstellt wird",
   "settings.convertRelativeToAbsoluteDates": "Relative Daten in absolute Daten umwandeln",
@@ -53,12 +53,23 @@
   "drawer.attributes.nextMonth": "nächster Monat",
   "drawer.attributes.overdue": "überfällig",
   "drawer.attributes.elapsed": "verstrichen",
-  "drawer.attributes.rename": "Umbenennen",
-  "drawer.attributes.delete": "Löschen",
-  "drawer.attributes.renameValue": "Attribut umbenennen",
-  "drawer.attributes.renameDescription": "Neuer Name für: Die Aktion wirkt sich auf alle Aufgaben aus",
-  "drawer.attributes.deleteValue": "Attribut löschen",
-  "drawer.attributes.deleteDescription": "Betroffene Aufgaben: Die Aktion wirkt sich auf alle Aufgaben aus",
+  "remove": "Entfernen",
+  "drawer.attributes.remove": {
+    "headline": "Attribut entfernen",
+    "description": "Attribut aus allen Aufgaben entfernen:"
+  },
+  "drawer.attributes.rename": {
+    "headline": "Attribut umbenennen",
+    "description": "Neuer Name für:",
+    "button": "Umbenennen",
+    "newValue": "Neuer Wert",
+    "emptyError": "Der Wert darf nicht leer sein",
+    "spacesError": "Der Wert darf keine Leerzeichen enthalten",
+    "sameValueError": "Der neue Wert ist derselbe wie der alte Wert"
+  },
+  "drawer.attributes.renameDescription": "Neuer Name für:",
+  "remove": "Entfernen",
+  "drawer.attributes.deleteDescription": "Attribut aus allen Aufgaben entfernen:",
   "drawer.attributes.newValue": "Neuer Wert",
   "drawer.attributes.emptyError": "Der Wert darf nicht leer sein",
   "drawer.attributes.spacesError": "Der Wert darf keine Leerzeichen enthalten",

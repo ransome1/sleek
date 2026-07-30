@@ -9,7 +9,7 @@
   "fileTabs.revealArchivingFile": "Mostrar arquivo de arquivamento no gerenciador de arquivos",
   "fileTabs.removeFileHeadline": "Remover ficheiro do sleek?",
   "fileTabs.removeFileText": "Não será eliminado do seu disco rígido",
-  "fileTabs.removeFileLabel": "Remover",
+
   "settings": "Definições",
   "settings.appendCreationDate": "Anexar data de criação quando a tarefa é criada",
   "settings.convertRelativeToAbsoluteDates": "Converter datas relativas em datas absolutas",
@@ -54,12 +54,23 @@
   "drawer.attributes.nextMonth": "próximo mês",
   "drawer.attributes.overdue": "atrasado",
   "drawer.attributes.elapsed": "decorrido",
-  "drawer.attributes.rename": "Renomear",
-  "drawer.attributes.delete": "Eliminar",
-  "drawer.attributes.renameValue": "Renomear atributo",
-  "drawer.attributes.renameDescription": "Novo nome para: A ação afetará todas as tarefas",
-  "drawer.attributes.deleteValue": "Eliminar atributo",
-  "drawer.attributes.deleteDescription": "Tarefas afetadas: A ação afetará todas as tarefas",
+  "remove": "Remover",
+  "drawer.attributes.remove": {
+    "headline": "Remover atributo",
+    "description": "Remover atributo de todas as tarefas:"
+  },
+  "drawer.attributes.rename": {
+    "headline": "Renomear atributo",
+    "description": "Novo nome para:",
+    "button": "Renomear",
+    "newValue": "Novo valor",
+    "emptyError": "O valor não pode estar vazio",
+    "spacesError": "O valor não pode conter espaços",
+    "sameValueError": "O novo valor é igual ao valor antigo"
+  },
+  "drawer.attributes.renameDescription": "Novo nome para:",
+  "remove": "Remover",
+  "drawer.attributes.deleteDescription": "Remover atributo de todas as tarefas:",
   "drawer.attributes.newValue": "Novo valor",
   "drawer.attributes.emptyError": "O valor não pode estar vazio",
   "drawer.attributes.spacesError": "O valor não pode conter espaços",

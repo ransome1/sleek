@@ -1,0 +1,319 @@
+import React, { useState, useRef, useEffect } from "react";
+import FormControl from "@mui/material/FormControl";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import Checkbox from "@mui/material/Checkbox";
+import Popover from "@mui/material/Popover";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
+import { useTranslation } from "react-i18next";
+import "./RecurrencePicker.scss";
+
+const getInterval = (recurrence: string | null): string => {
+  if (!recurrence) return "d";
+  const m = recurrence.match(/[a-zA-Z]+/);
+  if (!m) return "d";
+  return m[0];
+};
+const getAmount = (recurrence: string | null): string => {
+  if (!recurrence) return "1";
+  const m = recurrence.match(/\d+/);
+  if (!m) return "";
+  return m[0];
+};
+const getStrictIndicator = (recurrence: string | null): boolean =>
+  !!recurrence?.startsWith("+");
+
+interface RecurrencePickerComponentProps {
+  recurrence: string | null;
+  handleChange: (key: string, value: string) => void;
+  open?: boolean;
+  anchorEl?: HTMLElement | null;
+  onClose?: () => void;
+}
+
+const RecurrencePickerComponent: React.FC<RecurrencePickerComponentProps> = ({
+  recurrence,
+  handleChange,
+  open,
+  anchorEl: externalAnchorEl,
+  onClose,
+}) => {
+  const recurrenceFieldRef = useRef<HTMLInputElement | null>(null);
+  const [internalAnchorEl, setInternalAnchorEl] = useState<HTMLElement | null>(
+    null,
+  );
+  const [strictRecurrence, setStrictRecurrence] = useState<boolean>(false);
+  const [interval, setInterval] = useState<string>("d");
+  const [amount, setAmount] = useState<string>("1");
+
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    setStrictRecurrence(getStrictIndicator(recurrence));
+    setAmount(getAmount(recurrence));
+    setInterval(getInterval(recurrence));
+  }, [recurrence]);
+
+  useEffect(() => {
+    const handleEnterKeyPress = (event: KeyboardEvent): void => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        if (recurrenceFieldRef.current) {
+          recurrenceFieldRef.current.click();
+        }
+      }
+    };
+
+    if (recurrenceFieldRef.current) {
+      recurrenceFieldRef.current.addEventListener(
+        "keydown",
+        handleEnterKeyPress,
+      );
+    }
+
+    return (): void => {
+      if (recurrenceFieldRef.current) {
+        recurrenceFieldRef.current.removeEventListener(
+          "keydown",
+          handleEnterKeyPress,
+        );
+      }
+    };
+  }, [recurrenceFieldRef]);
+
+  return (
+    <>
+      {!externalAnchorEl && (
+        <FormControl>
+          <TextField
+            label={t("todoDialog.recurrencePicker.label")}
+            className="recurrencePicker"
+            onChange={(event) => handleChange("rec", event.target.value ?? "")}
+            value={recurrence || "-"}
+            slotProps={{ htmlInput: { ref: recurrenceFieldRef } }}
+            data-testid="dialog-picker-recurrence"
+            onClick={(event) => {
+              if (!externalAnchorEl) {
+                setInternalAnchorEl(event.currentTarget);
+              }
+            }}
+          />
+        </FormControl>
+      )}
+
+      {externalAnchorEl ? (
+        <ClickAwayListener
+          onClickAway={() => {
+            onClose?.();
+          }}
+        >
+          <Popover
+            id="recurrencePicker"
+            open={Boolean(externalAnchorEl)}
+            anchorEl={externalAnchorEl}
+            onClose={() => {
+              onClose?.();
+            }}
+            disableAutoFocus={true}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "center",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "center",
+            }}
+          >
+            <div onClick={(e) => e.stopPropagation()}>
+              <FormControl>
+                <TextField
+                  autoFocus={true}
+                  label={t("todoDialog.recurrencePicker.every")}
+                  type="number"
+                  onChange={(event) => {
+                    const updatedRecurrence = getStrictIndicator(recurrence)
+                      ? "+" + event.target.value + getInterval(recurrence)
+                      : event.target.value + getInterval(recurrence);
+                    handleChange("rec", updatedRecurrence);
+                  }}
+                  value={amount}
+                  className="recurrencePickerPopupInput"
+                  slotProps={{
+                    htmlInput: {
+                      min: 0,
+                    },
+
+                    inputLabel: {
+                      shrink: true,
+                    },
+                  }}
+                />
+              </FormControl>
+              <FormControl>
+                <RadioGroup
+                  aria-labelledby="recurrencePickerRadioGroup"
+                  value={interval}
+                  onChange={(event) => {
+                    const updatedRecurrence = getStrictIndicator(recurrence)
+                      ? "+" + getAmount(recurrence) + event.target.defaultValue
+                      : getAmount(recurrence) + event.target.defaultValue;
+                    handleChange("rec", updatedRecurrence);
+                  }}
+                >
+                  <FormControlLabel
+                    value="d"
+                    control={<Radio />}
+                    label={t("todoDialog.recurrencePicker.day")}
+                  />
+                  <FormControlLabel
+                    value="b"
+                    control={<Radio />}
+                    label={t("todoDialog.recurrencePicker.businessDay")}
+                  />
+                  <FormControlLabel
+                    value="w"
+                    control={<Radio />}
+                    label={t("todoDialog.recurrencePicker.week")}
+                  />
+                  <FormControlLabel
+                    value="m"
+                    control={<Radio />}
+                    label={t("todoDialog.recurrencePicker.month")}
+                  />
+                  <FormControlLabel
+                    value="y"
+                    control={<Radio />}
+                    label={t("todoDialog.recurrencePicker.year")}
+                  />
+                </RadioGroup>
+              </FormControl>
+              <FormControl>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={strictRecurrence}
+                      onChange={(event) => {
+                        const updatedRecurrence = event.target.checked
+                          ? "+" +
+                            getAmount(recurrence) +
+                            getInterval(recurrence)
+                          : getAmount(recurrence) + getInterval(recurrence);
+                        handleChange("rec", updatedRecurrence);
+                      }}
+                      name="strictRecurrenceCheckbox"
+                    />
+                  }
+                  label={t("todoDialog.recurrencePicker.strict")}
+                />
+              </FormControl>
+            </div>
+          </Popover>
+        </ClickAwayListener>
+      ) : (
+        <Popover
+          id="recurrencePicker"
+          open={Boolean(internalAnchorEl)}
+          anchorEl={internalAnchorEl}
+          onClose={() => {
+            setInternalAnchorEl(null);
+          }}
+          disableAutoFocus={true}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+        >
+          <div onClick={(e) => e.stopPropagation()}>
+            <FormControl>
+              <TextField
+                autoFocus={true}
+                label={t("todoDialog.recurrencePicker.every")}
+                type="number"
+                onChange={(event) => {
+                  const updatedRecurrence = getStrictIndicator(recurrence)
+                    ? "+" + event.target.value + getInterval(recurrence)
+                    : event.target.value + getInterval(recurrence);
+                  handleChange("rec", updatedRecurrence);
+                }}
+                value={amount}
+                className="recurrencePickerPopupInput"
+                slotProps={{
+                  htmlInput: {
+                    min: 0,
+                  },
+
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
+              />
+            </FormControl>
+            <FormControl>
+              <RadioGroup
+                aria-labelledby="recurrencePickerRadioGroup"
+                value={interval}
+                onChange={(event) => {
+                  const updatedRecurrence = getStrictIndicator(recurrence)
+                    ? "+" + getAmount(recurrence) + event.target.defaultValue
+                    : getAmount(recurrence) + event.target.defaultValue;
+                  handleChange("rec", updatedRecurrence);
+                }}
+              >
+                <FormControlLabel
+                  value="d"
+                  control={<Radio />}
+                  label={t("todoDialog.recurrencePicker.day")}
+                />
+                <FormControlLabel
+                  value="b"
+                  control={<Radio />}
+                  label={t("todoDialog.recurrencePicker.businessDay")}
+                />
+                <FormControlLabel
+                  value="w"
+                  control={<Radio />}
+                  label={t("todoDialog.recurrencePicker.week")}
+                />
+                <FormControlLabel
+                  value="m"
+                  control={<Radio />}
+                  label={t("todoDialog.recurrencePicker.month")}
+                />
+                <FormControlLabel
+                  value="y"
+                  control={<Radio />}
+                  label={t("todoDialog.recurrencePicker.year")}
+                />
+              </RadioGroup>
+            </FormControl>
+            <FormControl>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={strictRecurrence}
+                    onChange={(event) => {
+                      const updatedRecurrence = event.target.checked
+                        ? "+" + getAmount(recurrence) + getInterval(recurrence)
+                        : getAmount(recurrence) + getInterval(recurrence);
+                      handleChange("rec", updatedRecurrence);
+                    }}
+                    name="strictRecurrenceCheckbox"
+                  />
+                }
+                label={t("todoDialog.recurrencePicker.strict")}
+              />
+            </FormControl>
+          </div>
+        </Popover>
+      )}
+    </>
+  );
+};
+
+export default RecurrencePickerComponent;

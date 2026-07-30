@@ -8,6 +8,7 @@
     "build/icon.icns",
     "src/preload/electron.d.ts",
     "src/@types/**/*",
+    "src/types/**/*",
     "src/i18n.config.ts"
   ],
   "compilerOptions": {

@@ -9,7 +9,7 @@
   "fileTabs.revealArchivingFile": "Mutassa meg az archiválási fájlt a fájlkezelőben",
   "fileTabs.removeFileHeadline": "Fájl eltávolítása a sleek?",
   "fileTabs.removeFileText": "Nem kerül törlésre a merevlemezről",
-  "fileTabs.removeFileLabel": "Eltávolítás",
+
   "settings": "Beállítások",
   "settings.appendCreationDate": "Létrehozáskor hozzáadja a létrehozás dátumát",
   "settings.convertRelativeToAbsoluteDates": "Relatív dátumok konvertálása abszolút dátumokká",
@@ -54,12 +54,23 @@
   "drawer.attributes.nextMonth": "következő hónap",
   "drawer.attributes.overdue": "késedelmes",
   "drawer.attributes.elapsed": "eltelt",
-  "drawer.attributes.rename": "Átnevezés",
-  "drawer.attributes.delete": "Törlés",
-  "drawer.attributes.renameValue": "Tulajdonság átnevezése",
+  "remove": "Eltávolítás",
+  "drawer.attributes.remove": {
+    "headline": "Attribútum eltávolítása",
+    "description": "Attribútum eltávolítása az összes feladatból:"
+  },
+  "drawer.attributes.rename": {
+    "headline": "Tulajdonság átnevezése",
+    "description": "Új név ehhez: A művelet minden feladatra hatással lesz",
+    "button": "Átnevezés",
+    "newValue": "Új érték",
+    "emptyError": "Az érték nem lehet üres",
+    "spacesError": "Az érték nem tartalmazhat szóközöket",
+    "sameValueError": "Az új érték megegyezik a régi értékkel"
+  },
   "drawer.attributes.renameDescription": "Új név ehhez: A művelet minden feladatra hatással lesz",
-  "drawer.attributes.deleteValue": "Tulajdonság törlése",
-  "drawer.attributes.deleteDescription": "Érintett feladatok: A művelet minden feladatra hatással lesz",
+  "remove": "Eltávolítás",
+  "drawer.attributes.deleteDescription": "Attribútum eltávolítása az összes feladatból:",
   "drawer.attributes.newValue": "Új érték",
   "drawer.attributes.emptyError": "Az érték nem lehet üres",
   "drawer.attributes.spacesError": "Az érték nem tartalmazhat szóközöket",

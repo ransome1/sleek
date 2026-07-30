@@ -9,7 +9,7 @@
   <developer_name>Robin Ahle</developer_name>
   <content_rating type="oars-1.1"/>
   <releases>
-    <release version="2.0.26" date="2026-07-21">
+    <release version="2.0.27" date="2026-08-01">
       <url type="details">https://raw.githubusercontent.com/ransome1/sleek/refs/heads/main/CHANGELOG.md</url>
     </release>
   </releases>

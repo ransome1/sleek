@@ -323,33 +323,103 @@ function handleToggleTodoComplete(
 }
 
 export const ipcHandlers: IpcHandlerEntry[] = [
-  { channel: "toggleTodoComplete", handler: handleToggleTodoComplete },
-  { channel: "storeGetConfig", handler: handleStoreGetConfig },
-  { channel: "storeSetConfig", handler: handleStoreSetConfig },
-  { channel: "storeSetFilters", handler: handleStoreSetFilters },
-  { channel: "storeGetFilters", handler: handleStoreGetFilters },
-  { channel: "storeGetColors", handler: handleStoreGetColors },
+  {
+    channel: "toggleTodoComplete",
+    handler: (event, ...args) => handleToggleTodoComplete(event, ...args),
+  },
+  {
+    channel: "storeGetConfig",
+    handler: (event, ...args) => handleStoreGetConfig(event, ...args),
+  },
+  {
+    channel: "storeSetConfig",
+    handler: (event, ...args) => handleStoreSetConfig(event, ...args),
+  },
+  {
+    channel: "storeSetFilters",
+    handler: (event, ...args) => handleStoreSetFilters(event, ...args),
+  },
+  {
+    channel: "storeGetFilters",
+    handler: (event, ...args) => handleStoreGetFilters(event, ...args),
+  },
+  {
+    channel: "storeGetColors",
+    handler: (event, ...args) => handleStoreGetColors(event, ...args),
+  },
   {
     channel: "storeSetNotifiedTodoObjects",
-    handler: handleStoreSetNotifiedTodoObjects,
+    handler: (event, ...args) =>
+      handleStoreSetNotifiedTodoObjects(event, ...args),
   },
-  { channel: "setFile", handler: handleSetFile },
-  { channel: "removeFile", handler: handleRemoveFile },
-  { channel: "openFile", handler: handleOpenFile },
-  { channel: "createFile", handler: handleCreateFile },
-  { channel: "updateAttributeFields", handler: handleUpdateAttributeFields },
-  { channel: "openInBrowser", handler: handleOpenInBrowser },
-  { channel: "requestData", handler: handleDataRequest },
-  { channel: "writeSingleTodoToFile", handler: handleWriteTodoToFile },
-  { channel: "archiveTodos", handler: handleArchiveTodos },
-  { channel: "requestArchive", handler: handleRequestArchive },
-  { channel: "addFile", handler: handleAddFile },
-  { channel: "saveToClipboard", handler: handleSaveToClipboard },
-  { channel: "revealInFileManager", handler: handleRevealInFileManager },
-  { channel: "removeLineFromFile", handler: handleRemoveLineFromFile },
-  { channel: "updateTodoObject", handler: handleUpdateTodoObject },
-  { channel: "renameFilterValue", handler: handleRenameFilterValue },
-  { channel: "deleteFilterValue", handler: handleDeleteFilterValue },
+  {
+    channel: "setFile",
+    handler: (event, ...args) => handleSetFile(event, ...args),
+  },
+  {
+    channel: "removeFile",
+    handler: (event, ...args) => handleRemoveFile(event, ...args),
+  },
+  {
+    channel: "openFile",
+    handler: (event, ...args) => handleOpenFile(event, ...args),
+  },
+  {
+    channel: "createFile",
+    handler: (event, ...args) => handleCreateFile(event, ...args),
+  },
+  {
+    channel: "updateAttributeFields",
+    handler: (event, ...args) => handleUpdateAttributeFields(event, ...args),
+  },
+  {
+    channel: "openInBrowser",
+    handler: (event, ...args) => handleOpenInBrowser(event, ...args),
+  },
+  {
+    channel: "requestData",
+    handler: (event, ...args) => handleDataRequest(event, ...args),
+  },
+  {
+    channel: "writeSingleTodoToFile",
+    handler: (event, ...args) => handleWriteTodoToFile(event, ...args),
+  },
+  {
+    channel: "archiveTodos",
+    handler: (event, ...args) => handleArchiveTodos(event, ...args),
+  },
+  {
+    channel: "requestArchive",
+    handler: (event, ...args) => handleRequestArchive(event, ...args),
+  },
+  {
+    channel: "addFile",
+    handler: (event, ...args) => handleAddFile(event, ...args),
+  },
+  {
+    channel: "saveToClipboard",
+    handler: (event, ...args) => handleSaveToClipboard(event, ...args),
+  },
+  {
+    channel: "revealInFileManager",
+    handler: (event, ...args) => handleRevealInFileManager(event, ...args),
+  },
+  {
+    channel: "removeLineFromFile",
+    handler: (event, ...args) => handleRemoveLineFromFile(event, ...args),
+  },
+  {
+    channel: "updateTodoObject",
+    handler: (event, ...args) => handleUpdateTodoObject(event, ...args),
+  },
+  {
+    channel: "renameFilterValue",
+    handler: (event, ...args) => handleRenameFilterValue(event, ...args),
+  },
+  {
+    channel: "deleteFilterValue",
+    handler: (event, ...args) => handleDeleteFilterValue(event, ...args),
+  },
 ];
 
 export function registerAllHandlers(): void {

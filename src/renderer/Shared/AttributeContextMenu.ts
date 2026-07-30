@@ -5,27 +5,40 @@ export function createAttributeContextMenuItems(
   value: string,
   attributeKey: AttributeKey,
 ): ContextMenuItem[] {
+  // For contexts and projects, strip the @ or + prefix
+  // For recurrence, keep the + as it's part of the value (e.g., +1d)
+  const stripPrefixForTypes = ["contexts", "projects"];
+  const displayValue = stripPrefixForTypes.includes(attributeKey)
+    ? value.replace(/^[@+]/, "")
+    : value;
+
   return [
     {
       id: "rename",
-      label: t("drawer.attributes.rename"),
+      label: t("drawer.attributes.rename.button"),
       promptItem: {
-        headline: t("drawer.attributes.renameValue"),
-        text: `New name for: <code>${value}</code>`,
-        button1: t("drawer.attributes.rename"),
+        headline: t("drawer.attributes.rename.headline"),
+        text:
+          t("drawer.attributes.rename.description") +
+          " <code>" +
+          value +
+          "</code>",
+        button1: t("drawer.attributes.rename.button"),
         input: {
-          label: t("drawer.attributes.newValue"),
-          defaultValue: value.replace(/^[@+]/, ""),
+          label: t("drawer.attributes.rename.newValue"),
+          defaultValue: displayValue,
           validate: (val: string) => {
-            if (!val.trim()) return t("drawer.attributes.emptyError");
-            if (/\s/.test(val)) return t("drawer.attributes.spacesError");
-            if (val === value.replace(/^[@+]/, ""))
-              return t("drawer.attributes.sameValueError");
+            if (!val.trim()) return t("drawer.attributes.rename.emptyError");
+            if (/\s/.test(val))
+              return t("drawer.attributes.rename.spacesError");
+            if (val === displayValue)
+              return t("drawer.attributes.rename.sameValueError");
             return true;
           },
         },
         onButton1: (inputValue?: string) => {
           if (inputValue) {
+            // Send the value as-is (backend now handles rec: prefix correctly)
             window.api.renameFilterValue({
               attrType: attributeKey,
               oldValue: value,
@@ -37,16 +50,17 @@ export function createAttributeContextMenuItems(
     },
     {
       id: "delete",
-      label: t("drawer.attributes.delete"),
+      label: t("remove"),
       promptItem: {
-        headline: t("drawer.attributes.deleteValue"),
+        headline: t("drawer.attributes.remove.headline"),
         text:
-          t("drawer.attributes.deleteDescription") +
+          t("drawer.attributes.remove.description") +
           " <code>" +
           value +
           "</code>",
-        button1: t("drawer.attributes.delete"),
+        button1: t("remove"),
         onButton1: () => {
+          // Send value as-is, including + prefix for recurrence
           window.api.deleteFilterValue({
             attrType: attributeKey,
             valueToDelete: value,

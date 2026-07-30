@@ -9,7 +9,7 @@
   "fileTabs.revealArchivingFile": "파일 관리자에서 아카이브 파일 표시",
   "fileTabs.removeFileHeadline": "sleek에서 파일 삭제?",
   "fileTabs.removeFileText": "하드 드라이브에서는 삭제되지 않습니다",
-  "fileTabs.removeFileLabel": "삭제",
+
   "settings": "설정",
   "settings.appendCreationDate": "작업 생성 시 생성 날짜 추가",
   "settings.convertRelativeToAbsoluteDates": "상대적 날짜를 절대 날짜로 변환",
@@ -54,12 +54,23 @@
   "drawer.attributes.nextMonth": "다음 달",
   "drawer.attributes.overdue": "연체",
   "drawer.attributes.elapsed": "경과",
-  "drawer.attributes.rename": "이름 바꾸기",
-  "drawer.attributes.delete": "삭제",
-  "drawer.attributes.renameValue": "속성 이름 바꾸기",
+  "remove": "제거",
+  "drawer.attributes.remove": {
+    "headline": "속성 제거",
+    "description": "모든 작업에서 속성 제거:"
+  },
+  "drawer.attributes.rename": {
+    "headline": "속성 이름 바꾸기",
+    "description": "새 이름: 작업이 모든 할 일에 영향을 미칩니다",
+    "button": "이름 바꾸기",
+    "newValue": "새 값",
+    "emptyError": "값을 비워둘 수 없습니다",
+    "spacesError": "값에 공백이 포함될 수 없습니다",
+    "sameValueError": "새 값이 기존 값과 동일합니다"
+  },
   "drawer.attributes.renameDescription": "새 이름: 작업이 모든 할 일에 영향을 미칩니다",
-  "drawer.attributes.deleteValue": "속성 삭제",
-  "drawer.attributes.deleteDescription": "영향받는 작업: 작업이 모든 할 일에 영향을 미칩니다",
+  "remove": "제거",
+  "drawer.attributes.deleteDescription": "모든 작업에서 속성 제거:",
   "drawer.attributes.newValue": "새 값",
   "drawer.attributes.emptyError": "값을 비워둘 수 없습니다",
   "drawer.attributes.spacesError": "값에 공백이 포함될 수 없습니다",

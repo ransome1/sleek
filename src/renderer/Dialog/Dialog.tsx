@@ -9,7 +9,7 @@ import AutoSuggest from "./AutoSuggest";
 import PriorityPicker from "./PriorityPicker";
 import DatePicker from "./DatePicker";
 import PomodoroPicker from "./PomodoroPicker";
-import RecurrencePicker from "./RecurrencePicker";
+import RecurrencePicker from "../Picker/RecurrencePicker";
 import "./Dialog.scss";
 import { Attributes, SettingStore, TodoObject } from "../../@types";
 

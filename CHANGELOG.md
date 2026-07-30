@@ -2,6 +2,31 @@
 
 All notable changes to sleek will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.27] - 2026-07-29
+
+### Added
+
+- Added custom sorting rules for recurring todos
+- Added attribute renaming and deletion functionality
+- Added i18n support to the main process
+- Added test cases for CreateTodoObjects.ts
+
+### Enhanced
+
+- Consistent highlighting for search elements
+- Updated German translations
+- Updated all dependencies, including Electron 43 upgrade
+- Completed attribute renaming feature implementation
+
+### Fixed
+
+- Fixed https://github.com/ransome1/sleek/issues/904
+- Fixed bug that incorrectly added attributes
+- Fixed issue in Search module
+- Fixed proper key prop handling in Search component
+- Fixed https://github.com/ransome1/sleek/issues/887
+- Removed customStylesPath support in favor of customizable colors
+
 ## [2.0.26] - 2026-07-21
 
 ### Added

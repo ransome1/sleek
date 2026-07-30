@@ -9,7 +9,7 @@
   "fileTabs.revealArchivingFile": "Pokaż plik archiwizacyjny w menedżerze plików",
   "fileTabs.removeFileHeadline": "Usunąć plik z sleek?",
   "fileTabs.removeFileText": "Nie zostanie usunięty z dysku twardego",
-  "fileTabs.removeFileLabel": "Usuń",
+
   "settings": "Ustawienia",
   "settings.appendCreationDate": "Dodaj datę utworzenia podczas tworzenia zadania",
   "settings.convertRelativeToAbsoluteDates": "Konwertuj daty względne na daty bezwzględne",
@@ -54,12 +54,23 @@
   "drawer.attributes.nextMonth": "następny miesiąc",
   "drawer.attributes.overdue": "zaległy",
   "drawer.attributes.elapsed": "upłynął",
-  "drawer.attributes.rename": "Zmień nazwę",
-  "drawer.attributes.delete": "Usuń",
-  "drawer.attributes.renameValue": "Zmień nazwę atrybutu",
+  "remove": "Usuń",
+  "drawer.attributes.remove": {
+    "headline": "Usuń atrybut",
+    "description": "Usuń atrybut ze wszystkich zadań:"
+  },
+  "drawer.attributes.rename": {
+    "headline": "Zmień nazwę atrybutu",
+    "description": "Nowa nazwa dla: Akcja wpłynie na wszystkie zadania",
+    "button": "Zmień nazwę",
+    "newValue": "Nowa wartość",
+    "emptyError": "Wartość nie może być pusta",
+    "spacesError": "Wartość nie może zawierać spacji",
+    "sameValueError": "Nowa wartość jest taka sama jak stara wartość"
+  },
   "drawer.attributes.renameDescription": "Nowa nazwa dla: Akcja wpłynie na wszystkie zadania",
-  "drawer.attributes.deleteValue": "Usuń atrybut",
-  "drawer.attributes.deleteDescription": "Powiązane zadania: Akcja wpłynie na wszystkie zadania",
+  "remove": "Usuń",
+  "drawer.attributes.deleteDescription": "Usuń atrybut ze wszystkich zadań:",
   "drawer.attributes.newValue": "Nowa wartość",
   "drawer.attributes.emptyError": "Wartość nie może być pusta",
   "drawer.attributes.spacesError": "Wartość nie może zawierać spacji",

@@ -9,7 +9,7 @@
   "fileTabs.revealArchivingFile": "Mostra il file di archiviazione nel gestore dei file",
   "fileTabs.removeFileHeadline": "Rimuovi il file da sleek?",
   "fileTabs.removeFileText": "Non verrà eliminato dal tuo disco rigido",
-  "fileTabs.removeFileLabel": "Rimuovi",
+
   "settings": "Impostazioni",
   "settings.appendCreationDate": "Aggiungi data di creazione quando viene creato il compito",
   "settings.convertRelativeToAbsoluteDates": "Converti date relative in date assolute",
@@ -54,12 +54,23 @@
   "drawer.attributes.nextMonth": "il prossimo mese",
   "drawer.attributes.overdue": "in ritardo",
   "drawer.attributes.elapsed": "trascorso",
-  "drawer.attributes.rename": "Rinomina",
-  "drawer.attributes.delete": "Elimina",
-  "drawer.attributes.renameValue": "Rinomina attributo",
-  "drawer.attributes.renameDescription": "Nuovo nome per: L'azione influenzerà tutte le attività",
-  "drawer.attributes.deleteValue": "Elimina attributo",
-  "drawer.attributes.deleteDescription": "Compiti interessati: L'azione influenzerà tutte le attività",
+  "remove": "Rimuovi",
+  "drawer.attributes.remove": {
+    "headline": "Elimina attributo",
+    "description": "Rimuovi attributo da tutte le attività:"
+  },
+  "drawer.attributes.rename": {
+    "headline": "Rinomina attributo",
+    "description": "Nuovo nome per:",
+    "button": "Rinomina",
+    "newValue": "Nuovo valore",
+    "emptyError": "Il valore non può essere vuoto",
+    "spacesError": "Il valore non può contenere spazi",
+    "sameValueError": "Il nuovo valore è uguale al vecchio valore"
+  },
+  "drawer.attributes.renameDescription": "Nuovo nome per:",
+  "remove": "Rimuovi",
+  "drawer.attributes.deleteDescription": "Rimuovi attributo da tutte le attività:",
   "drawer.attributes.newValue": "Nuovo valore",
   "drawer.attributes.emptyError": "Il valore non può essere vuoto",
   "drawer.attributes.spacesError": "Il valore non può contenere spazi",

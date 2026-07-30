@@ -16,8 +16,11 @@ export function renameAttributeValue(
   if (linesInFile.length === 0) return { count: 0 };
 
   let count = 0;
-  const oldValueClean = oldValue.replace(/^[@+]/, "");
-  const newValueClean = newValue.replace(/^[@+]/, "");
+  // For recurrence, keep the + prefix; for contexts/projects, strip it
+  const oldValueClean =
+    attrType === "rec" ? oldValue : oldValue.replace(/^[@+]/, "");
+  const newValueClean =
+    attrType === "rec" ? newValue : newValue.replace(/^[@+]/, "");
 
   for (let i = 0; i < linesInFile.length; i++) {
     let newLine = linesInFile[i];
@@ -112,7 +115,9 @@ export function deleteAttributeValue(
   if (linesInFile.length === 0) return { count: 0 };
 
   let count = 0;
-  const valueClean = valueToDelete.replace(/^[@+]/, "");
+  // For recurrence, keep the + prefix; for contexts/projects, strip it
+  const valueClean =
+    attrType === "rec" ? valueToDelete : valueToDelete.replace(/^[@+]/, "");
 
   for (let i = 0; i < linesInFile.length; i++) {
     let newLine = linesInFile[i];

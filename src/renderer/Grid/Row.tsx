@@ -105,6 +105,9 @@ const Row: React.FC<RowProps> = memo(
       if (clickedElement.closest(".MuiPopper-root")) match = true;
       if (clickedElement.closest(".MuiPickersLayout-root")) match = true;
 
+      // Check if element is inside a RecurrencePicker Popover
+      if (clickedElement.closest(".MuiPopover-root")) match = true;
+
       return match;
     };
 

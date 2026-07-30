@@ -9,7 +9,7 @@ import {
 import { lineBreakPlaceholder } from "../Shared";
 import { DateTime } from "luxon";
 import { TodoObject } from "@sleek-types";
-import { Badge } from "@sleek-types";
+import { Badge } from "../../types/badge";
 
 let linesInFile: string[];
 const badge: Badge = { count: 0 };

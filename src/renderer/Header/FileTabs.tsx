@@ -67,11 +67,11 @@ const FileTabsComponent: React.FC<FileTabsComponentProps> = memo(
           },
           {
             id: "removeFile",
-            label: t("fileTabs.removeFileLabel"),
+            label: t("remove"),
             promptItem: {
               headline: t("fileTabs.removeFileHeadline"),
               text: t("fileTabs.removeFileText"),
-              button1: t("fileTabs.removeFileLabel"),
+              button1: t("remove"),
               onButton1: (): void => handleRemoveFile(index),
             },
           },

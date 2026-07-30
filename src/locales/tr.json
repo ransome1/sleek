@@ -9,7 +9,7 @@
   "fileTabs.revealArchivingFile": "Arşiv dosyasını dosya yöneticisinde göster",
   "fileTabs.removeFileHeadline": "Dosyayı sleek'ten kaldırmak istiyor musunuz?",
   "fileTabs.removeFileText": "Sabit diskinizden silinmeyecektir",
-  "fileTabs.removeFileLabel": "Kaldır",
+
   "settings": "Ayarlar",
   "settings.appendCreationDate": "Görev oluşturulduğunda oluşturma tarihini ekle",
   "settings.convertRelativeToAbsoluteDates": "İlgili tarihleri mutlak tarihlere dönüştür",
@@ -54,12 +54,23 @@
   "drawer.attributes.nextMonth": "Gelecek ay",
   "drawer.attributes.overdue": "Gecikmiş",
   "drawer.attributes.elapsed": "Geçmiş",
-  "drawer.attributes.rename": "Yeniden adlandır",
-  "drawer.attributes.delete": "Sil",
-  "drawer.attributes.renameValue": "Özelliği yeniden adlandır",
+  "remove": "Kaldır",
+  "drawer.attributes.remove": {
+    "headline": "Özniteliği Kaldır",
+    "description": "Tüm görevlerden özniteliği kaldır:"
+  },
+  "drawer.attributes.rename": {
+    "headline": "Özelliği yeniden adlandır",
+    "description": "Yeni ad için: İşlem tüm görevleri etkileyecektir",
+    "button": "Yeniden adlandır",
+    "newValue": "Yeni değer",
+    "emptyError": "Değer boş olamaz",
+    "spacesError": "Değer boşluk içeremez",
+    "sameValueError": "Yeni değer eski değerle aynı"
+  },
   "drawer.attributes.renameDescription": "Yeni ad için: İşlem tüm görevleri etkileyecektir",
-  "drawer.attributes.deleteValue": "Özelliği sil",
-  "drawer.attributes.deleteDescription": "Etkilenen görevler: İşlem tüm görevleri etkileyecektir",
+  "remove": "Kaldır",
+  "drawer.attributes.deleteDescription": "Tüm görevlerden özniteliği kaldır:",
   "drawer.attributes.newValue": "Yeni değer",
   "drawer.attributes.emptyError": "Değer boş olamaz",
   "drawer.attributes.spacesError": "Değer boşluk içeremez",

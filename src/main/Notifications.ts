@@ -3,7 +3,8 @@ import { DateTime } from "luxon";
 import { Notification } from "electron";
 import { SettingsStore, NotificationsStore, FiltersStore } from "./Stores";
 import { checkForSearchMatches } from "./Filters/Search";
-import { SearchFilter, Badge } from "@sleek-types";
+import { SearchFilter } from "@sleek-types";
+import { Badge } from "../types/badge";
 import i18n from "./i18n";
 
 // ─── Store accessors ────────────────────────────────────────────────────────

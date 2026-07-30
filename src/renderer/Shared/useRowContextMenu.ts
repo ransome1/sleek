@@ -1,5 +1,6 @@
 import React from "react";
 import { IpcRenderer } from "electron";
+import { AttributeKey } from "@sleek-types";
 
 type ContextMenuItem = {
   id: string;
@@ -31,6 +32,7 @@ type UseRowContextMenuReturn = {
     event: React.MouseEvent,
     todoString: string,
     lineNumber: number,
+    attributeType?: AttributeKey,
   ) => void;
 };
 
@@ -51,6 +53,7 @@ export const useRowContextMenu = (
     event: React.MouseEvent,
     todoString: string,
     lineNumber: number,
+    attributeType?: AttributeKey,
   ): void => {
     // Check if the right-click target is an attribute button
     const target = event.target as HTMLElement;
@@ -63,26 +66,39 @@ export const useRowContextMenu = (
       return;
     }
 
+    // Date and recurrence attributes in grid should only show delete (no rename)
+    const disableRenameForAttributes = [
+      "due",
+      "t",
+      "created",
+      "completed",
+      "rec",
+    ];
+    const shouldDisableRename =
+      attributeType && disableRenameForAttributes.includes(attributeType);
+
+    const items: ContextMenuItem[] = [
+      {
+        id: "copy",
+        label: t("copy"),
+        function: () => handleSaveToClipboard(todoString),
+      },
+      {
+        id: "delete",
+        label: t("delete"),
+        promptItem: {
+          id: "delete",
+          headline: t("prompt.delete.headline"),
+          text: `${t("prompt.delete.text")}: <code>${todoString}</code>`,
+          button1: t("delete"),
+          onButton1: () => handleConfirmDelete(lineNumber),
+        },
+      },
+    ];
+
     setContextMenu({
       event: event,
-      items: [
-        {
-          id: "copy",
-          label: t("copy"),
-          function: () => handleSaveToClipboard(todoString),
-        },
-        {
-          id: "delete",
-          label: t("delete"),
-          promptItem: {
-            id: "delete",
-            headline: t("prompt.delete.headline"),
-            text: `${t("prompt.delete.text")}: <code>${todoString}</code>`,
-            button1: t("delete"),
-            onButton1: () => handleConfirmDelete(lineNumber),
-          },
-        },
-      ],
+      items: items,
     });
   };
 
