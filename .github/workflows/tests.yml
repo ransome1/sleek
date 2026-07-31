@@ -1,0 +1,37 @@
+name: Execute tests
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Run tests and formatting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+      - name: Set up Nodejs
+        uses: actions/setup-node@v6
+        with:
+          node-version: 26
+          cache: "npm"
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Check formatting
+        run: npm run format
+      - name: Lint with ESLint
+        run: npm run lint
+      - name: Check TypeScript typings
+        run: npm run typecheck
+      - name: Run unit tests
+        run: npm run coverage
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v7
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

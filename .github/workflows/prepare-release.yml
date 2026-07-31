@@ -16,7 +16,7 @@ jobs:
       - name: Install Node and NPM
         uses: actions/setup-node@v6
         with:
-          node-version: 25
+          node-version: 26
           cache: "npm"
       - name: Install and build
         run: |
@@ -47,7 +47,7 @@ jobs:
       - name: Install Node and NPM
         uses: actions/setup-node@v6
         with:
-          node-version: 25
+          node-version: 26
           cache: "npm"
       - name: Install and build
         run: |
@@ -73,7 +73,7 @@ jobs:
       - name: Install Node and NPM
         uses: actions/setup-node@v6
         with:
-          node-version: 25
+          node-version: 26
           cache: "npm"
       - name: Install and build
         run: |
