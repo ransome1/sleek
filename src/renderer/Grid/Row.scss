@@ -16,6 +16,11 @@
   .MuiCheckbox-root {
     padding: 0.25em;
   }
+  *[data-todotxt-attribute="custom-tag"] {
+    padding: 0.1em 0.5em;
+    border-width: 2px;
+    border-style: solid;
+  }
   [data-todotxt-attribute="created"],
   [data-todotxt-attribute="completed"],
   [data-todotxt-attribute="hidden"] {

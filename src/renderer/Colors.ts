@@ -83,7 +83,7 @@ export interface ColorPalette {
     contexts: { light: AttributeColor; dark: AttributeColor };
     due: { light: AttributeColor; dark: AttributeColor };
     t: { light: AttributeColor; dark: AttributeColor };
-    generic: { light: AttributeColor; dark: AttributeColor };
+    "custom-tag": { light: AttributeColor; dark: AttributeColor };
   };
   navigation: {
     logo: {
@@ -209,13 +209,25 @@ export function getCssVariables(theme: ColorTheme): Record<string, string> {
   });
 
   // Add chip colors
-  // Add chip colors from generic attribute
-  const genericThemeColors = colors.attributes.generic[theme];
+  // Add chip colors from custom-tag attribute (fallback to generic for backwards compatibility)
+  const customTagThemeColors =
+    colors.attributes["custom-tag"]?.[theme] ||
+    colors.attributes.generic?.[theme];
+
+  // Explicitly set custom-tag CSS variables from fallback source
+  if (customTagThemeColors) {
+    vars["--attribute-custom-tag-text"] = customTagThemeColors.text;
+    vars["--attribute-custom-tag-bg"] = customTagThemeColors.background;
+  }
+
   if (themeColors?.opacity) {
     vars["--opacity-disabled"] = String(themeColors.opacity.disabled);
     vars["--opacity-hover"] = String(themeColors.opacity.hover);
     vars["--opacity-focus"] = String(themeColors.opacity.focus);
   }
+
+  // Add chip colors from generic (used by Chip component)
+  const genericThemeColors = colors.attributes.generic?.[theme];
   if (genericThemeColors && genericThemeColors.chip) {
     vars["--chip-bg"] = genericThemeColors.chip.background;
     vars["--chip-text"] = genericThemeColors.chip.text;

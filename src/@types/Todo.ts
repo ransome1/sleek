@@ -51,7 +51,9 @@ export type AttributeKey =
   | "pm"
   | "hidden"
   | "created"
-  | "completed";
+  | "completed"
+  | "url"
+  | "custom-tag";
 
 export interface AttributeGroup {
   [key: string]: AttributeEntry;

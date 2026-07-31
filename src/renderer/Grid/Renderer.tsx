@@ -52,6 +52,11 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
           type: "url",
           key: "url",
         },
+        {
+          pattern: /\b(?!(?:due|t|pm|rec|h|pri):)\w+:[^\s)]+/,
+          type: "custom-tag",
+          key: "custom-tag",
+        },
       ];
 
     const { handleContextMenu } = useAttributeContextMenu({
@@ -184,6 +189,8 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
           <OpenInNewIcon />
         </a>
       ),
+
+      "custom-tag": (value) => <span>{value}</span>,
     };
 
     const options: Components = {
@@ -224,12 +231,19 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
           // Step 2: Sort by position
           allMatches.sort((a, b) => a.start - b.start);
 
+          // Step 2b: Remove custom-tag matches that overlap with known attributes
+          // This prevents custom-tag from stealing matches from due, pm, rec, etc.
+          const filteredMatches = allMatches.filter((m, i) => {
+            if (m.type !== "custom-tag") return true;
+            return !allMatches.slice(0, i).some((prev) => prev.end > m.start);
+          });
+
           // Step 3: Build result array with interleaved text and React elements
           const result: React.ReactNode[] = [];
           let lastEnd = 0;
           let elementIndex = 0;
 
-          allMatches.forEach((matchInfo) => {
+          filteredMatches.forEach((matchInfo) => {
             // Add text before the match
             if (matchInfo.start > lastEnd) {
               result.push(

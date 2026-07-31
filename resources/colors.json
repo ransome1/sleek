@@ -145,10 +145,6 @@
       "light": {
         "text": "#5a5a5a",
         "background": "#ccc",
-        "selected": {
-          "text": "white",
-          "background": "#5a5a5a"
-        },
         "chip": {
           "background": "#5a5a5a",
           "text": "#ffffff"
@@ -157,14 +153,20 @@
       "dark": {
         "text": "#5a5a5a",
         "background": "#ccc",
-        "selected": {
-          "text": "white",
-          "background": "#343434"
-        },
         "chip": {
           "background": "#343434",
           "text": "#ffffff"
         }
+      }
+    },
+    "custom-tag": {
+      "light": {
+        "text": "#5a5a5a",
+        "background": "#ccc"
+      },
+      "dark": {
+        "text": "#5a5a5a",
+        "background": "#ccc"
       }
     }
   }

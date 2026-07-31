@@ -180,6 +180,14 @@ button:hover:not(.MuiIconButton-root) {
   }
 }
 
+*[data-todotxt-attribute="custom-tag"] {
+  --color1: var(--attribute-custom-tag-text);
+  --color2: var(--attribute-custom-tag-bg);
+  color: var(--color1);
+  border-radius: var(--radius);
+  border-color: var(--color2);
+}
+
 .dark {
   button:not(.MuiIconButton-root),
   button:hover:not(.MuiIconButton-root) {
