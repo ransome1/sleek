@@ -1,0 +1,49 @@
+name: Code Scanning
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  njsscan:
+    name: njsscan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v6
+      - name: nodejsscan scan
+        id: njsscan
+        uses: ajinabraham/njsscan-action@master
+        with:
+          args: ". --sarif --output results.sarif || true"
+      - name: Upload njsscan report
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: results.sarif
+  codeql:
+    needs: njsscan
+    name: CodeQL
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ["javascript"]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Set up Nodejs
+        uses: actions/setup-node@v6
+        with:
+          node-version: 26
+          cache: "npm"
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v4
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v4
