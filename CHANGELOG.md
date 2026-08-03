@@ -2,24 +2,29 @@
 
 All notable changes to sleek will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.27] - 2026-07-29
+## [Unrealeased]
+
+## [2.0.27] - 2026-08-03
 
 ### Added
 
 - Added custom sorting rules for recurring todos
-- Added attribute renaming and deletion functionality
-- Added i18n support to the main process
-- Added test cases for CreateTodoObjects.ts
+- Added attribute [renaming and deletion functionality](https://github.com/ransome1/sleek/wiki/Renaming-and-removing-attributes) as discussed here: https://github.com/ransome1/sleek/discussions/722
+- The recurrence picker is now available directly from the grid by clicking on the rec-attribute value
+- Added greyscale highlighting for custom key-value tags (e.g. `client:john`, `status:active`)
+- Added a setting to disable [Safe writes](https://github.com/ransome1/sleek/wiki/Safe-writes) introduced in v2.0.26 as this caused issues on some setups
 
 ### Enhanced
 
 - Consistent highlighting for search elements
 - Updated German translations
-- Updated all dependencies, including Electron 43 upgrade
 - Completed attribute renaming feature implementation
+- Updated all dependencies
+- Added test cases for CreateTodoObjects.ts
 
 ### Fixed
 
+- Fixed an issue where the list would not refresh after a change (by @mvanhorn in https://github.com/ransome1/sleek/pull/903)
 - Fixed https://github.com/ransome1/sleek/issues/904
 - Fixed bug that incorrectly added attributes
 - Fixed issue in Search module
@@ -42,7 +47,7 @@ All notable changes to sleek will be documented in this file. The format is base
 - Enhanced highlighting of elements and made it consistant
 - Increased number of test cases
 - Reduced amounts of IPC calls
-- Updated all dependencies
+- Updated all dependencies, including Electron 43 upgrade
 
 ### Fixed
 
