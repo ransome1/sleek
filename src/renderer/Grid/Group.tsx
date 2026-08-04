@@ -16,7 +16,14 @@ interface GroupProps {
 }
 
 const Group: React.FC<GroupProps> = memo(
-  ({ attributeKey, value, filters, setContextMenu, setPromptItem }) => {
+  ({
+    attributeKey,
+    value,
+    filters,
+    setContextMenu,
+    setPromptItem,
+    settings,
+  }) => {
     if (!value || value.length === 0) {
       return (
         <ListItem className="row group">
@@ -28,6 +35,7 @@ const Group: React.FC<GroupProps> = memo(
     const { handleContextMenu } = useAttributeContextMenu({
       setContextMenu,
       setPromptItem,
+      settings,
     });
 
     const groupElements =

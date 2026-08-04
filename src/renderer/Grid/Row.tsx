@@ -45,7 +45,7 @@ const Row: React.FC<RowProps> = memo(
   }) => {
     const { t } = useTranslation();
     const { handleContextMenu: handleAttributeContextMenu } =
-      useAttributeContextMenu({ setContextMenu, setPromptItem });
+      useAttributeContextMenu({ setContextMenu, setPromptItem, settings });
     const { handleRowContextMenu } = useRowContextMenu({
       setContextMenu,
       setPromptItem,

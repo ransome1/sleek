@@ -142,6 +142,7 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> =
     const { handleContextMenu } = useAttributeContextMenu({
       setContextMenu,
       setPromptItem,
+      settings,
     });
 
     const renderFilterChips = (

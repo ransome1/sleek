@@ -1,11 +1,17 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { ContextMenu, PromptItem, AttributeKey } from "@sleek-types";
+import {
+  ContextMenu,
+  PromptItem,
+  AttributeKey,
+  SettingStore,
+} from "@sleek-types";
 import { createAttributeContextMenuItems } from "./AttributeContextMenu";
 
 type UseAttributeContextMenuProps = {
   setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
+  settings?: SettingStore;
 };
 
 type UseAttributeContextMenuReturn = {
@@ -19,7 +25,7 @@ type UseAttributeContextMenuReturn = {
 export const useAttributeContextMenu = (
   props: UseAttributeContextMenuProps,
 ): UseAttributeContextMenuReturn => {
-  const { setContextMenu } = props;
+  const { setContextMenu, settings } = props;
   const { t } = useTranslation();
 
   const handleContextMenu = (
@@ -31,6 +37,7 @@ export const useAttributeContextMenu = (
       t,
       attributeValue,
       attributeType,
+      settings,
     );
     setContextMenu({
       event,

@@ -1,9 +1,11 @@
 import { ContextMenuItem, AttributeKey } from "@sleek-types";
 
+import { SettingStore } from "@sleek-types";
 export function createAttributeContextMenuItems(
   t: (key: string) => string,
   value: string,
   attributeKey: AttributeKey,
+  settings?: SettingStore,
 ): ContextMenuItem[] {
   // For contexts and projects, strip the @ or + prefix
   // For recurrence, keep the + as it's part of the value (e.g., +1d)
@@ -12,13 +14,12 @@ export function createAttributeContextMenuItems(
     ? value.replace(/^[@+]/, "")
     : value;
 
-  // Date and recurrence attributes in grid should only show delete (no rename)
+  // Date and system-managed attributes should only show delete (no rename)
+  // Recurrences support rename (they don't have fuzzy parsing issues)
   const disableRenameForAttributes = [
-    "due",
-    "t",
+    ...(settings?.useHumanFriendlyDates ? ["due", "t"] : []),
     "created",
     "completed",
-    "rec",
   ];
   const shouldDisableRename =
     attributeKey && disableRenameForAttributes.includes(attributeKey);

@@ -67,6 +67,7 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
     const { handleContextMenu } = useAttributeContextMenu({
       setContextMenu,
       setPromptItem,
+      settings,
     });
 
     const replacements: {
