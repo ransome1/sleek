@@ -31,13 +31,7 @@ function filterByCompletion(content: string, complete: boolean): string {
 
 function archiveTodos(): string {
   const activeFile = getActiveFile();
-  if (!activeFile) {
-    throw new Error(i18n.t("archive.error.todoFileNotDefined"));
-  }
-
-  if (!activeFile.doneFilePath) {
-    throw new Error(i18n.t("archive.error.archivingFileNotDefined"));
-  }
+  validateArchivingPrerequisites(activeFile);
 
   // Read todo file only once
   const todoContent: string = readFileContent(
@@ -72,4 +66,51 @@ function archiveTodos(): string {
   return i18n.t("archive.success");
 }
 
-export { archiveTodos, checkArchiveReadiness };
+function archiveSingleTodo(lineNumber: number): string {
+  const activeFile = getActiveFile();
+  validateArchivingPrerequisites(activeFile);
+
+  // Read todo file
+  const todoContent: string = readFileContent(
+    activeFile.todoFilePath,
+    activeFile.todoFileBookmark,
+  );
+  const todoLines = todoContent
+    .split(/[\r\n]+/)
+    .filter((line) => line.trim() !== "");
+
+  // Read done file
+  const todosFromDoneFile: string = readFileContent(
+    activeFile.doneFilePath,
+    activeFile.doneFileBookmark,
+  );
+
+  const lineToArchive = todoLines[lineNumber];
+
+  // Only write a new line when file is not empty and does not already end with a new line
+  const trim = todosFromDoneFile.trim();
+  const separator = trim ? "\n" : "";
+  const contentForDoneFile = trim
+    ? `${trim}${separator}${lineToArchive}`
+    : lineToArchive;
+  writeToFile(contentForDoneFile, activeFile.doneFilePath);
+
+  todoLines.splice(lineNumber, 1);
+  writeToFile(todoLines.join("\n"), activeFile.todoFilePath);
+
+  return i18n.t("archive.success");
+}
+
+function validateArchivingPrerequisites(
+  activeFile: File | null,
+): asserts activeFile is File & { doneFilePath: string } {
+  if (!activeFile) {
+    throw new Error(i18n.t("archive.error.todoFileNotDefined"));
+  }
+
+  if (!activeFile.doneFilePath) {
+    throw new Error(i18n.t("archive.error.archivingFileNotDefined"));
+  }
+}
+
+export { archiveTodos, archiveSingleTodo, checkArchiveReadiness };

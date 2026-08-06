@@ -5,7 +5,7 @@ export function createAttributeContextMenuItems(
   t: (key: string) => string,
   value: string,
   attributeKey: AttributeKey,
-  settings?: SettingStore,
+  settings: SettingStore | null,
 ): ContextMenuItem[] {
   // For contexts and projects, strip the @ or + prefix
   // For recurrence, keep the + as it's part of the value (e.g., +1d)

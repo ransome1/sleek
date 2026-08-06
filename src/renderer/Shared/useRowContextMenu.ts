@@ -32,6 +32,10 @@ export const useRowContextMenu = (
     ipcRenderer.send("saveToClipboard", todoString);
   };
 
+  const handleArchive = (lineNumber: number) => {
+    ipcRenderer.send("archiveSingleTodo", lineNumber);
+  };
+
   const handleConfirmDelete = (lineNumber: number) => {
     ipcRenderer.send("removeLineFromFile", lineNumber);
   };
@@ -57,6 +61,17 @@ export const useRowContextMenu = (
         id: "copy",
         label: t("copy"),
         function: () => handleSaveToClipboard(todoString),
+      },
+      {
+        id: "archive",
+        label: t("archive"),
+        promptItem: {
+          id: "archive",
+          headline: t("prompt.archive.headline.single"),
+          text: t("prompt.archive.text.single"),
+          button1: t("archive"),
+          onButton1: () => handleArchive(lineNumber),
+        },
       },
       {
         id: "delete",

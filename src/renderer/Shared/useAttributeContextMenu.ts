@@ -11,7 +11,7 @@ import { createAttributeContextMenuItems } from "./AttributeContextMenu";
 type UseAttributeContextMenuProps = {
   setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
-  settings?: SettingStore;
+  settings: SettingStore | null;
 };
 
 type UseAttributeContextMenuReturn = {

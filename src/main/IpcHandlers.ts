@@ -9,7 +9,11 @@ import {
 import { dataRequest, searchString } from "./DataRequest/DataRequest";
 import { createTodoObject } from "./DataRequest/CreateTodoObjects";
 import { writeSingleTodoToFile, removeLineFromFile } from "./File/Write";
-import { archiveTodos, checkArchiveReadiness } from "./File/Archive";
+import {
+  archiveSingleTodo,
+  archiveTodos,
+  checkArchiveReadiness,
+} from "./File/Archive";
 import { activateFile, removeFile, registerTodoFile } from "./File/File";
 import { openFile, createFile } from "./File/Dialog";
 import { HandleError } from "./Shared";
@@ -268,6 +272,22 @@ function handleArchiveTodos(event: IpcMainEvent): void {
   }
 }
 
+function handleArchiveSingleTodo(
+  event: IpcMainEvent,
+  lineNumber: number,
+): void {
+  try {
+    const result = archiveSingleTodo(lineNumber);
+    refreshRequestedData(event);
+    event.reply("responseFromMainProcess", result);
+  } catch (error) {
+    if (error instanceof Error) {
+      HandleError(error);
+      event.reply("responseFromMainProcess", error);
+    }
+  }
+}
+
 function handleRequestArchive(event: IpcMainEvent): void {
   try {
     checkArchiveReadiness();
@@ -393,6 +413,10 @@ export const ipcHandlers: IpcHandlerEntry[] = [
   {
     channel: "archiveTodos",
     handler: handleArchiveTodos,
+  },
+  {
+    channel: "archiveSingleTodo",
+    handler: handleArchiveSingleTodo,
   },
   {
     channel: "requestArchive",
