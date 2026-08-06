@@ -17,6 +17,7 @@
   "fileTabs.revealArchivingFile": "आर्काइविंग फ़ाइल को फ़ाइल प्रबंधक में दिखाएं",
   "fileTabs.removeFileHeadline": "sleek से फ़ाइल हटाएं?",
   "fileTabs.removeFileText": "यह आपके हार्ड ड्राइव से हटाएं नहीं होगा।",
+  "fileTabs.removeFileSuccess": "फ़ाइल सफलतापूर्वक हटा दी गई",
   "settings.appendCreationDate": "कार्य बनाते समय निर्माण तिथि जोड़ें",
   "settings.convertRelativeToAbsoluteDates": "सांख्यिक तिथियों को पूर्ण तिथियों में परिवर्तित करें",
   "settings.notificationsAllowed": "सूचनाएँ भेजें",

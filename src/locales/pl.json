@@ -17,6 +17,7 @@
   "fileTabs.revealArchivingFile": "Pokaż plik archiwizacyjny w menedżerze plików",
   "fileTabs.removeFileHeadline": "Usunąć plik z sleek?",
   "fileTabs.removeFileText": "Nie zostanie usunięty z dysku twardego",
+  "fileTabs.removeFileSuccess": "Plik został pomyślnie usunięty",
   "settings.appendCreationDate": "Dodaj datę utworzenia podczas tworzenia zadania",
   "settings.convertRelativeToAbsoluteDates": "Konwertuj daty względne na daty bezwzględne",
   "settings.notificationsAllowed": "Wysyłaj powiadomienia",

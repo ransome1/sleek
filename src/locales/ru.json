@@ -17,6 +17,7 @@
   "fileTabs.revealArchivingFile": "Показать архивный файл в файловом менеджере",
   "fileTabs.removeFileHeadline": "Удалить файл из sleek?",
   "fileTabs.removeFileText": "Он не будет удален с вашего жесткого диска",
+  "fileTabs.removeFileSuccess": "Файл успешно удален",
   "settings.appendCreationDate": "Добавить дату создания при создании задачи",
   "settings.convertRelativeToAbsoluteDates": "Преобразовать относительные даты в абсолютные",
   "settings.notificationsAllowed": "Отправлять уведомления",

@@ -20,7 +20,7 @@ contact:
   - https://github.com/ransome1/sleek/discussions
 grade: stable
 confinement: strict
-icon: ./build/512x512.png
+icon: ./resources/icon.iconset/icon_512x512.png
 license: MIT
 compression: lzo
 

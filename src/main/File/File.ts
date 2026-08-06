@@ -85,6 +85,7 @@ function removeFile(index: number) {
   }
 
   SettingsStore.set("files", files);
+  return "fileTabs.removeFileSuccess";
 }
 
 function activateFile(index: number) {

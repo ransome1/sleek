@@ -17,6 +17,7 @@
   "fileTabs.revealArchivingFile": "Mutassa meg az archiválási fájlt a fájlkezelőben",
   "fileTabs.removeFileHeadline": "Fájl eltávolítása a sleek?",
   "fileTabs.removeFileText": "Nem kerül törlésre a merevlemezről",
+  "fileTabs.removeFileSuccess": "Fájl sikeresen eltávolítva",
   "settings.appendCreationDate": "Létrehozáskor hozzáadja a létrehozás dátumát",
   "settings.convertRelativeToAbsoluteDates": "Relatív dátumok konvertálása abszolút dátumokká",
   "settings.notificationsAllowed": "Értesítések küldése",

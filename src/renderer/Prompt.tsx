@@ -27,6 +27,30 @@ const PromptComponent: React.FC<PromptComponentProps> = ({
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Enter" || event.key === "Return") {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const buttonToTrigger = promptItem?.enterKeyTriggersButton ?? 1;
+      const handler =
+        buttonToTrigger === 1 ? promptItem?.onButton1 : promptItem?.onButton2;
+
+      if (!handler) return;
+
+      if (promptItem?.input?.validate) {
+        const validationResult = promptItem.input.validate(inputValue);
+        if (validationResult !== true) {
+          setError(validationResult);
+          return;
+        }
+      }
+
+      handler(inputValue);
+      setPromptItem(null);
+    }
+  };
+
   const onClick = (
     _: React.MouseEvent<HTMLButtonElement>,
     handler?: (inputValue?: string) => void,
@@ -63,7 +87,7 @@ const PromptComponent: React.FC<PromptComponentProps> = ({
   }, [promptItem]);
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} onKeyDown={handleKeyDown}>
       {promptItem?.headline && <DialogTitle>{promptItem.headline}</DialogTitle>}
       {(promptItem?.text || promptItem?.input) && (
         <DialogContent>

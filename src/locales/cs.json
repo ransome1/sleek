@@ -17,6 +17,7 @@
   "fileTabs.revealArchivingFile": "Zobrazit archivační soubor v průzkumníku souborů",
   "fileTabs.removeFileHeadline": "Odstranit soubor ze sleek?",
   "fileTabs.removeFileText": "Nebude smazán z pevného disku",
+  "fileTabs.removeFileSuccess": "Soubor úspěšně odstraněn",
   "settings.appendCreationDate": "Přidat datum vytvoření při vytvoření úkolu",
   "settings.convertRelativeToAbsoluteDates": "Převést relativní data na absolutní data",
   "settings.notificationsAllowed": "Odeslat oznámení",

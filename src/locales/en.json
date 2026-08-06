@@ -17,6 +17,7 @@
   "fileTabs.revealArchivingFile": "Show archiving file in file manager",
   "fileTabs.removeFileHeadline": "Remove file from sleek?",
   "fileTabs.removeFileText": "It will not be deleted from your hard drive",
+  "fileTabs.removeFileSuccess": "File removed successfully",
   "settings.appendCreationDate": "Append creation date when todo is created",
   "settings.convertRelativeToAbsoluteDates": "Convert relative dates to absolute dates",
   "settings.notificationsAllowed": "Send notifications",

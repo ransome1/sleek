@@ -96,7 +96,11 @@ const FileTabsComponent: React.FC<FileTabsComponentProps> = memo(
     }, [index]);
 
     return (
-      <Tabs value={fileTab} id="fileTabs" onChange={handleChange}>
+      <Tabs
+        value={fileTab < settings.files.length ? fileTab : 0}
+        id="fileTabs"
+        onChange={handleChange}
+      >
         {settings.files.map((file, index) =>
           file ? (
             <Tab

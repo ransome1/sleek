@@ -17,6 +17,7 @@
   "fileTabs.revealArchivingFile": "ファイルマネージャーでアーカイブファイルを表示する",
   "fileTabs.removeFileHeadline": "sleek からファイルを削除しますか？",
   "fileTabs.removeFileText": "ハードディスクからは削除されません。",
+  "fileTabs.removeFileSuccess": "ファイルが正常に削除されました",
   "settings.appendCreationDate": "タスク作成時に作成日を追加",
   "settings.convertRelativeToAbsoluteDates": "相対日付を絶対日付に変換",
   "settings.notificationsAllowed": "通知を送信",

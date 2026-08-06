@@ -17,6 +17,7 @@
   "fileTabs.revealArchivingFile": "Mostrar arquivo de arquivamento no gerenciador de arquivos",
   "fileTabs.removeFileHeadline": "Remover ficheiro do sleek?",
   "fileTabs.removeFileText": "Não será eliminado do seu disco rígido",
+  "fileTabs.removeFileSuccess": "Ficheiro removido com sucesso",
   "settings.appendCreationDate": "Anexar data de criação quando a tarefa é criada",
   "settings.convertRelativeToAbsoluteDates": "Converter datas relativas em datas absolutas",
   "settings.notificationsAllowed": "Enviar notificações",

@@ -17,6 +17,7 @@
   "fileTabs.revealArchivingFile": "Arşiv dosyasını dosya yöneticisinde göster",
   "fileTabs.removeFileHeadline": "Dosyayı sleek'ten kaldırmak istiyor musunuz?",
   "fileTabs.removeFileText": "Sabit diskinizden silinmeyecektir",
+  "fileTabs.removeFileSuccess": "Dosya başarıyla kaldırıldı",
   "settings.appendCreationDate": "Görev oluşturulduğunda oluşturma tarihini ekle",
   "settings.convertRelativeToAbsoluteDates": "İlgili tarihleri mutlak tarihlere dönüştür",
   "settings.notificationsAllowed": "Bildirimleri Gönder",

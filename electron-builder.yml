@@ -1,7 +1,7 @@
 directories:
   output: dist
   buildResources: build
-buildVersion: "67"
+buildVersion: "68"
 asar: true
 asarUnpack:
   - "resources/icon.ico"
@@ -27,6 +27,7 @@ files:
   - "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}"
 mac:
   appId: com.todotxt.sleek
+  icon: ./resources/icon.icns
   target:
     target: default
     arch:
@@ -90,7 +91,7 @@ appx:
   publisherDisplayName: Robin Ahle
   applicationId: RobinAhle.sleektodomanager
 linux:
-  icon: ./resources/icon
+  icon: ./resources/icon.iconset/icon_512x512
   category: ProjectManagement
   artifactName: ${productName}-${version}-linux-${arch}.${ext}
   target:

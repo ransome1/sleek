@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { AlertColor } from "@mui/material/Alert";
+import { useTranslation } from "react-i18next";
 import {
   Attributes,
   Filters,
@@ -39,31 +40,44 @@ const IpcComponent: React.FC<IpcComponentProps> = ({
   setSettings,
   setIsSettingsOpen,
 }) => {
-  const handleRequestedData = (requestedData: RequestedData | null): void => {
-    if (requestedData?.headers) setHeaders(requestedData.headers);
-    if (requestedData?.attributes) setAttributes(requestedData.attributes);
-    if (requestedData?.filters) setFilters(requestedData.filters);
-    if (requestedData?.todoData) setTodoData(requestedData.todoData);
-  };
+  const { t } = useTranslation();
 
-  const handleUpdateAttributeFields = (todoObject: TodoObject): void => {
-    if (todoObject) {
-      setAttributeFields(todoObject);
-    }
-  };
+  const handleRequestedData = useCallback(
+    (requestedData: RequestedData | null): void => {
+      if (requestedData?.headers) setHeaders(requestedData.headers);
+      if (requestedData?.attributes) setAttributes(requestedData.attributes);
+      if (requestedData?.filters) setFilters(requestedData.filters);
+      if (requestedData?.todoData) setTodoData(requestedData.todoData);
+    },
+    [setHeaders, setAttributes, setFilters, setTodoData],
+  );
 
-  const handleResponse = (response: Error | string): void => {
-    const severity: AlertColor =
-      response instanceof Error ? "error" : "success";
-    setSnackBarSeverity(severity);
-    if (response instanceof Error) {
-      setSnackBarContent(response.message);
-      console.error(response);
-    } else {
-      setSnackBarContent(response);
-      console.info(response);
-    }
-  };
+  const handleUpdateAttributeFields = useCallback(
+    (todoObject: TodoObject): void => {
+      if (todoObject) {
+        setAttributeFields(todoObject);
+      }
+    },
+    [setAttributeFields],
+  );
+
+  const handleResponse = useCallback(
+    (response: Error | string): void => {
+      const severity: AlertColor =
+        response instanceof Error ? "error" : "success";
+      setSnackBarSeverity(severity);
+      if (response instanceof Error) {
+        setSnackBarContent(response.message);
+        console.error(response);
+      } else {
+        // Try to translate the response as a key; if it's not a key, use as-is
+        const translatedMessage = t(response, response);
+        setSnackBarContent(translatedMessage);
+        console.info(translatedMessage);
+      }
+    },
+    [t, setSnackBarSeverity, setSnackBarContent],
+  );
 
   useEffect(() => {
     ipcRenderer.on("requestData", handleRequestedData);
@@ -92,7 +106,14 @@ const IpcComponent: React.FC<IpcComponentProps> = ({
         setIsSettingsOpen(isSettingsOpen),
       );
     };
-  }, []);
+  }, [
+    handleResponse,
+    handleRequestedData,
+    handleUpdateAttributeFields,
+    setTodoObject,
+    setSettings,
+    setIsSettingsOpen,
+  ]);
 
   return <></>;
 };

@@ -13,6 +13,7 @@ export interface PromptItem {
     defaultValue?: string;
     validate: (val: string) => string | true;
   };
+  enterKeyTriggersButton?: 1 | 2;
 }
 
 export interface ContextMenuItem {

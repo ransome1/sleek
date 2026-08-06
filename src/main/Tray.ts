@@ -4,10 +4,10 @@ import { GetFileMenuEntries } from "./Menu";
 import { SettingsStore } from "./Stores";
 import { File } from "../@types";
 import i18n from "./i18n";
-import TrayIconDark from "../../resources/trayDarkTemplate.png?asset";
-import TrayIconLight from "../../resources/trayLightTemplate.png?asset";
-import TrayIconDarkWin from "../../resources/trayDark.ico?asset";
-import TrayIconLightWin from "../../resources/trayLight.ico?asset";
+import TrayIconDark from "../../resources/tray/trayDark.png?asset";
+import TrayIconLight from "../../resources/tray/trayLight.png?asset";
+import TrayIconDarkWin from "../../resources/tray/trayDark.png?asset";
+import TrayIconLightWin from "../../resources/tray/trayLight.png?asset";
 
 let tray: Tray | null = null;
 

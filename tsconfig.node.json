@@ -5,7 +5,7 @@
     "src/main/**/*",
     "src/main/**/*.ts",
     "src/preload/**/*",
-    "build/icon.icns",
+    "resources/icon.icns",
     "src/preload/electron.d.ts",
     "src/@types/**/*",
     "src/types/**/*",

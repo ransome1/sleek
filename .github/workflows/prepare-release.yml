@@ -5,7 +5,7 @@ on:
       - "*"
 jobs:
   macos:
-    name: MacOS (Prepare release)
+    name: macOS (Prepare release)
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
