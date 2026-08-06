@@ -2,10 +2,23 @@ import { app } from "electron";
 import path from "path";
 import { mainWindow } from "./index.js";
 
-export const userDataDirectory: string =
-  process.env.NODE_ENV === "development"
-    ? path.join(app.getPath("userData"), "userData-Development")
-    : path.join(app.getPath("userData"), "userData");
+export const userDataDirectory: string = (() => {
+  // Portable mode: store config alongside executable with "sleekUserData" folder
+  if (process.env.PORTABLE_EXECUTABLE_DIR) {
+    const folderName =
+      process.env.NODE_ENV === "development"
+        ? "sleekUserData-Development"
+        : "sleekUserData";
+    return path.join(process.env.PORTABLE_EXECUTABLE_DIR, folderName);
+  }
+
+  // Standard mode: store config in user's AppData/config directory with "userData" folder
+  const folderName =
+    process.env.NODE_ENV === "development"
+      ? "userData-Development"
+      : "userData";
+  return path.join(app.getPath("userData"), folderName);
+})();
 
 export const lineBreakPlaceholder: string = String.fromCharCode(16);
 
