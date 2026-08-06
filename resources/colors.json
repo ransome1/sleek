@@ -51,7 +51,7 @@
       "A": {
         "background": "#ff0000",
         "selected": {
-          "background": "##B70025"
+          "background": "#B70025"
         }
       },
       "B": {
