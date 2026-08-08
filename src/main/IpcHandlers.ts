@@ -121,9 +121,10 @@ function handleRemoveFile(event: IpcMainEvent, index: number): void {
 async function handleOpenFile(
   event: IpcMainEvent,
   setDoneFile: boolean,
+  lineNumber?: number,
 ): Promise<void> {
   try {
-    await openFile(setDoneFile || false);
+    await openFile(setDoneFile || false, lineNumber);
   } catch (error) {
     if (error instanceof Error) {
       HandleError(error);
@@ -135,9 +136,10 @@ async function handleOpenFile(
 async function handleCreateFile(
   event: IpcMainEvent,
   setDoneFile: boolean,
+  lineNumber?: number,
 ): Promise<void> {
   try {
-    await createFile(setDoneFile || false);
+    await createFile(setDoneFile || false, lineNumber);
   } catch (error) {
     if (error instanceof Error) {
       HandleError(error);
@@ -288,9 +290,9 @@ function handleArchiveSingleTodo(
   }
 }
 
-function handleRequestArchive(event: IpcMainEvent): void {
+function handleRequestArchive(event: IpcMainEvent, lineNumber?: number): void {
   try {
-    checkArchiveReadiness();
+    checkArchiveReadiness(lineNumber);
   } catch (error) {
     if (error instanceof Error) {
       HandleError(error);
