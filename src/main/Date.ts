@@ -65,22 +65,22 @@ export interface DateAttributes {
 export function extractSpeakingDates(body: string): DateAttributes {
   const expressions = [
     {
-      pattern: /(?<=\b)due:(?!(\d{4}-\d{2}-\d{2}))(.*?)(?=[^\s]:|$)/g,
+      pattern: /(?:^|\s)due:(?!\d{4}-\d{2}-\d{2})(.*?)(?=[^\s]:|$)/g,
       key: "due:",
       type: "relative" as DateType,
     },
     {
-      pattern: /(?<=\b)due:(\d{4}-\d{2}-\d{2})/g,
+      pattern: /(?:^|\s)due:(\d{4}-\d{2}-\d{2})/g,
       key: "due:",
       type: "absolute" as DateType,
     },
     {
-      pattern: /(?<=\b)t:(?!(\d{4}-\d{2}-\d{2}))(.*?)(?=[^\s]:|$)/g,
+      pattern: /(?:^|\s)t:(?!\d{4}-\d{2}-\d{2})(.*?)(?=[^\s]:|$)/g,
       key: "t:",
       type: "relative" as DateType,
     },
     {
-      pattern: /(?<=\b)t:(\d{4}-\d{2}-\d{2})/g,
+      pattern: /(?:^|\s)t:(\d{4}-\d{2}-\d{2})/g,
       key: "t:",
       type: "absolute" as DateType,
     },
@@ -102,10 +102,10 @@ export function extractSpeakingDates(body: string): DateAttributes {
   };
 
   for (const expression of expressions) {
-    const regex = new RegExp(`(${expression.pattern.source})`);
-    const match = body.match(regex);
+    const regex = new RegExp(expression.pattern);
+    const match = regex.exec(body);
     if (match) {
-      const attributeValue = match[0].slice(expression.key.length);
+      const attributeValue = match[1];
       const dateAttribute = processDateWithSugar(
         attributeValue,
         expression.type,

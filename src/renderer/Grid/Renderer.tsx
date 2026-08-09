@@ -45,7 +45,7 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
     }[] = [
       {
         pattern: new RegExp(
-          `t:${todoObject.tString?.replace(/\s/g, "\\s")}`,
+          `(?:^|\\s)t:${todoObject.tString?.replace(/\s/g, "\\s")}`,
           "g",
         ),
         type: "t",
@@ -53,24 +53,24 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
       },
       {
         pattern: new RegExp(
-          `due:${todoObject.dueString?.replace(/\s/g, "\\s")}`,
+          `(?:^|\\s)due:${todoObject.dueString?.replace(/\s/g, "\\s")}`,
           "g",
         ),
         type: "due",
         key: "due:",
       },
-      { pattern: /@(\S+)/, type: "contexts", key: "@" },
+      { pattern: /(?:^|\s)@(\S+)/, type: "contexts", key: "@" },
       { pattern: /(?:^|\s)\+(\S+)/, type: "projects", key: "+" },
-      { pattern: /\bh:1\b/, type: "hidden", key: "h:1" },
-      { pattern: /\bpm:(\d+)/, type: "pm", key: "pm:" },
-      { pattern: /\brec:([^ ]+)/, type: "rec", key: "rec:" },
+      { pattern: /(?:^|\s)h:1\b/, type: "hidden", key: "h:1" },
+      { pattern: /(?:^|\s)pm:(\d+)/, type: "pm", key: "pm:" },
+      { pattern: /(?:^|\s)rec:([^ ]+)/, type: "rec", key: "rec:" },
       {
-        pattern: /([a-zA-Z][a-zA-Z0-9+.-]*:\/\/\S+)/,
+        pattern: /\b([a-zA-Z][a-zA-Z0-9+.-]*:\/\/\S+)/,
         type: "url",
         key: "url",
       },
       {
-        pattern: /\b(?!(?:due|t|pm|rec|h|pri):)\w+:[^\s)]+/,
+        pattern: /(?:^|\s)(?!(?:due|t|pm|rec|h|pri):)[\w-]+:[^\s)]+/,
         type: "custom-tag",
         key: "custom-tag",
       },
