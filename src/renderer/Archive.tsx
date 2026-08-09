@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PromptItem } from "@sleek-types";
 
@@ -14,31 +14,54 @@ const ArchiveComponent: React.FC<ArchiveComponentProps> = ({
   setPromptItem,
 }) => {
   const { t } = useTranslation();
+  const [archiveLineNumber, setArchiveLineNumber] = useState<
+    number | undefined
+  >(undefined);
 
-  const handleTriggerArchiving = (doneFileAvailable: boolean): void => {
+  const handleTriggerArchiving = (
+    doneFileAvailable: boolean,
+    lineNumber?: number,
+  ): void => {
+    setArchiveLineNumber(lineNumber);
     setPromptItem(
-      doneFileAvailable ? promptItemArchiving : promptItemChooseChangeFile,
+      doneFileAvailable
+        ? lineNumber
+          ? promptItemArchivingSingle
+          : promptItemArchivingAll
+        : promptItemChooseChangeFile,
     );
   };
 
-  const handleArchiveConfirm = (): void => {
+  const handleArchiveAllConfirm = (): void => {
     ipcRenderer.send("archiveTodos");
   };
 
+  const handleArchiveSingleConfirm = (): void => {
+    ipcRenderer.send("archiveSingleTodo", archiveLineNumber);
+  };
+
   const handleOpenDoneFile = (): void => {
-    ipcRenderer.send("openFile", true);
+    ipcRenderer.send("openFile", true, archiveLineNumber);
   };
 
   const handleCreateDoneFile = (): void => {
-    ipcRenderer.send("createFile", true);
+    ipcRenderer.send("createFile", true, archiveLineNumber);
   };
 
-  const promptItemArchiving = {
+  const promptItemArchivingAll = {
     id: "archive",
     headline: t("prompt.archive.headline"),
     text: t("prompt.archive.text"),
     button1: t("archive"),
-    onButton1: handleArchiveConfirm,
+    onButton1: handleArchiveAllConfirm,
+  };
+
+  const promptItemArchivingSingle = {
+    id: "archive",
+    headline: t("prompt.archive.headline.single"),
+    text: t("prompt.archive.text.single"),
+    button1: t("archive"),
+    onButton1: handleArchiveSingleConfirm,
   };
 
   const promptItemChooseChangeFile = {

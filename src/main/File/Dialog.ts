@@ -22,7 +22,10 @@ const dialogFilters = () => {
   ];
 };
 
-async function openFile(setDoneFile: boolean): Promise<void> {
+async function openFile(
+  setDoneFile: boolean,
+  lineNumber?: number,
+): Promise<void> {
   const result: OpenDialogReturnValue = await dialog.showOpenDialog({
     properties: ["openFile"],
     filters: dialogFilters(),
@@ -33,14 +36,17 @@ async function openFile(setDoneFile: boolean): Promise<void> {
     const bookmark: string | null = result.bookmarks?.[0] || null;
 
     if (setDoneFile) {
-      linkDoneFile(filePath, bookmark);
+      linkDoneFile(filePath, bookmark, lineNumber);
     } else {
       registerTodoFile(filePath, bookmark);
     }
   }
 }
 
-async function createFile(setDoneFile: boolean): Promise<void> {
+async function createFile(
+  setDoneFile: boolean,
+  lineNumber?: number,
+): Promise<void> {
   const defaultFileName = setDoneFile ? "done.txt" : "todo.txt";
   const result: SaveDialogReturnValue = await dialog.showSaveDialog({
     defaultPath: path.join(app.getPath("documents"), defaultFileName),
@@ -55,7 +61,7 @@ async function createFile(setDoneFile: boolean): Promise<void> {
     writeToFile("", filePath);
 
     if (setDoneFile) {
-      linkDoneFile(filePath, bookmark);
+      linkDoneFile(filePath, bookmark, lineNumber);
     } else {
       registerTodoFile(filePath, bookmark);
     }

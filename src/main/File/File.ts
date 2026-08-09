@@ -56,7 +56,11 @@ function registerTodoFile(filePath: string, bookmark: string | null) {
   SettingsStore.set("files", files);
 }
 
-function linkDoneFile(filePath: string, bookmark: string | null) {
+function linkDoneFile(
+  filePath: string,
+  bookmark: string | null,
+  lineNumber?: number,
+) {
   const files: File[] = SettingsStore.get("files");
   const activeIndex: number = files.findIndex((file) => file.active);
 
@@ -67,7 +71,7 @@ function linkDoneFile(filePath: string, bookmark: string | null) {
 
   SettingsStore.set("files", files);
 
-  mainWindow!.webContents.send("triggerArchiving", true);
+  mainWindow!.webContents.send("triggerArchiving", true, lineNumber);
 }
 
 function removeFile(index: number) {

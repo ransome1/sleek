@@ -33,7 +33,7 @@ export const useRowContextMenu = (
   };
 
   const handleArchive = (lineNumber: number) => {
-    ipcRenderer.send("archiveSingleTodo", lineNumber);
+    ipcRenderer.send("requestArchive", lineNumber);
   };
 
   const handleConfirmDelete = (lineNumber: number) => {
@@ -65,13 +65,7 @@ export const useRowContextMenu = (
       {
         id: "archive",
         label: t("archive"),
-        promptItem: {
-          id: "archive",
-          headline: t("prompt.archive.headline.single"),
-          text: t("prompt.archive.text.single"),
-          button1: t("archive"),
-          onButton1: () => handleArchive(lineNumber),
-        },
+        function: () => handleArchive(lineNumber),
       },
       {
         id: "delete",

@@ -7,7 +7,7 @@ import { File } from "@sleek-types";
 
 const COMPLETION_MARKER = "x ";
 
-function checkArchiveReadiness(): void {
+function checkArchiveReadiness(lineNumber?: number): void {
   const activeFile: File | null = getActiveFile();
   if (!activeFile) {
     throw new Error(i18n.t("archive.error.todoFileNotDefined"));
@@ -15,6 +15,7 @@ function checkArchiveReadiness(): void {
   mainWindow!.webContents.send(
     "triggerArchiving",
     Boolean(activeFile?.doneFilePath),
+    lineNumber,
   );
 }
 
