@@ -26,18 +26,21 @@ export function handleRenameFilterValue(
     );
 
     if (count === 0) {
-      event.reply(
-        "responseFromMainProcess",
-        `No todos found with "${oldValue}"`,
-      );
+      event.reply("responseFromMainProcess", {
+        type: "notFound",
+        value: oldValue,
+      });
       return;
     }
 
     writeToFile(linesInFile.join("\n"), activeFile.todoFilePath);
-    event.reply(
-      "responseFromMainProcess",
-      `Renamed "${oldValue}" to "${newValue}" in ${count} todos`,
-    );
+    event.reply("responseFromMainProcess", {
+      type: "rename",
+      attrType,
+      oldValue,
+      newValue,
+      count,
+    });
   } catch (error) {
     if (error instanceof Error) HandleError(error);
   }
@@ -59,18 +62,20 @@ export function handleDeleteFilterValue(
     );
 
     if (count === 0) {
-      event.reply(
-        "responseFromMainProcess",
-        `No todos found with "${valueToDelete}"`,
-      );
+      event.reply("responseFromMainProcess", {
+        type: "notFound",
+        value: valueToDelete,
+      });
       return;
     }
 
     writeToFile(linesInFile.join("\n"), activeFile.todoFilePath);
-    event.reply(
-      "responseFromMainProcess",
-      `Deleted "${valueToDelete}" from ${count} todos`,
-    );
+    event.reply("responseFromMainProcess", {
+      type: "delete",
+      attrType,
+      value: valueToDelete,
+      count,
+    });
   } catch (error) {
     if (error instanceof Error) HandleError(error);
   }

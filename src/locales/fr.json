@@ -157,5 +157,8 @@
   "clipboard.copied": "Copié dans le presse-papiers : {{value}}",
   "sorting.ascending": "Ordre croissant",
   "sorting.descending": "Ordre décroissant",
-  "pomodoro.alt": "Pomodoro"
+  "pomodoro.alt": "Pomodoro",
+  "success.renameAttribute": "\"{{oldValue}}\" renommé en \"{{newValue}}\" dans {{count}} tâches",
+  "success.deleteAttribute": "\"{{value}}\" supprimé de {{count}} tâches",
+  "success.notFound": "Aucune tâche trouvée avec \"{{value}}\""
 }

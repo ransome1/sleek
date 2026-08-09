@@ -157,5 +157,8 @@
   "clipboard.copied": "Copiado para a área de transferência: {{value}}",
   "sorting.ascending": "Ordem ascendente",
   "sorting.descending": "Ordem descendente",
-  "pomodoro.alt": "Pomodoro"
+  "pomodoro.alt": "Pomodoro",
+  "success.renameAttribute": "Renomeado \"{{oldValue}}\" para \"{{newValue}}\" em {{count}} tarefas",
+  "success.deleteAttribute": "Deletado \"{{value}}\" de {{count}} tarefas",
+  "success.notFound": "Nenhuma tarefa encontrada com \"{{value}}\""
 }

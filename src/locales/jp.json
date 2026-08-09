@@ -157,5 +157,8 @@
   "clipboard.copied": "クリップボードにコピーされました: {{value}}",
   "sorting.ascending": "昇順",
   "sorting.descending": "降順",
-  "pomodoro.alt": "ポモドーロ"
+  "pomodoro.alt": "ポモドーロ",
+  "success.renameAttribute": "{{count}}個のタスクで\"{{oldValue}}\"から\"{{newValue}}\"に名前が変更されました",
+  "success.deleteAttribute": "{{count}}個のタスクから\"{{value}}\"が削除されました",
+  "success.notFound": "\"{{value}}\"を含むタスクが見つかりません"
 }

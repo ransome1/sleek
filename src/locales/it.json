@@ -157,5 +157,8 @@
   "clipboard.copied": "Copiato negli appunti: {{value}}",
   "sorting.ascending": "Ordinamento ascendente",
   "sorting.descending": "Ordinamento discendente",
-  "pomodoro.alt": "Pomodoro"
+  "pomodoro.alt": "Pomodoro",
+  "success.renameAttribute": "\"{{oldValue}}\" rinominato in \"{{newValue}}\" in {{count}} attività",
+  "success.deleteAttribute": "\"{{value}}\" cancellato da {{count}} attività",
+  "success.notFound": "Nessuna attività trovata con \"{{value}}\""
 }

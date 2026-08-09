@@ -157,5 +157,8 @@
   "clipboard.copied": "Zkopírováno do schránky: {{value}}",
   "sorting.ascending": "Vzestupné řazení",
   "sorting.descending": "Sestupné řazení",
-  "pomodoro.alt": "Pomodoro"
+  "pomodoro.alt": "Pomodoro",
+  "success.renameAttribute": "Přejmenováno \"{{oldValue}}\" na \"{{newValue}}\" v {{count}} úkolech",
+  "success.deleteAttribute": "\"{{value}}\" odstraněno z {{count}} úkolů",
+  "success.notFound": "Nebyly nalezeny žádné úkoly s \"{{value}}\""
 }

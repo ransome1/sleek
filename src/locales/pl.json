@@ -157,5 +157,8 @@
   "clipboard.copied": "Skopiowano do schowka: {{value}}",
   "sorting.ascending": "Sortowanie rosnące",
   "sorting.descending": "Sortowanie malejące",
-  "pomodoro.alt": "Pomodoro"
+  "pomodoro.alt": "Pomodoro",
+  "success.renameAttribute": "\"{{oldValue}}\" zmieniona na \"{{newValue}}\" w {{count}} zadaniach",
+  "success.deleteAttribute": "\"{{value}}\" usunięta z {{count}} zadań",
+  "success.notFound": "Nie znaleziono żadnych zadań z \"{{value}}\""
 }

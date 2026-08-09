@@ -16,6 +16,10 @@ export interface AttributeColor {
     background: string;
     text: string;
   };
+  badge?: {
+    background: string;
+    text: string;
+  };
   selected?: {
     text: string;
     background: string;
@@ -232,6 +236,21 @@ export function getCssVariables(theme: ColorTheme): Record<string, string> {
   if (genericThemeColors && genericThemeColors.chip) {
     vars["--chip-bg"] = genericThemeColors.chip.background;
     vars["--chip-text"] = genericThemeColors.chip.text;
+  }
+
+  // Add badge colors from generic
+  if (
+    genericThemeColors &&
+    "badge" in genericThemeColors &&
+    genericThemeColors.badge
+  ) {
+    vars["--attribute-generic-badge-text"] = genericThemeColors.badge.text;
+    vars["--attribute-generic-badge-bg"] = genericThemeColors.badge.background;
+  } else {
+    // Fallback badge colors if not defined
+    vars["--attribute-generic-badge-text"] =
+      theme === "dark" ? "#ffffff" : "#ccc";
+    vars["--attribute-generic-badge-bg"] = "#5a5a5a";
   }
 
   // Add gradients

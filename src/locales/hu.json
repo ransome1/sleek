@@ -157,5 +157,8 @@
   "clipboard.copied": "Vágólapra másolva: {{value}}",
   "sorting.ascending": "Növekvő sorrend",
   "sorting.descending": "Csökkenő sorrend",
-  "pomodoro.alt": "Pomodoro"
+  "pomodoro.alt": "Pomodoro",
+  "success.renameAttribute": "\"{{oldValue}}\" átnevezve \"{{newValue}}\" névre {{count}} feladatban",
+  "success.deleteAttribute": "\"{{value}}\" eltávolítva {{count}} feladatból",
+  "success.notFound": "Nem találtunk feladatot \"{{value}}\" értékkel"
 }

@@ -29,3 +29,15 @@ export interface RequestedData {
   headers: HeadersObject;
   todoData: TodoData;
 }
+
+export type MainProcessResponse =
+  | {
+      type: "rename";
+      attrType: string;
+      oldValue: string;
+      newValue: string;
+      count: number;
+    }
+  | { type: "delete"; attrType: string; value: string; count: number }
+  | { type: "notFound"; value: string }
+  | Error;

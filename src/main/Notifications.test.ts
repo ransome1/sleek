@@ -10,14 +10,9 @@ import {
   GetToday,
 } from "./Notifications";
 
-const today = GetToday();
-const tomorrow = today.plus({ days: 1 });
-const inOneWeek = today.plus({ weeks: 1 });
-const lastWeek = today.minus({ weeks: 1 });
-const inFourDays = today.plus({ days: 4 });
-const thresholdDay = today.plus({ days: 5 }); // mirrors the notificationThreshold mock value
-
 vi.mock("./Stores", () => {
+  const today = GetToday();
+  const inFourDays = today.plus({ days: 4 });
   return {
     SettingsStore: {
       get: vi.fn((key) => {
@@ -60,34 +55,6 @@ vi.mock("./index.js", () => {
   };
 });
 
-vi.mock(import("./Notifications"), async (importOriginal) => {
-  const actual = await importOriginal();
-  return {
-    ...actual,
-  };
-});
-
-vi.mock("path", () => {
-  return {
-    default: {
-      join: vi.fn(),
-    },
-  };
-});
-
-vi.mock("electron", () => {
-  return {
-    Notification: vi.fn(function () {
-      return {
-        show: vi.fn(),
-      };
-    }),
-    app: {
-      getPath: vi.fn().mockReturnValue(""),
-    },
-  };
-});
-
 vi.mock("./i18n", () => {
   return {
     default: {
@@ -106,6 +73,13 @@ vi.mock("./i18n", () => {
     },
   };
 });
+
+const today = GetToday();
+const tomorrow = today.plus({ days: 1 });
+const inOneWeek = today.plus({ weeks: 1 });
+const lastWeek = today.minus({ weeks: 1 });
+const inFourDays = today.plus({ days: 4 });
+const thresholdDay = today.plus({ days: 5 }); // mirrors the notificationThreshold mock value
 
 describe("MustNotify", () => {
   beforeEach(() => {

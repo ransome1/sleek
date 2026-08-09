@@ -157,5 +157,8 @@
   "clipboard.copied": "Panoya kopyalandı: {{value}}",
   "sorting.ascending": "Artan sıra",
   "sorting.descending": "Azalan sıra",
-  "pomodoro.alt": "Pomodoro"
+  "pomodoro.alt": "Pomodoro",
+  "success.renameAttribute": "\"{{oldValue}}\" ile \"{{newValue}}\" olarak {{count}} görevde yeniden adlandırıldı",
+  "success.deleteAttribute": "\"{{value}}\" {{count}} görevden silindi",
+  "success.notFound": "\"{{value}}\" ile görev bulunamadı"
 }

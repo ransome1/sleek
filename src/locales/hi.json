@@ -157,5 +157,8 @@
   "clipboard.copied": "क्लिपबोर्ड पर कॉपी किया गया: {{value}}",
   "sorting.ascending": "आरोही क्रम",
   "sorting.descending": "अवरोही क्रम",
-  "pomodoro.alt": "पोमोडोरो"
+  "pomodoro.alt": "पोमोडोरो",
+  "success.renameAttribute": "{{count}} कार्यों में \"{{oldValue}}\" को \"{{newValue}}\" में नाम बदला गया",
+  "success.deleteAttribute": "{{count}} कार्यों से \"{{value}}\" हटाया गया",
+  "success.notFound": "\"{{value}}\" के साथ कोई कार्य नहीं मिला"
 }

@@ -157,5 +157,8 @@
   "clipboard.copied": "클립보드에 복사됨: {{value}}",
   "sorting.ascending": "오름차순 정렬",
   "sorting.descending": "내림차순 정렬",
-  "pomodoro.alt": "포모도로"
+  "pomodoro.alt": "포모도로",
+  "success.renameAttribute": "\"{{oldValue}}\"을(를) \"{{newValue}}\"(으)로 {{count}}개 작업에서 이름 변경됨",
+  "success.deleteAttribute": "{{count}}개 작업에서 \"{{value}}\" 삭제됨",
+  "success.notFound": "\"{{value}}\"이(가) 있는 작업을 찾을 수 없음"
 }

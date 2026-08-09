@@ -1,11 +1,17 @@
 import { ContextMenuItem, AttributeKey } from "@sleek-types";
-
+import { AlertColor } from "@mui/material/Alert";
+import React from "react";
 import { SettingStore } from "@sleek-types";
+
 export function createAttributeContextMenuItems(
   t: (key: string) => string,
   value: string,
   attributeKey: AttributeKey,
   settings: SettingStore | null,
+  setSnackBarContent?: React.Dispatch<React.SetStateAction<string | null>>,
+  setSnackBarSeverity?: React.Dispatch<
+    React.SetStateAction<AlertColor | undefined>
+  >,
 ): ContextMenuItem[] {
   // For contexts and projects, strip the @ or + prefix
   // For recurrence, keep the + as it's part of the value (e.g., +1d)
@@ -41,12 +47,24 @@ export function createAttributeContextMenuItems(
           label: t("drawer.attributes.rename.newValue"),
           defaultValue: displayValue,
           validate: (val: string) => {
-            if (!val.trim()) return t("drawer.attributes.rename.emptyError");
-            if (/\s/.test(val))
+            if (!val.trim()) {
+              return t("drawer.attributes.rename.emptyError");
+            }
+            if (/\s/.test(val)) {
               return t("drawer.attributes.rename.spacesError");
-            if (val === displayValue)
+            }
+            if (val === displayValue) {
               return t("drawer.attributes.rename.sameValueError");
+            }
             return true;
+          },
+          onValidationError: (errorMessage: string) => {
+            if (setSnackBarContent) {
+              setSnackBarContent(errorMessage);
+            }
+            if (setSnackBarSeverity) {
+              setSnackBarSeverity("info");
+            }
           },
         },
         onButton1: (inputValue?: string) => {

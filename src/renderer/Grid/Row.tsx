@@ -7,6 +7,7 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import { useTranslation } from "react-i18next";
+import { AlertColor } from "@mui/material/Alert";
 import { useAttributeContextMenu } from "../Shared/useAttributeContextMenu";
 import { useRowContextMenu } from "../Shared/useRowContextMenu";
 
@@ -16,9 +17,9 @@ import "./Row.scss";
 import {
   ContextMenu,
   Filters,
-  PromptItem,
   SettingStore,
   TodoObject,
+  PromptItem,
 } from "@sleek-types";
 
 const { ipcRenderer } = window.api;
@@ -31,6 +32,10 @@ interface RowProps {
   setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
   settings: SettingStore;
+  setSnackBarContent?: React.Dispatch<React.SetStateAction<string | null>>;
+  setSnackBarSeverity?: React.Dispatch<
+    React.SetStateAction<AlertColor | undefined>
+  >;
 }
 
 const Row: React.FC<RowProps> = memo(
@@ -42,10 +47,18 @@ const Row: React.FC<RowProps> = memo(
     setContextMenu,
     setPromptItem,
     settings,
+    setSnackBarContent,
+    setSnackBarSeverity,
   }) => {
     const { t } = useTranslation();
     const { handleContextMenu: handleAttributeContextMenu } =
-      useAttributeContextMenu({ setContextMenu, setPromptItem, settings });
+      useAttributeContextMenu({
+        setContextMenu,
+
+        settings,
+        setSnackBarContent,
+        setSnackBarSeverity,
+      });
     const { handleRowContextMenu } = useRowContextMenu({
       setContextMenu,
       setPromptItem,
@@ -245,7 +258,8 @@ const Row: React.FC<RowProps> = memo(
             filters={filters ? filters : ({} as Filters)}
             settings={settings}
             setContextMenu={setContextMenu}
-            setPromptItem={setPromptItem}
+            setSnackBarContent={setSnackBarContent}
+            setSnackBarSeverity={setSnackBarSeverity}
           />
         </li>
       </>

@@ -6,6 +6,7 @@ import Link from "@mui/material/Link";
 import HelpIcon from "@mui/icons-material/Help";
 import Badge from "@mui/material/Badge";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { AlertColor } from "@mui/material/Alert";
 import PomodoroIcon from "../../../resources/pomodoro.svg?asset";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import AirIcon from "@mui/icons-material/Air";
@@ -41,6 +42,10 @@ interface DrawerAttributesComponentProps {
   filters: Filters | null;
   setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
+  setSnackBarContent?: React.Dispatch<React.SetStateAction<string | null>>;
+  setSnackBarSeverity?: React.Dispatch<
+    React.SetStateAction<AlertColor | undefined>
+  >;
 }
 
 // Merges raw attribute entries into display-ready buckets.
@@ -118,194 +123,204 @@ function buildDisplayBuckets(
 }
 
 const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> =
-  memo(({ settings, attributes, filters, setContextMenu, setPromptItem }) => {
-    const [hovered, setHovered] = useState<string | null>(null);
-
-    const { t } = useTranslation();
-
-    const isAttributesEmpty = useMemo(
-      () =>
-        !attributes ||
-        Object.values(attributes).every(
-          (group) => Object.keys(group).length === 0,
-        ),
-      [attributes],
-    );
-
-    const handleAccordionToggle = (index: number): void => {
-      // Spread to avoid mutating the settings object in place
-      const updated = [...settings.accordionOpenState];
-      updated[index] = !updated[index];
-      store.setConfig("accordionOpenState", updated);
-    };
-
-    const { handleContextMenu } = useAttributeContextMenu({
-      setContextMenu,
-      setPromptItem,
+  memo(
+    ({
       settings,
-    });
+      attributes,
+      filters,
+      setContextMenu,
+      setSnackBarContent,
+      setSnackBarSeverity,
+    }) => {
+      const [hovered, setHovered] = useState<string | null>(null);
 
-    const renderFilterChips = (
-      categoryKey: AttributeKey,
-      buckets: AttributeGroup,
-    ) => {
-      return Object.entries(buckets).map(
-        ([bucketName, attribute], childIndex) => {
-          if (attribute.hide) return null;
+      const { t } = useTranslation();
 
-          const chipId = `${categoryKey}-${bucketName}-${childIndex}`;
-          const isHovered = hovered === chipId;
-          const excluded = IsExcluded(attribute, filters);
-          const selected = IsSelected(categoryKey, filters, attribute.value);
-          const disabled = attribute.count === 0;
-          // groupedName is only set when multiple raw dates collapsed into one bucket label
-          const groupedName = attribute.value.length > 1 ? bucketName : null;
+      const isAttributesEmpty = useMemo(
+        () =>
+          !attributes ||
+          Object.values(attributes).every(
+            (group) => Object.keys(group).length === 0,
+          ),
+        [attributes],
+      );
 
-          return (
-            <div
-              key={chipId}
-              data-todotxt-attribute={categoryKey}
-              data-todotxt-value={bucketName}
-              onMouseEnter={() => setHovered(chipId)}
-              onMouseLeave={() => setHovered(null)}
-              onContextMenu={(event) =>
-                handleContextMenu(event, bucketName, categoryKey)
-              }
-              className={`filter ${selected ? "selected" : ""} ${excluded ? "excluded" : ""}`}
-            >
-              <Badge
-                badgeContent={
-                  attribute.count > 0 ? (
-                    <span
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        HandleFilterSelect(
-                          categoryKey,
-                          attribute.value,
-                          filters,
-                          true,
-                          groupedName,
-                        );
-                      }}
-                    >
-                      {isHovered ? <VisibilityOffIcon /> : attribute.count}
-                    </span>
-                  ) : null
+      const handleAccordionToggle = (index: number): void => {
+        // Spread to avoid mutating the settings object in place
+        const updated = [...settings.accordionOpenState];
+        updated[index] = !updated[index];
+        store.setConfig("accordionOpenState", updated);
+      };
+
+      const { handleContextMenu } = useAttributeContextMenu({
+        setContextMenu,
+        settings,
+        setSnackBarContent,
+        setSnackBarSeverity,
+      });
+
+      const renderFilterChips = (
+        categoryKey: AttributeKey,
+        buckets: AttributeGroup,
+      ) => {
+        return Object.entries(buckets).map(
+          ([bucketName, attribute], childIndex) => {
+            if (attribute.hide) return null;
+
+            const chipId = `${categoryKey}-${bucketName}-${childIndex}`;
+            const isHovered = hovered === chipId;
+            const excluded = IsExcluded(attribute, filters);
+            const selected = IsSelected(categoryKey, filters, attribute.value);
+            const disabled = attribute.count === 0;
+            // groupedName is only set when multiple raw dates collapsed into one bucket label
+            const groupedName = attribute.value.length > 1 ? bucketName : null;
+
+            return (
+              <div
+                key={chipId}
+                data-todotxt-attribute={categoryKey}
+                data-todotxt-value={bucketName}
+                onMouseEnter={() => setHovered(chipId)}
+                onMouseLeave={() => setHovered(null)}
+                onContextMenu={(event) =>
+                  handleContextMenu(event, bucketName, categoryKey)
                 }
-                className={attribute.notify ? "notify" : undefined}
+                className={`filter ${selected ? "selected" : ""} ${excluded ? "excluded" : ""}`}
               >
-                <button
-                  data-testid={`drawer-button-${categoryKey}`}
-                  onClick={
-                    disabled
-                      ? undefined
-                      : () =>
+                <Badge
+                  badgeContent={
+                    attribute.count > 0 ? (
+                      <span
+                        onClick={(event) => {
+                          event.stopPropagation();
                           HandleFilterSelect(
                             categoryKey,
                             attribute.value,
                             filters,
-                            false,
+                            true,
                             groupedName,
-                          )
+                          );
+                        }}
+                      >
+                        {isHovered ? <VisibilityOffIcon /> : attribute.count}
+                      </span>
+                    ) : null
                   }
-                  disabled={disabled}
-                  className={categoryKey === "pm" ? "pomodoro" : undefined}
+                  className={attribute.notify ? "notify" : undefined}
                 >
-                  {categoryKey === "pm" && (
-                    <img src={PomodoroIcon} alt="Pomodoro" />
-                  )}
-                  {bucketName}
-                </button>
-              </Badge>
-              {excluded && (
-                <div
-                  data-todotxt-attribute={categoryKey}
-                  data-todotxt-value={bucketName}
-                  data-testid={`drawer-button-exclude-${categoryKey}`}
-                  className="overlay"
-                  onClick={() =>
-                    HandleFilterSelect(
-                      categoryKey,
-                      attribute.value,
-                      filters,
-                      true,
-                      groupedName,
-                    )
-                  }
-                >
-                  <VisibilityOffIcon />
-                </div>
-              )}
-            </div>
-          );
-        },
-      );
-    };
-
-    return (
-      <div id="Attributes">
-        {!isAttributesEmpty && attributes ? (
-          Object.keys(attributes).map((catKey, index) => {
-            const categoryKey = catKey as AttributeKey;
-            const buckets = buildDisplayBuckets(
-              categoryKey,
-              attributes[categoryKey],
-              settings,
-              t,
-            );
-            // Don't render the accordion if there are no entries at all,
-            // or if every entry is intentionally hidden via h:1.
-            const hasEntries = Object.keys(buckets).length > 0;
-            const hasVisibleEntries = Object.values(buckets).some(
-              (attribute) => !attribute.hide,
-            );
-            if (!hasEntries || !hasVisibleEntries) return null;
-
-            const hasNotification =
-              categoryKey === "due" &&
-              Object.values(buckets).some((attribute) => attribute.notify);
-
-            return (
-              <Accordion
-                key={index}
-                expanded={settings.accordionOpenState[index]}
-                onChange={() => handleAccordionToggle(index)}
-              >
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Badge
-                    variant="dot"
-                    invisible={!hasNotification}
-                    data-testid={`drawer-attributes-accordion-${categoryKey}`}
+                  <button
+                    data-testid={`drawer-button-${categoryKey}`}
+                    onClick={
+                      disabled
+                        ? undefined
+                        : () =>
+                            HandleFilterSelect(
+                              categoryKey,
+                              attribute.value,
+                              filters,
+                              false,
+                              groupedName,
+                            )
+                    }
+                    disabled={disabled}
+                    className={categoryKey === "pm" ? "pomodoro" : undefined}
                   >
-                    {translatedAttributes(t)[categoryKey]}
-                  </Badge>
-                </AccordionSummary>
-                <AccordionDetails>
-                  {renderFilterChips(categoryKey, buckets)}
-                </AccordionDetails>
-              </Accordion>
+                    {categoryKey === "pm" && (
+                      <img src={PomodoroIcon} alt="Pomodoro" />
+                    )}
+                    {bucketName}
+                  </button>
+                </Badge>
+                {excluded && (
+                  <div
+                    data-todotxt-attribute={categoryKey}
+                    data-todotxt-value={bucketName}
+                    data-testid={`drawer-button-exclude-${categoryKey}`}
+                    className="overlay"
+                    onClick={() =>
+                      HandleFilterSelect(
+                        categoryKey,
+                        attribute.value,
+                        filters,
+                        true,
+                        groupedName,
+                      )
+                    }
+                  >
+                    <VisibilityOffIcon />
+                  </div>
+                )}
+              </div>
             );
-          })
-        ) : (
-          <div className="placeholder">
-            <AirIcon />
-            <br />
-            {t("drawer.attributes.noAttributesAvailable")}
-            <Link
-              onClick={(event) =>
-                handleLinkClick(
-                  event,
-                  "https://github.com/ransome1/sleek/wiki/Available-todo.txt-attributes-and-extensions",
-                )
-              }
-            >
-              <HelpIcon />
-            </Link>
-          </div>
-        )}
-      </div>
-    );
-  });
+          },
+        );
+      };
+
+      return (
+        <div id="Attributes">
+          {!isAttributesEmpty && attributes ? (
+            Object.keys(attributes).map((catKey, index) => {
+              const categoryKey = catKey as AttributeKey;
+              const buckets = buildDisplayBuckets(
+                categoryKey,
+                attributes[categoryKey],
+                settings,
+                t,
+              );
+              // Don't render the accordion if there are no entries at all,
+              // or if every entry is intentionally hidden via h:1.
+              const hasEntries = Object.keys(buckets).length > 0;
+              const hasVisibleEntries = Object.values(buckets).some(
+                (attribute) => !attribute.hide,
+              );
+              if (!hasEntries || !hasVisibleEntries) return null;
+
+              const hasNotification =
+                categoryKey === "due" &&
+                Object.values(buckets).some((attribute) => attribute.notify);
+
+              return (
+                <Accordion
+                  key={index}
+                  expanded={settings.accordionOpenState[index]}
+                  onChange={() => handleAccordionToggle(index)}
+                >
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Badge
+                      variant="dot"
+                      invisible={!hasNotification}
+                      data-testid={`drawer-attributes-accordion-${categoryKey}`}
+                    >
+                      {translatedAttributes(t)[categoryKey]}
+                    </Badge>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    {renderFilterChips(categoryKey, buckets)}
+                  </AccordionDetails>
+                </Accordion>
+              );
+            })
+          ) : (
+            <div className="placeholder">
+              <AirIcon />
+              <br />
+              {t("drawer.attributes.noAttributesAvailable")}
+              <Link
+                onClick={(event) =>
+                  handleLinkClick(
+                    event,
+                    "https://github.com/ransome1/sleek/wiki/Available-todo.txt-attributes-and-extensions",
+                  )
+                }
+              >
+                <HelpIcon />
+              </Link>
+            </div>
+          )}
+        </div>
+      );
+    },
+  );
 
 DrawerAttributesComponent.displayName = "DrawerAttributesComponent";
 

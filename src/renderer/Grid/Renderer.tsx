@@ -2,6 +2,7 @@ import React, { JSX, memo } from "react";
 import ReactMarkdown, { Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Chip from "@mui/material/Chip";
+import { AlertColor } from "@mui/material/Alert";
 
 import PomodoroIcon from "../../../resources/pomodoro.svg?asset";
 import DatePickerInline from "./DatePickerInline";
@@ -9,7 +10,7 @@ import RecurrencePicker from "../Picker/RecurrencePicker";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { handleLinkClick, HandleFilterSelect, IsSelected } from "../Shared";
 import { TodoObject, Filters, SettingStore, AttributeKey } from "@sleek-types";
-import { ContextMenu, PromptItem } from "@sleek-types";
+import { ContextMenu } from "@sleek-types";
 import { useAttributeContextMenu } from "../Shared/useAttributeContextMenu";
 
 const { ipcRenderer } = window.api;
@@ -19,13 +20,24 @@ interface RendererComponentProps {
   filters: Filters;
   settings: SettingStore;
   setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
-  setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
+
+  setSnackBarContent?: React.Dispatch<React.SetStateAction<string | null>>;
+  setSnackBarSeverity?: React.Dispatch<
+    React.SetStateAction<AlertColor | undefined>
+  >;
 }
 
 type ReplacementsKey = AttributeKey | "url" | "custom-tag";
 
 const RendererComponent: React.FC<RendererComponentProps> = memo(
-  ({ todoObject, filters, settings, setContextMenu, setPromptItem }) => {
+  ({
+    todoObject,
+    filters,
+    settings,
+    setContextMenu,
+    setSnackBarContent,
+    setSnackBarSeverity,
+  }) => {
     const expressions: {
       pattern: RegExp;
       type: ReplacementsKey;
@@ -66,8 +78,9 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
 
     const { handleContextMenu } = useAttributeContextMenu({
       setContextMenu,
-      setPromptItem,
       settings,
+      setSnackBarContent,
+      setSnackBarSeverity,
     });
 
     const replacements: {

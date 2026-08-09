@@ -80,7 +80,7 @@ button:hover:not(.MuiIconButton-root) {
   &.selected {
     button {
       color: white;
-      background: var(--color-outline);
+      background: var(--attribute-generic-selected-bg);
     }
   }
   .overlay {
@@ -88,12 +88,21 @@ button:hover:not(.MuiIconButton-root) {
       color: var(--color2);
     }
   }
+  // Badge: use generic badge colors for non-A/B/C priorities
+  .MuiBadge-badge {
+    color: var(--attribute-generic-badge-text);
+    background: var(--attribute-generic-badge-bg);
+  }
 }
 
 // Priority A: Red
 *[data-todotxt-attribute="priority"][data-todotxt-value="A"] {
   --color2: var(--priority-A);
   border-left-color: var(--priority-A);
+  .MuiBadge-badge {
+    color: var(--priority-A);
+    background: white;
+  }
   &.selected {
     button {
       background: var(--priority-A-selected);
@@ -105,6 +114,10 @@ button:hover:not(.MuiIconButton-root) {
 *[data-todotxt-attribute="priority"][data-todotxt-value="B"] {
   --color2: var(--priority-B);
   border-left-color: var(--priority-B);
+  .MuiBadge-badge {
+    color: var(--priority-B);
+    background: white;
+  }
   &.selected {
     button {
       background: var(--priority-B-selected);
@@ -116,6 +129,10 @@ button:hover:not(.MuiIconButton-root) {
 *[data-todotxt-attribute="priority"][data-todotxt-value="C"] {
   --color2: var(--priority-C);
   border-left-color: var(--priority-C);
+  .MuiBadge-badge {
+    color: var(--priority-C);
+    background: white;
+  }
   &.selected {
     button {
       background: var(--priority-C-selected);

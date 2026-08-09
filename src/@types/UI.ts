@@ -12,6 +12,7 @@ export interface PromptItem {
     label: string;
     defaultValue?: string;
     validate: (val: string) => string | true;
+    onValidationError?: (errorMessage: string) => void;
   };
   enterKeyTriggersButton?: 1 | 2;
 }

@@ -123,6 +123,8 @@ const App = (): JSX.Element => {
                 searchFieldRef={searchFieldRef}
                 setContextMenu={setContextMenu}
                 setPromptItem={setPromptItem}
+                setSnackBarContent={setSnackBarContent}
+                setSnackBarSeverity={setSnackBarSeverity}
               />
             )}
             <div className="flexItems">
@@ -143,6 +145,8 @@ const App = (): JSX.Element => {
                         settings={settings}
                         searchFieldRef={searchFieldRef}
                         setPromptItem={setPromptItem}
+                        setSnackBarContent={setSnackBarContent}
+                        setSnackBarSeverity={setSnackBarSeverity}
                       />
                       <HeaderComponent
                         settings={settings}
@@ -161,6 +165,8 @@ const App = (): JSX.Element => {
                     setDialogOpen={setDialogOpen}
                     setContextMenu={setContextMenu}
                     setPromptItem={setPromptItem}
+                    setSnackBarContent={setSnackBarContent}
+                    setSnackBarSeverity={setSnackBarSeverity}
                     settings={settings}
                     headers={headers}
                     searchString={searchString}

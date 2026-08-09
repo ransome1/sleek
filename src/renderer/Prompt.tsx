@@ -24,7 +24,7 @@ const PromptComponent: React.FC<PromptComponentProps> = ({
 }) => {
   const { t } = useTranslation();
   const [inputValue, setInputValue] = useState<string>("");
-  const [error, setError] = useState<string | null>(null);
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -41,7 +41,7 @@ const PromptComponent: React.FC<PromptComponentProps> = ({
       if (promptItem?.input?.validate) {
         const validationResult = promptItem.input.validate(inputValue);
         if (validationResult !== true) {
-          setError(validationResult);
+          promptItem.input?.onValidationError?.(validationResult);
           return;
         }
       }
@@ -59,7 +59,7 @@ const PromptComponent: React.FC<PromptComponentProps> = ({
       if (promptItem?.input?.validate) {
         const validationResult = promptItem.input.validate(inputValue);
         if (validationResult !== true) {
-          setError(validationResult);
+          promptItem.input?.onValidationError?.(validationResult);
           return;
         }
       }
@@ -72,7 +72,7 @@ const PromptComponent: React.FC<PromptComponentProps> = ({
     if (promptItem) {
       setContextMenu(null);
       setInputValue(promptItem.input?.defaultValue || "");
-      setError(null);
+
       // Focus the input field after state is updated
       setTimeout(() => {
         if (inputRef.current) {
@@ -104,8 +104,6 @@ const PromptComponent: React.FC<PromptComponentProps> = ({
                 fullWidth
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                error={!!error}
-                helperText={error}
               />
             )}
           </Fragment>

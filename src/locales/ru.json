@@ -157,5 +157,8 @@
   "clipboard.copied": "Скопировано в буфер обмена: {{value}}",
   "sorting.ascending": "По возрастанию",
   "sorting.descending": "По убыванию",
-  "pomodoro.alt": "Помодоро"
+  "pomodoro.alt": "Помодоро",
+  "success.renameAttribute": "\"{{oldValue}}\" переименовано на \"{{newValue}}\" в {{count}} задачах",
+  "success.deleteAttribute": "\"{{value}}\" удалено из {{count}} задач",
+  "success.notFound": "Не найдено задач с \"{{value}}\""
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useRef } from "react";
 import { AlertColor } from "@mui/material/Alert";
 import { useTranslation } from "react-i18next";
 import {
@@ -6,6 +6,7 @@ import {
   Filters,
   HeadersObject,
   RequestedData,
+  MainProcessResponse,
   SettingStore,
   TodoData,
   TodoObject,
@@ -41,6 +42,11 @@ const IpcComponent: React.FC<IpcComponentProps> = ({
   setIsSettingsOpen,
 }) => {
   const { t } = useTranslation();
+  const tRef = useRef(t);
+
+  useEffect(() => {
+    tRef.current = t;
+  }, [t]);
 
   const handleRequestedData = useCallback(
     (requestedData: RequestedData | null): void => {
@@ -62,21 +68,48 @@ const IpcComponent: React.FC<IpcComponentProps> = ({
   );
 
   const handleResponse = useCallback(
-    (response: Error | string): void => {
-      const severity: AlertColor =
-        response instanceof Error ? "error" : "success";
-      setSnackBarSeverity(severity);
+    (response: MainProcessResponse | Error): void => {
       if (response instanceof Error) {
+        const severity: AlertColor = "error";
+        setSnackBarSeverity(severity);
         setSnackBarContent(response.message);
         console.error(response);
-      } else {
-        // Try to translate the response as a key; if it's not a key, use as-is
-        const translatedMessage = t(response, response);
-        setSnackBarContent(translatedMessage);
-        console.info(translatedMessage);
+        return;
+      }
+
+      switch (response.type) {
+        case "rename":
+          setSnackBarSeverity("success");
+          setSnackBarContent(
+            tRef.current("success.renameAttribute", {
+              oldValue: response.oldValue,
+              newValue: response.newValue,
+              count: response.count,
+            }),
+          );
+          break;
+        case "delete":
+          setSnackBarSeverity("success");
+          setSnackBarContent(
+            tRef.current("success.deleteAttribute", {
+              value: response.value,
+              count: response.count,
+            }),
+          );
+          break;
+        case "notFound":
+          setSnackBarSeverity("info");
+          setSnackBarContent(
+            tRef.current("success.notFound", {
+              value: response.value,
+            }),
+          );
+          break;
+        default:
+          console.warn("Unknown response type", response);
       }
     },
-    [t, setSnackBarSeverity, setSnackBarContent],
+    [setSnackBarSeverity, setSnackBarContent],
   );
 
   useEffect(() => {

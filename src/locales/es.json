@@ -157,5 +157,8 @@
   "clipboard.copied": "Copiado al portapapeles: {{value}}",
   "sorting.ascending": "Orden ascendente",
   "sorting.descending": "Orden descendente",
-  "pomodoro.alt": "Pomodoro"
+  "pomodoro.alt": "Pomodoro",
+  "success.renameAttribute": "Renombrado \"{{oldValue}}\" a \"{{newValue}}\" en {{count}} tareas",
+  "success.deleteAttribute": "Eliminado \"{{value}}\" de {{count}} tareas",
+  "success.notFound": "No se encontraron tareas con \"{{value}}\""
 }

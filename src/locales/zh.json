@@ -157,5 +157,8 @@
   "clipboard.copied": "已复制到剪贴板：{{value}}",
   "sorting.ascending": "升序",
   "sorting.descending": "降序",
-  "pomodoro.alt": "番茄钟"
+  "pomodoro.alt": "番茄钟",
+  "success.renameAttribute": "在{{count}}个任务中将\"{{oldValue}}\"重命名为\"{{newValue}}\"",
+  "success.deleteAttribute": "从{{count}}个任务中删除\"{{value}}\"",
+  "success.notFound": "找不到包含\"{{value}}\"的任务"
 }

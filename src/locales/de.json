@@ -159,5 +159,8 @@
   "clipboard.copied": "In die Zwischenablage kopiert: {{value}}",
   "sorting.ascending": "aufsteigend",
   "sorting.descending": "absteigend",
-  "pomodoro.alt": "Pomodoro"
+  "pomodoro.alt": "Pomodoro",
+  "success.renameAttribute": "Umbenannt von \"{{oldValue}}\" zu \"{{newValue}}\" in {{count}} Aufgaben",
+  "success.deleteAttribute": "\"{{value}}\" aus {{count}} Aufgaben gelöscht",
+  "success.notFound": "Keine Aufgaben mit \"{{value}}\" gefunden"
 }

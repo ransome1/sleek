@@ -1,18 +1,23 @@
 import React, { memo } from "react";
 import ListItem from "@mui/material/ListItem";
 import Divider from "@mui/material/Divider";
+import { AlertColor } from "@mui/material/Alert";
 import { HandleFilterSelect, IsSelected } from "../Shared";
 import { AttributeKey, Filters } from "@sleek-types";
 import { useAttributeContextMenu } from "../Shared/useAttributeContextMenu";
-import { ContextMenu, PromptItem, SettingStore } from "@sleek-types";
+import { ContextMenu, SettingStore } from "@sleek-types";
 
 interface GroupProps {
   attributeKey: AttributeKey;
   value: string | string[] | null;
   filters: Filters | null;
   setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
-  setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
+
   settings: SettingStore | null;
+  setSnackBarContent?: React.Dispatch<React.SetStateAction<string | null>>;
+  setSnackBarSeverity?: React.Dispatch<
+    React.SetStateAction<AlertColor | undefined>
+  >;
 }
 
 const Group: React.FC<GroupProps> = memo(
@@ -21,9 +26,18 @@ const Group: React.FC<GroupProps> = memo(
     value,
     filters,
     setContextMenu,
-    setPromptItem,
+
     settings,
+    setSnackBarContent,
+    setSnackBarSeverity,
   }) => {
+    const { handleContextMenu } = useAttributeContextMenu({
+      setContextMenu,
+      settings,
+      setSnackBarContent,
+      setSnackBarSeverity,
+    });
+
     if (!value || value.length === 0) {
       return (
         <ListItem className="row group">
@@ -31,12 +45,6 @@ const Group: React.FC<GroupProps> = memo(
         </ListItem>
       );
     }
-
-    const { handleContextMenu } = useAttributeContextMenu({
-      setContextMenu,
-      setPromptItem,
-      settings,
-    });
 
     const groupElements =
       typeof value === "string" || typeof value === "number" ? [value] : value;

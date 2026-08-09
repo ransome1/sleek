@@ -1,3 +1,4 @@
+import { expect, beforeEach, describe, it, vi } from "vitest";
 import { nativeTheme, Tray } from "electron";
 import { CreateTray, DestroyTray, GetTrayImagePath } from "./Tray";
 import { SettingsStore } from "./Stores";
@@ -28,7 +29,7 @@ vi.mock("electron", () => {
       createEmpty: vi.fn(),
     },
     app: {
-      getPath: vi.fn().mockReturnValue(""),
+      getPath: vi.fn().mockReturnValue("/mock/app/path"),
     },
     Tray: vi.fn(
       class {

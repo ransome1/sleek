@@ -159,5 +159,8 @@
   "clipboard.copied": "Copied to clipboard: {{value}}",
   "sorting.ascending": "Ascending order",
   "sorting.descending": "Descending order",
-  "pomodoro.alt": "Pomodoro"
+  "pomodoro.alt": "Pomodoro",
+  "success.renameAttribute": "Renamed \"{{oldValue}}\" to \"{{newValue}}\" in {{count}} todos",
+  "success.deleteAttribute": "Deleted \"{{value}}\" from {{count}} todos",
+  "success.notFound": "No todos found with \"{{value}}\""
 }
