@@ -18,20 +18,6 @@ const ArchiveComponent: React.FC<ArchiveComponentProps> = ({
     number | undefined
   >(undefined);
 
-  const handleTriggerArchiving = (
-    doneFileAvailable: boolean,
-    lineNumber?: number,
-  ): void => {
-    setArchiveLineNumber(lineNumber);
-    setPromptItem(
-      doneFileAvailable
-        ? lineNumber
-          ? promptItemArchivingSingle
-          : promptItemArchivingAll
-        : promptItemChooseChangeFile,
-    );
-  };
-
   const handleArchiveAllConfirm = (): void => {
     ipcRenderer.send("archiveTodos");
   };
@@ -48,30 +34,46 @@ const ArchiveComponent: React.FC<ArchiveComponentProps> = ({
     ipcRenderer.send("createFile", true, archiveLineNumber);
   };
 
-  const promptItemArchivingAll = {
-    id: "archive",
-    headline: t("prompt.archive.headline"),
-    text: t("prompt.archive.text"),
-    button1: t("archive"),
-    onButton1: handleArchiveAllConfirm,
-  };
+  const handleTriggerArchiving = (
+    doneFileAvailable: boolean,
+    lineNumber?: number,
+  ): void => {
+    setArchiveLineNumber(lineNumber);
 
-  const promptItemArchivingSingle = {
-    id: "archive",
-    headline: t("prompt.archive.headline.single"),
-    text: t("prompt.archive.text.single"),
-    button1: t("archive"),
-    onButton1: handleArchiveSingleConfirm,
-  };
+    // Define prompt items here to get fresh translations every time
+    const promptItemArchivingAll = {
+      id: "archive",
+      headline: t("prompt.archive.headline"),
+      text: t("prompt.archive.text"),
+      button1: t("archive"),
+      onButton1: handleArchiveAllConfirm,
+    };
 
-  const promptItemChooseChangeFile = {
-    id: "changeFile",
-    headline: t("prompt.archive.changeFile.headline"),
-    text: t("prompt.archive.changeFile.text"),
-    button1: t("openFile"),
-    onButton1: handleOpenDoneFile,
-    button2: t("createFile"),
-    onButton2: handleCreateDoneFile,
+    const promptItemArchivingSingle = {
+      id: "archive",
+      headline: t("prompt.archive.headline.single"),
+      text: t("prompt.archive.text.single"),
+      button1: t("archive"),
+      onButton1: handleArchiveSingleConfirm,
+    };
+
+    const promptItemChooseChangeFile = {
+      id: "changeFile",
+      headline: t("prompt.archive.changeFile.headline"),
+      text: t("prompt.archive.changeFile.text"),
+      button1: t("openFile"),
+      onButton1: handleOpenDoneFile,
+      button2: t("createFile"),
+      onButton2: handleCreateDoneFile,
+    };
+
+    setPromptItem(
+      doneFileAvailable
+        ? lineNumber
+          ? promptItemArchivingSingle
+          : promptItemArchivingAll
+        : promptItemChooseChangeFile,
+    );
   };
 
   useEffect((): void => {
@@ -85,7 +87,7 @@ const ArchiveComponent: React.FC<ArchiveComponentProps> = ({
     return (): void => {
       ipcRenderer.off("triggerArchiving", handleTriggerArchiving);
     };
-  }, []);
+  }, [handleTriggerArchiving]);
 
   return <></>;
 };

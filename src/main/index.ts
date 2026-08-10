@@ -235,8 +235,8 @@ if (!gotTheLock) {
 
   app
     .whenReady()
-    .then(() => {
-      setupI18n();
+    .then(async () => {
+      await setupI18n();
       registerAllHandlers();
       const tray = SettingsStore.get("tray");
       const startMinimized = SettingsStore.get("startMinimized");
