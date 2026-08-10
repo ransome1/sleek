@@ -1,9 +1,8 @@
 import React, { memo } from "react";
 import ListItem from "@mui/material/ListItem";
 import Divider from "@mui/material/Divider";
-import { AlertColor } from "@mui/material/Alert";
 import { HandleFilterSelect, IsSelected } from "../Shared";
-import { AttributeKey, Filters } from "@sleek-types";
+import { AttributeKey, Filters, SnackbarAction } from "@sleek-types";
 import { useAttributeContextMenu } from "../Shared/useAttributeContextMenu";
 import { ContextMenu, SettingStore } from "@sleek-types";
 
@@ -12,12 +11,8 @@ interface GroupProps {
   value: string | string[] | null;
   filters: Filters | null;
   setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
-
   settings: SettingStore | null;
-  setSnackBarContent?: React.Dispatch<React.SetStateAction<string | null>>;
-  setSnackBarSeverity?: React.Dispatch<
-    React.SetStateAction<AlertColor | undefined>
-  >;
+  onNotification?: React.Dispatch<SnackbarAction>;
 }
 
 const Group: React.FC<GroupProps> = memo(
@@ -26,16 +21,13 @@ const Group: React.FC<GroupProps> = memo(
     value,
     filters,
     setContextMenu,
-
     settings,
-    setSnackBarContent,
-    setSnackBarSeverity,
+    onNotification,
   }) => {
     const { handleContextMenu } = useAttributeContextMenu({
       setContextMenu,
       settings,
-      setSnackBarContent,
-      setSnackBarSeverity,
+      onNotification,
     });
 
     if (!value || value.length === 0) {

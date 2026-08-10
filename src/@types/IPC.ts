@@ -40,4 +40,9 @@ export type MainProcessResponse =
     }
   | { type: "delete"; attrType: string; value: string; count: number }
   | { type: "notFound"; value: string }
+  | {
+      type: "clipboard";
+      translationKey: string;
+      translationParams: Record<string, unknown>;
+    }
   | Error;

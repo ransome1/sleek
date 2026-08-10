@@ -6,7 +6,7 @@ import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import TuneIcon from "@mui/icons-material/Tune";
-import { AlertColor } from "@mui/material/Alert";
+import { SnackbarAction } from "../../@types";
 import DrawerAttributes from "./Attributes";
 import DrawerSorting from "./Sorting";
 import DrawerFilters from "./Filters";
@@ -30,10 +30,7 @@ interface DrawerComponentProps {
   searchFieldRef: React.RefObject<HTMLInputElement | null>;
   setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
-  setSnackBarContent?: React.Dispatch<React.SetStateAction<string | null>>;
-  setSnackBarSeverity?: React.Dispatch<
-    React.SetStateAction<AlertColor | undefined>
-  >;
+  onNotification: React.Dispatch<SnackbarAction>;
 }
 
 const DrawerComponent: React.FC<DrawerComponentProps> = memo(
@@ -44,8 +41,7 @@ const DrawerComponent: React.FC<DrawerComponentProps> = memo(
     searchFieldRef,
     setContextMenu,
     setPromptItem,
-    setSnackBarContent,
-    setSnackBarSeverity,
+    onNotification,
   }) => {
     const [activeTab, setActiveTab] = useState<string>("attributes");
     const [drawerWidth, setDrawerWidth] = useState<number>(
@@ -156,8 +152,7 @@ const DrawerComponent: React.FC<DrawerComponentProps> = memo(
             filters={filters}
             setContextMenu={setContextMenu}
             setPromptItem={setPromptItem}
-            setSnackBarContent={setSnackBarContent}
-            setSnackBarSeverity={setSnackBarSeverity}
+            onNotification={onNotification}
           />
         )}
         {settings.isDrawerOpen && activeTab === "filters" && (

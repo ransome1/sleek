@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useRef, useEffect } from "react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import "./ContextMenu.scss";
@@ -12,20 +12,39 @@ interface ContextMenuComponentProps {
 
 const ContextMenuComponent: React.FC<ContextMenuComponentProps> = memo(
   ({ contextMenu, setContextMenu, setPromptItem }) => {
+    const triggerElementRef = useRef<Element | null>(null);
+
+    useEffect(() => {
+      // Store the focused element before menu opens
+      if (contextMenu) {
+        triggerElementRef.current = document.activeElement;
+      }
+    }, [contextMenu]);
+
     const onClick = (contextMenuItem: ContextMenuItem): void => {
       if (contextMenuItem.promptItem) {
         setPromptItem(contextMenuItem.promptItem);
       } else if (contextMenuItem.function) {
         contextMenuItem.function();
-        setContextMenu(null);
       }
+      handleClose();
+    };
+
+    const handleClose = (): void => {
+      setContextMenu(null);
+      // Restore focus to the element that triggered the menu
+      setTimeout(() => {
+        if (triggerElementRef.current instanceof HTMLElement) {
+          triggerElementRef.current.focus();
+        }
+      }, 0);
     };
 
     return (
       <Menu
         id="contextMenu"
         open={Boolean(contextMenu)}
-        onClose={() => setContextMenu(null)}
+        onClose={handleClose}
         anchorReference="anchorPosition"
         anchorPosition={{
           top: contextMenu.event.clientY,

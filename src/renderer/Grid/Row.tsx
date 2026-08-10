@@ -7,7 +7,7 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import { useTranslation } from "react-i18next";
-import { AlertColor } from "@mui/material/Alert";
+import { SnackbarAction } from "@sleek-types";
 import { useAttributeContextMenu } from "../Shared/useAttributeContextMenu";
 import { useRowContextMenu } from "../Shared/useRowContextMenu";
 
@@ -32,10 +32,7 @@ interface RowProps {
   setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
   settings: SettingStore;
-  setSnackBarContent?: React.Dispatch<React.SetStateAction<string | null>>;
-  setSnackBarSeverity?: React.Dispatch<
-    React.SetStateAction<AlertColor | undefined>
-  >;
+  onNotification: React.Dispatch<SnackbarAction>;
 }
 
 const Row: React.FC<RowProps> = memo(
@@ -47,8 +44,7 @@ const Row: React.FC<RowProps> = memo(
     setContextMenu,
     setPromptItem,
     settings,
-    setSnackBarContent,
-    setSnackBarSeverity,
+    onNotification,
   }) => {
     const { t } = useTranslation();
     const { handleContextMenu: handleAttributeContextMenu } =
@@ -56,8 +52,7 @@ const Row: React.FC<RowProps> = memo(
         setContextMenu,
 
         settings,
-        setSnackBarContent,
-        setSnackBarSeverity,
+        onNotification,
       });
     const { handleRowContextMenu } = useRowContextMenu({
       setContextMenu,
@@ -258,8 +253,7 @@ const Row: React.FC<RowProps> = memo(
             filters={filters ? filters : ({} as Filters)}
             settings={settings}
             setContextMenu={setContextMenu}
-            setSnackBarContent={setSnackBarContent}
-            setSnackBarSeverity={setSnackBarSeverity}
+            onNotification={onNotification}
           />
         </li>
       </>

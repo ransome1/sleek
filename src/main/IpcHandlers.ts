@@ -314,7 +314,11 @@ function handleOpenInBrowser(_: IpcMainEvent, url: string): void {
 function handleSaveToClipboard(event: IpcMainEvent, content: string): void {
   try {
     clipboard.writeText(content);
-    event.reply("responseFromMainProcess", "Copied to clipboard");
+    event.reply("responseFromMainProcess", {
+      type: "clipboard",
+      translationKey: "clipboard.copied",
+      translationParams: { value: content },
+    });
   } catch (error) {
     if (error instanceof Error) {
       HandleError(error);

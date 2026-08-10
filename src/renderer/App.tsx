@@ -1,10 +1,12 @@
-import { useEffect, useState, useRef, JSX } from "react";
+import { useEffect, useState, useRef, JSX, useReducer } from "react";
 import { Theme, ThemeProvider, createTheme } from "@mui/material/styles";
 import IpcComponent from "./IpcRenderer";
 import MatomoComponent from "./Matomo";
 import CssBaseline from "@mui/material/CssBaseline";
 import Snackbar from "@mui/material/Snackbar";
-import Alert, { AlertColor } from "@mui/material/Alert";
+import Alert from "@mui/material/Alert";
+import { snackbarReducer, initialSnackbarState } from "./hooks/useAppState";
+
 import NavigationComponent from "./Navigation";
 import GridComponent from "./Grid/Grid";
 import SplashScreen from "./SplashScreen";
@@ -39,11 +41,10 @@ const { store, ipcRenderer } = window.api;
 
 const App = (): JSX.Element => {
   const [settings, setSettings] = useState<SettingStore>(store.getConfig());
-  const [snackBarOpen, setSnackBarOpen] = useState<boolean>(false);
-  const [snackBarContent, setSnackBarContent] = useState<string | null>(null);
-  const [snackBarSeverity, setSnackBarSeverity] = useState<
-    AlertColor | undefined
-  >();
+  const [snackbar, dispatchSnackbar] = useReducer(
+    snackbarReducer,
+    initialSnackbarState,
+  );
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [searchString, setSearchString] = useState<string>("");
   const [todoData, setTodoData] = useState<TodoData | null>(null);
@@ -80,10 +81,6 @@ const App = (): JSX.Element => {
   }, [settings?.shouldUseDarkColors]);
 
   useEffect(() => {
-    setSnackBarOpen(Boolean(snackBarContent));
-  }, [snackBarContent]);
-
-  useEffect(() => {
     ipcRenderer.send("requestData");
   }, []);
 
@@ -96,8 +93,7 @@ const App = (): JSX.Element => {
         setTodoData={setTodoData}
         setTodoObject={setTodoObject}
         setAttributeFields={setAttributeFields}
-        setSnackBarSeverity={setSnackBarSeverity}
-        setSnackBarContent={setSnackBarContent}
+        onNotification={dispatchSnackbar}
         setSettings={setSettings}
         setIsSettingsOpen={setIsSettingsOpen}
       />
@@ -123,8 +119,7 @@ const App = (): JSX.Element => {
                 searchFieldRef={searchFieldRef}
                 setContextMenu={setContextMenu}
                 setPromptItem={setPromptItem}
-                setSnackBarContent={setSnackBarContent}
-                setSnackBarSeverity={setSnackBarSeverity}
+                onNotification={dispatchSnackbar}
               />
             )}
             <div className="flexItems">
@@ -145,8 +140,6 @@ const App = (): JSX.Element => {
                         settings={settings}
                         searchFieldRef={searchFieldRef}
                         setPromptItem={setPromptItem}
-                        setSnackBarContent={setSnackBarContent}
-                        setSnackBarSeverity={setSnackBarSeverity}
                       />
                       <HeaderComponent
                         settings={settings}
@@ -165,8 +158,7 @@ const App = (): JSX.Element => {
                     setDialogOpen={setDialogOpen}
                     setContextMenu={setContextMenu}
                     setPromptItem={setPromptItem}
-                    setSnackBarContent={setSnackBarContent}
-                    setSnackBarSeverity={setSnackBarSeverity}
+                    onNotification={dispatchSnackbar}
                     settings={settings}
                     headers={headers}
                     searchString={searchString}
@@ -191,8 +183,7 @@ const App = (): JSX.Element => {
               attributes={attributes}
               attributeFields={attributeFields}
               setAttributeFields={setAttributeFields}
-              setSnackBarSeverity={setSnackBarSeverity}
-              setSnackBarContent={setSnackBarContent}
+              onNotification={dispatchSnackbar}
               settings={settings}
             />
           ) : null}
@@ -212,15 +203,15 @@ const App = (): JSX.Element => {
             />
           )}
           <Snackbar
-            open={snackBarOpen}
-            onClose={() => setSnackBarContent(null)}
+            open={snackbar.open}
+            onClose={() => dispatchSnackbar({ type: "close" })}
             autoHideDuration={3000}
           >
             <Alert
-              severity={snackBarSeverity}
-              data-testid={`snackbar-${snackBarSeverity}`}
+              severity={snackbar.severity}
+              data-testid={`snackbar-${snackbar.severity}`}
             >
-              {snackBarContent}
+              {snackbar.content}
             </Alert>
           </Snackbar>
           {settings?.files?.length > 0 && (

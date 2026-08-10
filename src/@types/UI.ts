@@ -32,3 +32,17 @@ export interface ContextMenu {
 export interface Badge {
   count: number;
 }
+
+// Snackbar (UI Toast) - for user feedback messages
+export type AlertSeverity =
+  "success" | "error" | "info" | "warning" | undefined;
+
+export interface SnackbarState {
+  open: boolean;
+  content: string | null;
+  severity: AlertSeverity;
+}
+
+export type SnackbarAction =
+  | { type: "show"; severity: AlertSeverity; content: string }
+  | { type: "close" };

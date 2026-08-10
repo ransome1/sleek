@@ -1,17 +1,17 @@
 import React, { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { AlertColor } from "@mui/material/Alert";
-import { ContextMenu, AttributeKey, SettingStore } from "@sleek-types";
+import {
+  ContextMenu,
+  AttributeKey,
+  SettingStore,
+  SnackbarAction,
+} from "@sleek-types";
 import { createAttributeContextMenuItems } from "./AttributeContextMenu";
 
 type UseAttributeContextMenuProps = {
   setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
-
   settings: SettingStore | null;
-  setSnackBarContent?: React.Dispatch<React.SetStateAction<string | null>>;
-  setSnackBarSeverity?: React.Dispatch<
-    React.SetStateAction<AlertColor | undefined>
-  >;
+  onNotification?: React.Dispatch<SnackbarAction>;
 };
 
 type UseAttributeContextMenuReturn = {
@@ -25,8 +25,7 @@ type UseAttributeContextMenuReturn = {
 export const useAttributeContextMenu = (
   props: UseAttributeContextMenuProps,
 ): UseAttributeContextMenuReturn => {
-  const { setContextMenu, settings, setSnackBarContent, setSnackBarSeverity } =
-    props;
+  const { setContextMenu, settings, onNotification } = props;
   const { t } = useTranslation();
 
   const handleContextMenu = useCallback(
@@ -40,15 +39,14 @@ export const useAttributeContextMenu = (
         attributeValue,
         attributeType,
         settings,
-        setSnackBarContent,
-        setSnackBarSeverity,
+        onNotification,
       );
       setContextMenu({
         event,
         items,
       });
     },
-    [t, setContextMenu, settings, setSnackBarContent, setSnackBarSeverity],
+    [t, setContextMenu, settings, onNotification],
   );
 
   return { handleContextMenu };

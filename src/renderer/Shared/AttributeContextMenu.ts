@@ -1,5 +1,4 @@
-import { ContextMenuItem, AttributeKey } from "@sleek-types";
-import { AlertColor } from "@mui/material/Alert";
+import { ContextMenuItem, AttributeKey, SnackbarAction } from "@sleek-types";
 import React from "react";
 import { SettingStore } from "@sleek-types";
 
@@ -8,10 +7,7 @@ export function createAttributeContextMenuItems(
   value: string,
   attributeKey: AttributeKey,
   settings: SettingStore | null,
-  setSnackBarContent?: React.Dispatch<React.SetStateAction<string | null>>,
-  setSnackBarSeverity?: React.Dispatch<
-    React.SetStateAction<AlertColor | undefined>
-  >,
+  onNotification?: React.Dispatch<SnackbarAction>,
 ): ContextMenuItem[] {
   // For contexts and projects, strip the @ or + prefix
   // For recurrence, keep the + as it's part of the value (e.g., +1d)
@@ -59,11 +55,12 @@ export function createAttributeContextMenuItems(
             return true;
           },
           onValidationError: (errorMessage: string) => {
-            if (setSnackBarContent) {
-              setSnackBarContent(errorMessage);
-            }
-            if (setSnackBarSeverity) {
-              setSnackBarSeverity("info");
+            if (onNotification) {
+              onNotification({
+                type: "show",
+                severity: "info",
+                content: errorMessage,
+              });
             }
           },
         },

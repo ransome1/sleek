@@ -49,10 +49,6 @@ interface SearchComponentProps {
   setSearchString: React.Dispatch<React.SetStateAction<string>>;
   searchFieldRef: React.RefObject<HTMLInputElement | null>;
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
-  setSnackBarContent?: (content: string) => void;
-  setSnackBarSeverity?: (
-    severity: "success" | "error" | "warning" | "info",
-  ) => void;
 }
 
 const SearchComponent: React.FC<SearchComponentProps> = memo(

@@ -1,6 +1,6 @@
 import React, { memo, ReactElement, useState } from "react";
 import List from "@mui/material/List";
-import { AlertColor } from "@mui/material/Alert";
+import { SnackbarAction } from "../../@types";
 import Row from "./Row";
 import Group from "./Group";
 import "./Grid.scss";
@@ -26,10 +26,7 @@ interface GridComponentProps {
   settings: SettingStore;
   headers: HeadersObject;
   searchString: string | null;
-  setSnackBarContent: React.Dispatch<React.SetStateAction<string | null>>;
-  setSnackBarSeverity: React.Dispatch<
-    React.SetStateAction<AlertColor | undefined>
-  >;
+  onNotification: React.Dispatch<SnackbarAction>;
 }
 
 const GridComponent: React.FC<GridComponentProps> = memo(
@@ -43,8 +40,7 @@ const GridComponent: React.FC<GridComponentProps> = memo(
     settings,
     headers,
     searchString,
-    setSnackBarContent,
-    setSnackBarSeverity,
+    onNotification,
   }) => {
     const renderedRows: number[] = [];
     const list = document.getElementById("grid");
@@ -133,8 +129,7 @@ const GridComponent: React.FC<GridComponentProps> = memo(
                   filters={filters}
                   setContextMenu={setContextMenu}
                   settings={settings}
-                  setSnackBarContent={setSnackBarContent}
-                  setSnackBarSeverity={setSnackBarSeverity}
+                  onNotification={onNotification}
                 />,
               );
 
@@ -157,8 +152,7 @@ const GridComponent: React.FC<GridComponentProps> = memo(
                     setContextMenu={setContextMenu}
                     setPromptItem={setPromptItem}
                     settings={settings}
-                    setSnackBarContent={setSnackBarContent}
-                    setSnackBarSeverity={setSnackBarSeverity}
+                    onNotification={onNotification}
                   />,
                 );
               }

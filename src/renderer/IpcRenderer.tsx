@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useRef } from "react";
-import { AlertColor } from "@mui/material/Alert";
+import { SnackbarAction } from "@sleek-types";
 import { useTranslation } from "react-i18next";
 import {
   Attributes,
@@ -21,10 +21,7 @@ interface IpcComponentProps {
   setTodoData: React.Dispatch<React.SetStateAction<TodoData | null>>;
   setTodoObject: React.Dispatch<React.SetStateAction<TodoObject | null>>;
   setAttributeFields: React.Dispatch<React.SetStateAction<TodoObject | null>>;
-  setSnackBarSeverity: React.Dispatch<
-    React.SetStateAction<AlertColor | undefined>
-  >;
-  setSnackBarContent: React.Dispatch<React.SetStateAction<string | null>>;
+  onNotification: React.Dispatch<SnackbarAction>;
   setSettings: React.Dispatch<React.SetStateAction<SettingStore>>;
   setIsSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -36,8 +33,7 @@ const IpcComponent: React.FC<IpcComponentProps> = ({
   setTodoData,
   setTodoObject,
   setAttributeFields,
-  setSnackBarSeverity,
-  setSnackBarContent,
+  onNotification,
   setSettings,
   setIsSettingsOpen,
 }) => {
@@ -70,46 +66,61 @@ const IpcComponent: React.FC<IpcComponentProps> = ({
   const handleResponse = useCallback(
     (response: MainProcessResponse | Error): void => {
       if (response instanceof Error) {
-        const severity: AlertColor = "error";
-        setSnackBarSeverity(severity);
-        setSnackBarContent(response.message);
+        onNotification({
+          type: "show",
+          severity: "error",
+          content: response.message,
+        });
         console.error(response);
         return;
       }
 
       switch (response.type) {
         case "rename":
-          setSnackBarSeverity("success");
-          setSnackBarContent(
-            tRef.current("success.renameAttribute", {
+          onNotification({
+            type: "show",
+            severity: "success",
+            content: tRef.current("success.renameAttribute", {
               oldValue: response.oldValue,
               newValue: response.newValue,
               count: response.count,
             }),
-          );
+          });
           break;
         case "delete":
-          setSnackBarSeverity("success");
-          setSnackBarContent(
-            tRef.current("success.deleteAttribute", {
+          onNotification({
+            type: "show",
+            severity: "success",
+            content: tRef.current("success.deleteAttribute", {
               value: response.value,
               count: response.count,
             }),
-          );
+          });
           break;
         case "notFound":
-          setSnackBarSeverity("info");
-          setSnackBarContent(
-            tRef.current("success.notFound", {
+          onNotification({
+            type: "show",
+            severity: "info",
+            content: tRef.current("success.notFound", {
               value: response.value,
             }),
-          );
+          });
+          break;
+        case "clipboard":
+          onNotification({
+            type: "show",
+            severity: "success",
+            content: tRef.current(
+              response.translationKey,
+              response.translationParams,
+            ),
+          });
           break;
         default:
           console.warn("Unknown response type", response);
       }
     },
-    [setSnackBarSeverity, setSnackBarContent],
+    [onNotification],
   );
 
   useEffect(() => {

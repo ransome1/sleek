@@ -2,7 +2,7 @@ import React, { JSX, memo } from "react";
 import ReactMarkdown, { Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Chip from "@mui/material/Chip";
-import { AlertColor } from "@mui/material/Alert";
+import { SnackbarAction } from "../../@types";
 
 import PomodoroIcon from "../../../resources/pomodoro.svg?asset";
 import DatePickerInline from "./DatePickerInline";
@@ -21,23 +21,13 @@ interface RendererComponentProps {
   settings: SettingStore;
   setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
 
-  setSnackBarContent?: React.Dispatch<React.SetStateAction<string | null>>;
-  setSnackBarSeverity?: React.Dispatch<
-    React.SetStateAction<AlertColor | undefined>
-  >;
+  onNotification?: React.Dispatch<SnackbarAction>;
 }
 
 type ReplacementsKey = AttributeKey | "url" | "custom-tag";
 
 const RendererComponent: React.FC<RendererComponentProps> = memo(
-  ({
-    todoObject,
-    filters,
-    settings,
-    setContextMenu,
-    setSnackBarContent,
-    setSnackBarSeverity,
-  }) => {
+  ({ todoObject, filters, settings, setContextMenu, onNotification }) => {
     const expressions: {
       pattern: RegExp;
       type: ReplacementsKey;
@@ -79,8 +69,7 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
     const { handleContextMenu } = useAttributeContextMenu({
       setContextMenu,
       settings,
-      setSnackBarContent,
-      setSnackBarSeverity,
+      onNotification,
     });
 
     const replacements: {

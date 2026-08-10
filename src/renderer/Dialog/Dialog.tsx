@@ -2,7 +2,7 @@ import React, { useState, useEffect, memo } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
-import { AlertColor } from "@mui/material/Alert";
+import { SnackbarAction } from "../../@types";
 import { useTranslation } from "react-i18next";
 import { DateTime } from "luxon";
 import AutoSuggest from "./AutoSuggest";
@@ -23,10 +23,7 @@ interface DialogComponentProps {
   attributes: Attributes | null;
   attributeFields: TodoObject | null;
   setAttributeFields: React.Dispatch<React.SetStateAction<TodoObject | null>>;
-  setSnackBarSeverity: React.Dispatch<
-    React.SetStateAction<AlertColor | undefined>
-  >;
-  setSnackBarContent: React.Dispatch<React.SetStateAction<string | null>>;
+  onNotification: React.Dispatch<SnackbarAction>;
   settings: SettingStore;
 }
 
@@ -39,8 +36,7 @@ const DialogComponent: React.FC<DialogComponentProps> = memo(
     attributes,
     attributeFields,
     setAttributeFields,
-    setSnackBarSeverity,
-    setSnackBarContent,
+    onNotification,
     settings,
   }) => {
     const [priority, setPriority] = useState<string>("-");
@@ -66,8 +62,11 @@ const DialogComponent: React.FC<DialogComponentProps> = memo(
           ipcRenderer.send("writeSingleTodoToFile", index, string);
           handleClose();
         } else {
-          setSnackBarSeverity("info");
-          setSnackBarContent(t("todoDialog.snackbar.emptyInput"));
+          onNotification({
+            type: "show",
+            severity: "info",
+            content: t("todoDialog.snackbar.emptyInput"),
+          });
         }
       } catch (error: unknown) {
         console.error((error as Error).message);
