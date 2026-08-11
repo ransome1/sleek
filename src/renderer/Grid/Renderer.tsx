@@ -1,5 +1,5 @@
 import React, { JSX, memo } from "react";
-import ReactMarkdown, { Components } from "react-markdown";
+import ReactMarkdown, { Components, defaultUrlTransform } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Chip from "@mui/material/Chip";
 import { SnackbarAction } from "../../@types";
@@ -235,6 +235,15 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
       "custom-tag": (value) => <span>{value}</span>,
     };
 
+    const allowCustomProtocols = (url: string): string => {
+      // Allow file:// and other custom protocol URLs (joplin://, cbthunderlink://, etc.)
+      if (/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//i.test(url)) {
+        return url; // pass through all protocol URLs untouched
+      }
+      // Fall back to default security behavior for web URLs
+      return defaultUrlTransform(url);
+    };
+
     const options: Components = {
       p: ({ children }): JSX.Element | null => {
         const mappedChildren = React.Children.map(children, (child) => {
@@ -328,11 +337,13 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
         const childrenStr =
           typeof children === "string" ? children : String(children);
 
-        // Use href from destructure first, then fall back
-        // Treat empty strings as missing - trim whitespace and use if available
-        const href = hrefFromDestructure?.trim() || childrenStr;
+        // Use href from ReactMarkdown if available and non-empty.
+        // Otherwise extract a URL from the children text (bare URL case).
+        const urlInChildren =
+          /([a-zA-Z][a-zA-Z0-9+.-]*:\/\/\S+)/g.exec(childrenStr)?.[1] ?? null;
+        const href =
+          hrefFromDestructure?.trim() || urlInChildren || childrenStr;
 
-        const match = /([a-zA-Z]+:\/\/\S+)/g.exec(childrenStr);
         const maxChars = 40;
         const truncatedChildren =
           childrenStr.length > maxChars
@@ -343,9 +354,9 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
           <a
             {...restProps}
             href={href}
-            onClick={(event) =>
-              handleLinkClick(event, match ? childrenStr : href || childrenStr)
-            }
+            onClick={(event) => {
+              handleLinkClick(event, href);
+            }}
           >
             {truncatedChildren}
             <OpenInNewIcon />
@@ -372,7 +383,11 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
     };
 
     return (
-      <ReactMarkdown remarkPlugins={[remarkGfm]} components={options}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={options}
+        urlTransform={allowCustomProtocols}
+      >
         {preprocessBody(todoObject.body)}
       </ReactMarkdown>
     );

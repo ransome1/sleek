@@ -303,11 +303,16 @@ function handleRequestArchive(event: IpcMainEvent, lineNumber?: number): void {
 
 // ─── System handlers ─────────────────────────────────────────────────────
 
-function handleOpenInBrowser(_: IpcMainEvent, url: string): void {
+async function handleOpenInBrowser(
+  event: IpcMainEvent,
+  url: string,
+): Promise<void> {
   try {
-    shell.openExternal(url);
+    await shell.openExternal(url);
   } catch (error) {
-    if (error instanceof Error) HandleError(error);
+    if (error instanceof Error) {
+      event.reply("responseFromMainProcess", error);
+    }
   }
 }
 

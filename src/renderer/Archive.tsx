@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { PromptItem } from "@sleek-types";
 
@@ -18,63 +18,69 @@ const ArchiveComponent: React.FC<ArchiveComponentProps> = ({
     number | undefined
   >(undefined);
 
-  const handleArchiveAllConfirm = (): void => {
+  const handleArchiveAllConfirm = useCallback((): void => {
     ipcRenderer.send("archiveTodos");
-  };
+  }, []);
 
-  const handleArchiveSingleConfirm = (): void => {
+  const handleArchiveSingleConfirm = useCallback((): void => {
     ipcRenderer.send("archiveSingleTodo", archiveLineNumber);
-  };
+  }, [archiveLineNumber]);
 
-  const handleOpenDoneFile = (): void => {
+  const handleOpenDoneFile = useCallback((): void => {
     ipcRenderer.send("openFile", true, archiveLineNumber);
-  };
+  }, [archiveLineNumber]);
 
-  const handleCreateDoneFile = (): void => {
+  const handleCreateDoneFile = useCallback((): void => {
     ipcRenderer.send("createFile", true, archiveLineNumber);
-  };
+  }, [archiveLineNumber]);
 
-  const handleTriggerArchiving = (
-    doneFileAvailable: boolean,
-    lineNumber?: number,
-  ): void => {
-    setArchiveLineNumber(lineNumber);
+  const handleTriggerArchiving = useCallback(
+    (doneFileAvailable: boolean, lineNumber?: number): void => {
+      setArchiveLineNumber(lineNumber);
 
-    // Define prompt items here to get fresh translations every time
-    const promptItemArchivingAll = {
-      id: "archive",
-      headline: t("prompt.archive.headline"),
-      text: t("prompt.archive.text"),
-      button1: t("archive"),
-      onButton1: handleArchiveAllConfirm,
-    };
+      // Define prompt items here to get fresh translations every time
+      const promptItemArchivingAll = {
+        id: "archive",
+        headline: t("prompt.archive.headline"),
+        text: t("prompt.archive.text"),
+        button1: t("archive"),
+        onButton1: handleArchiveAllConfirm,
+      };
 
-    const promptItemArchivingSingle = {
-      id: "archive",
-      headline: t("prompt.archive.headline.single"),
-      text: t("prompt.archive.text.single"),
-      button1: t("archive"),
-      onButton1: handleArchiveSingleConfirm,
-    };
+      const promptItemArchivingSingle = {
+        id: "archive",
+        headline: t("prompt.archive.headline.single"),
+        text: t("prompt.archive.text.single"),
+        button1: t("archive"),
+        onButton1: handleArchiveSingleConfirm,
+      };
 
-    const promptItemChooseChangeFile = {
-      id: "changeFile",
-      headline: t("prompt.archive.changeFile.headline"),
-      text: t("prompt.archive.changeFile.text"),
-      button1: t("openFile"),
-      onButton1: handleOpenDoneFile,
-      button2: t("createFile"),
-      onButton2: handleCreateDoneFile,
-    };
+      const promptItemChooseChangeFile = {
+        id: "changeFile",
+        headline: t("prompt.archive.changeFile.headline"),
+        text: t("prompt.archive.changeFile.text"),
+        button1: t("openFile"),
+        onButton1: handleOpenDoneFile,
+        button2: t("createFile"),
+        onButton2: handleCreateDoneFile,
+      };
 
-    setPromptItem(
-      doneFileAvailable
-        ? lineNumber
-          ? promptItemArchivingSingle
-          : promptItemArchivingAll
-        : promptItemChooseChangeFile,
-    );
-  };
+      setPromptItem(
+        doneFileAvailable
+          ? lineNumber
+            ? promptItemArchivingSingle
+            : promptItemArchivingAll
+          : promptItemChooseChangeFile,
+      );
+    },
+    [
+      t,
+      handleArchiveAllConfirm,
+      handleArchiveSingleConfirm,
+      handleOpenDoneFile,
+      handleCreateDoneFile,
+    ],
+  );
 
   useEffect((): void => {
     if (triggerArchiving) {
