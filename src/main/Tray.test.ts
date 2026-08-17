@@ -61,6 +61,14 @@ vi.mock("path", () => {
   };
 });
 
+vi.mock("./Shared", () => {
+  return {
+    userDataDirectory: "/mock/user/data",
+    lineBreakPlaceholder: String.fromCharCode(16),
+    HandleError: vi.fn(),
+  };
+});
+
 describe("CreateTray", () => {
   beforeEach(() => {
     vi.clearAllMocks();
