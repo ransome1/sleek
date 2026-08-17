@@ -81,12 +81,12 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
         className={IsSelected(type, filters, [date]) ? "selected" : undefined}
         data-todotxt-attribute={type}
       >
-         <button tabIndex={-1}>
-           <Badge
-             variant="dot"
-             invisible={mustNotify}
-             className={!mustNotify ? "notify" : undefined}
-           >
+        <button tabIndex={-1}>
+          <Badge
+            variant="dot"
+            invisible={mustNotify}
+            className={!mustNotify ? "notify" : undefined}
+          >
             <Chip
               onClick={(event) => {
                 event.stopPropagation();
