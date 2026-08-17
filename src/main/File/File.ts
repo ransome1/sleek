@@ -89,7 +89,7 @@ function removeFile(index: number) {
   }
 
   SettingsStore.set("files", files);
-  return "fileTabs.removeFileSuccess";
+  return { type: "fileTabs.removeFileSuccess" };
 }
 
 function activateFile(index: number) {

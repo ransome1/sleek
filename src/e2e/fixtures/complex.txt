@@ -1,0 +1,16 @@
+(A) High priority task +work @computer due:2026-12-31 created:2026-01-15 t:2026-08-20
+(B) Medium priority +home @shopping due:2026-08-15 created:2026-02-01
+(C) Low priority +personal @home
+x 2026-08-10 Completed task created:2026-01-10
+x 2026-06-15 Archived task created:2026-01-01 +project1
+Task with multiple contexts @home @personal @work +project1
+Task with multiple projects +work +home +personal @computer due:2026-09-30
++project1 task with project created:2026-03-15 rec:1d
++project2 task with daily recurrence @context1 rec:1d
++project3 task with weekly recurrence @context2 rec:1w due:2026-12-25
++project4 task with monthly recurrence @context3 rec:1m
+(A) Task with pomodoro estimation @work pm:4 due:2026-10-15
+(B) Hidden task h:1 +work @admin
+(C) Task with all attributes +work +home @context @admin due:2026-11-30 t:2026-10-01 rec:1d pm:2 created:2026-02-15 @home
+Standard task without special attributes
+Task with just body text

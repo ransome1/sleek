@@ -116,6 +116,13 @@ const IpcComponent: React.FC<IpcComponentProps> = ({
             ),
           });
           break;
+        case "fileTabs.removeFileSuccess":
+          onNotification({
+            type: "show",
+            severity: "success",
+            content: tRef.current("fileTabs.removeFileSuccess"),
+          });
+          break;
         default:
           console.warn("Unknown response type", response);
       }
