@@ -45,5 +45,10 @@ export type MainProcessResponse =
       translationKey: string;
       translationParams: Record<string, unknown>;
     }
+  | {
+      type: "archive";
+      translationKey: string;
+      translationParams?: Record<string, unknown>;
+    }
   | { type: "fileTabs.removeFileSuccess" }
   | Error;

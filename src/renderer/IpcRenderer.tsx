@@ -116,6 +116,16 @@ const IpcComponent: React.FC<IpcComponentProps> = ({
             ),
           });
           break;
+        case "archive":
+          onNotification({
+            type: "show",
+            severity: "success",
+            content: tRef.current(
+              response.translationKey,
+              response.translationParams,
+            ),
+          });
+          break;
         case "fileTabs.removeFileSuccess":
           onNotification({
             type: "show",

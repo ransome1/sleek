@@ -263,9 +263,12 @@ function handleUpdateTodoObject(
 
 function handleArchiveTodos(event: IpcMainEvent): void {
   try {
-    const result = archiveTodos();
+    archiveTodos();
     refreshRequestedData(event);
-    event.reply("responseFromMainProcess", result);
+    event.reply("responseFromMainProcess", {
+      type: "archive",
+      translationKey: "archive.success",
+    });
   } catch (error) {
     if (error instanceof Error) {
       HandleError(error);
@@ -279,9 +282,12 @@ function handleArchiveSingleTodo(
   lineNumber: number,
 ): void {
   try {
-    const result = archiveSingleTodo(lineNumber);
+    archiveSingleTodo(lineNumber);
     refreshRequestedData(event);
-    event.reply("responseFromMainProcess", result);
+    event.reply("responseFromMainProcess", {
+      type: "archive",
+      translationKey: "archive.success",
+    });
   } catch (error) {
     if (error instanceof Error) {
       HandleError(error);

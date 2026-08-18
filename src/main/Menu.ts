@@ -2,7 +2,8 @@ import { app, Menu, dialog, shell, MenuItemConstructorOptions } from "electron";
 import { activateFile } from "./File/File";
 import { mainWindow, HandleCreateWindow } from "./index";
 import { openFile, createFile } from "./File/Dialog";
-
+import { HandleError } from "./Shared";
+import { checkArchiveReadiness } from "./File/Archive";
 import { SettingsStore, FiltersStore } from "./Stores";
 import { File } from "../@types";
 import appPackage from "../../package.json";
@@ -195,7 +196,13 @@ const GetMenuTemplate = (
                 label: i18n.t("menu.archiveCompletedTodos"),
                 accelerator: "Ctrl+Alt+A",
                 click: () => {
-                  mainWindow?.webContents.send("requestArchive");
+                  try {
+                    checkArchiveReadiness();
+                  } catch (error) {
+                    if (error instanceof Error) {
+                      HandleError(error);
+                    }
+                  }
                 },
               },
             ],
