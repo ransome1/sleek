@@ -20,8 +20,6 @@ export function createAttributeContextMenuItems(
   // Recurrences support rename (they don't have fuzzy parsing issues)
   const disableRenameForAttributes = [
     ...(settings?.useHumanFriendlyDates ? ["due", "t"] : []),
-    "created",
-    "completed",
   ];
   const shouldDisableRename =
     attributeKey && disableRenameForAttributes.includes(attributeKey);

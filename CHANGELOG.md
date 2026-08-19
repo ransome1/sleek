@@ -5,17 +5,20 @@ All notable changes to sleek will be documented in this file. The format is base
 ## [2.0.28] - 2026-00-00
 
 ### Added
+
 - Add single todo archive option to context menu by @Lezurex in https://github.com/ransome1/sleek/pull/909
 - Fix due: and t: parsing false-positives by @Lezurex in https://github.com/ransome1/sleek/pull/912
 - Introducing Playwright for e2e testing and first test cases
 
 ### Enhanced
+
 - Updated app icon to squared one
 - Addressed https://github.com/ransome1/sleek/issues/557
 - Aligned attribute renaming/removal prompts with the snackbar message system (Refactored snackbar (UI toast) state management)
 - Added success message snackbar when file is removed
 
 ### Fixed
+
 - Fixed missing renaming function for dates
 - Fixed minor bug in filetabs
 - Fixed minor bug: Priority A selected color was not used due to duplicate # character

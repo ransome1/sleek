@@ -1,6 +1,5 @@
 import { test, expect } from "./helpers/appFixture";
 import { initTestDir, cleanupTestDir } from "./helpers/fileHelper";
-import { isButtonVisible, getVisibleButtons } from "./helpers/navigationHelpers";
 
 /**
  * E2E tests for the splash screen state when no files are loaded
@@ -14,18 +13,22 @@ test.describe("Splash Screen - No Files State", () => {
     cleanupTestDir();
   });
 
-    // Test case 1: Button Display & Correct Text
+  // Test case 1: Button Display & Correct Text
   test("should display buttons with correct text", async ({ page }) => {
     await page.waitForLoadState("domcontentloaded");
 
     // Verify Open File button
-    const openFileBtn = page.locator("[data-testid='splashscreen-button-open-file']");
+    const openFileBtn = page.locator(
+      "[data-testid='splashscreen-button-open-file']",
+    );
     await expect(openFileBtn).toBeVisible();
     const openFileText = await openFileBtn.textContent();
     expect(openFileText?.trim()).toBe("Open file"); // lowercase in translations
 
     // Verify Create File button
-    const createFileBtn = page.locator("[data-testid='splashscreen-button-create-file']");
+    const createFileBtn = page.locator(
+      "[data-testid='splashscreen-button-create-file']",
+    );
     await expect(createFileBtn).toBeVisible();
     const createFileText = await createFileBtn.textContent();
     expect(createFileText?.trim()).toBe("Create file"); // lowercase in translations
@@ -35,7 +38,7 @@ test.describe("Splash Screen - No Files State", () => {
     await expect(createFileBtn).toBeEnabled();
   });
 
-    // Test case 2: Help Link
+  // Test case 2: Help Link
   test("should display and verify help link", async ({ page }) => {
     await page.waitForLoadState("domcontentloaded");
 
@@ -48,31 +51,31 @@ test.describe("Splash Screen - No Files State", () => {
     await expect(helpIcon).toBeVisible();
 
     // Verify link is clickable (has proper attributes for interaction)
-    const linkRole = await helpLink.getAttribute("role");
+
     // Material-UI Link component should be interactive
     await expect(helpLink).toBeEnabled();
   });
 
-    // Test case 3: Navigation Structure
+  // Test case 3: Navigation Structure
   test("should display correct navigation items", async ({ page }) => {
     await page.waitForLoadState("domcontentloaded");
 
     // Count all visible navigation buttons (excluding showNavigation which is hidden)
     const visibleButtons = page.locator(
-      "#navigation li[role='button']:not(.showNavigation)"
+      "#navigation li[role='button']:not(.showNavigation)",
     );
     const count = await visibleButtons.count();
     expect(count).toBe(3); // open-file, settings, hide-navigation
 
     // Verify specific buttons are visible
     await expect(
-      page.locator("[data-testid='navigation-button-open-file']")
+      page.locator("[data-testid='navigation-button-open-file']"),
     ).toBeVisible();
     await expect(
-      page.locator("[data-testid='navigation-button-show-settings']")
+      page.locator("[data-testid='navigation-button-show-settings']"),
     ).toBeVisible();
     await expect(
-      page.locator("[data-testid='navigation-button-hide-navigation']")
+      page.locator("[data-testid='navigation-button-hide-navigation']"),
     ).toBeVisible();
 
     // Verify buttons that should NOT be visible
@@ -95,13 +98,15 @@ test.describe("Splash Screen - No Files State", () => {
     expect(archiveVisible).toBe(false);
   });
 
-    // Test case 4: Disabled Keyboard Shortcut: Ctrl+F (Find)
+  // Test case 4: Disabled Keyboard Shortcut: Ctrl+F (Find)
   test("should not open search field with Ctrl+F", async ({ page }) => {
     // Press Ctrl+F
     await page.keyboard.press("Control+F");
 
     // Verify search field is not visible
-    await expect(page.locator("[data-testid='header-search-icon']")).not.toBeVisible();
+    await expect(
+      page.locator("[data-testid='header-search-icon']"),
+    ).not.toBeVisible();
 
     // Verify splash screen is still visible
     await expect(page.locator("#splashScreen")).toBeVisible();
@@ -113,7 +118,9 @@ test.describe("Splash Screen - No Files State", () => {
     await page.keyboard.press("Control+Enter");
 
     // Verify no todo creation dialog appears
-    await expect(page.locator("[data-testid='dialog-create-todo']")).not.toBeVisible();
+    await expect(
+      page.locator("[data-testid='dialog-create-todo']"),
+    ).not.toBeVisible();
 
     // Verify splash screen is still visible
     await expect(page.locator("#splashScreen")).toBeVisible();
@@ -128,7 +135,7 @@ test.describe("Splash Screen - No Files State", () => {
     await expect(page.locator("#splashScreen")).toBeVisible();
   });
 
-    // Test case 7: Splash Screen Content
+  // Test case 7: Splash Screen Content
   test("should display splash screen content", async ({ page }) => {
     await page.waitForLoadState("domcontentloaded");
 
@@ -144,23 +151,27 @@ test.describe("Splash Screen - No Files State", () => {
     expect(message).toContain("todo.txt");
   });
 
-    // Test case 8: Drawer Hidden
+  // Test case 8: Drawer Hidden
   test("should not display drawer", async ({ page }) => {
     // Verify drawer is not visible
     await expect(page.locator("#drawer")).not.toBeVisible();
 
     // Verify left sidebar is not rendered
-    await expect(page.locator("[data-testid='drawer-content']")).not.toBeVisible();
+    await expect(
+      page.locator("[data-testid='drawer-content']"),
+    ).not.toBeVisible();
   });
 
-    // Test case 9: Grid, Header, and FileTabs Hidden
+  // Test case 9: Grid, Header, and FileTabs Hidden
   test("should not display grid, header, or file tabs", async ({ page }) => {
     // Verify todo grid is not visible
     await expect(page.locator(".MuiList-root")).not.toBeVisible();
     await expect(page.locator("[id='grid']")).not.toBeVisible();
 
     // Verify search header is not visible
-    await expect(page.locator("[data-testid='header-search-icon']")).not.toBeVisible();
+    await expect(
+      page.locator("[data-testid='header-search-icon']"),
+    ).not.toBeVisible();
 
     // Verify file tabs are not visible
     await expect(page.locator("[data-testid='file-tabs']")).not.toBeVisible();

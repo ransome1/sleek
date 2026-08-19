@@ -1,8 +1,4 @@
 import { test, expect } from "./helpers/appFixture";
-import {
-  clickButton,
-  isButtonVisible,
-} from "./helpers/navigationHelpers";
 
 test.describe("File Dialogs - Open & Create", () => {
   test("should display Open File button on splash screen", async ({ page }) => {
@@ -14,7 +10,7 @@ test.describe("File Dialogs - Open & Create", () => {
 
     // Verify Open File button exists
     const openFileButton = page.locator(
-      "[data-testid='splashscreen-button-open-file']"
+      "[data-testid='splashscreen-button-open-file']",
     );
     await expect(openFileButton).toBeVisible();
 
@@ -31,7 +27,7 @@ test.describe("File Dialogs - Open & Create", () => {
     await expect(splashScreen).toBeVisible();
 
     const createFileButton = page.locator(
-      "[data-testid='splashscreen-button-create-file']"
+      "[data-testid='splashscreen-button-create-file']",
     );
     await expect(createFileButton).toBeVisible();
 
@@ -43,10 +39,10 @@ test.describe("File Dialogs - Open & Create", () => {
     await page.waitForLoadState("domcontentloaded");
 
     const openFileButton = page.locator(
-      "[data-testid='splashscreen-button-open-file']"
+      "[data-testid='splashscreen-button-open-file']",
     );
     const createFileButton = page.locator(
-      "[data-testid='splashscreen-button-create-file']"
+      "[data-testid='splashscreen-button-create-file']",
     );
 
     await expect(openFileButton).toBeVisible();
@@ -83,7 +79,7 @@ test.describe("File Dialogs - Open & Create", () => {
     await page.waitForLoadState("domcontentloaded");
 
     const openFileButton = page.locator(
-      "[data-testid='splashscreen-button-open-file']"
+      "[data-testid='splashscreen-button-open-file']",
     );
 
     // Verify button exists and has click handler
@@ -103,7 +99,7 @@ test.describe("File Dialogs - Open & Create", () => {
     await page.waitForLoadState("domcontentloaded");
 
     const createFileButton = page.locator(
-      "[data-testid='splashscreen-button-create-file']"
+      "[data-testid='splashscreen-button-create-file']",
     );
 
     // Verify button exists and has click handler
@@ -134,7 +130,7 @@ test.describe("File Dialogs - Open & Create", () => {
     // Verify buttons are focusable
     for (let i = 0; i < count; i++) {
       const button = buttons.nth(i);
-      const role = await button.getAttribute("role") || "button";
+      const role = (await button.getAttribute("role")) || "button";
       expect(role).toBe("button");
     }
   });
@@ -144,10 +140,10 @@ test.describe("File Dialogs - Open & Create", () => {
 
     // Just verify buttons can be clicked without throwing
     const openFileButton = page.locator(
-      "[data-testid='splashscreen-button-open-file']"
+      "[data-testid='splashscreen-button-open-file']",
     );
     await expect(openFileButton).toBeVisible();
-    
+
     // Button should exist and be visible - that's sufficient
     // (We can't actually test the dialog opening without a file picker UI)
     expect(await openFileButton.isVisible()).toBe(true);
@@ -160,16 +156,16 @@ test.describe("File Dialogs - Open & Create", () => {
 
     const splashScreen = page.locator("#splashScreen");
     const buttonsContainer = page.locator("#splashScreen .buttons");
-    
+
     // Verify splash screen exists
     await expect(splashScreen).toBeVisible();
-    
+
     // Verify buttons container exists
     await expect(buttonsContainer).toBeVisible();
-    
+
     const buttons = buttonsContainer.locator("button");
     const count = await buttons.count();
-    
+
     // Should have exactly 2 buttons
     expect(count).toBe(2);
   });
