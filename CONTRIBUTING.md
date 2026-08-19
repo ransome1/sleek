@@ -2,7 +2,7 @@
 
 ## 👩🏾‍💻 Become a contributer
 
-We're actively inviting passionate contributors skilled in `React`, `TypeScript`, `Electron`, and `vitest` to join our collaborative effort. [Here you'll find our roadmap](https://github.com/users/ransome1/projects/3).
+We're actively inviting passionate contributors skilled in `React`, `TypeScript`, `Electron`, `vitest` and `Playwright` to join our collaborative effort. [Here you'll find our roadmap](https://github.com/users/ransome1/projects/3).
 
 ## Table of Contents
 

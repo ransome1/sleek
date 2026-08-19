@@ -118,3 +118,5 @@ ARCHITECTURE.md
 wiki/
 
 test-results/
+
+playwright-report/
