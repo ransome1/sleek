@@ -132,6 +132,7 @@ export const test = base.extend<AppFixtures>({
         XDG_CACHE_HOME: resolve(testDataDir, "XDG_CACHE"),
         XDG_DATA_HOME: resolve(testDataDir, "XDG_DATA"),
         USERPROFILE: homeDir,
+        LANG: "en_US.UTF-8",
       },
     });
 
