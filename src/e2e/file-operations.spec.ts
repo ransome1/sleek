@@ -1,3 +1,5 @@
+import { Locator } from "@playwright/test";
+import { TodoData } from "../@types";
 import { test, expect } from "./helpers/appFixture";
 import {
   createTodoFile,

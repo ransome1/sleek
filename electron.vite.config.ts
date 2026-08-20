@@ -13,6 +13,7 @@ export const config = {
     globals: true,
     environment: "jsdom",
     setupFiles: ["src/setupTests.ts"],
+    exclude: ["**/node_modules/**", "**/src/e2e/**"],
   },
   plugins: [react()],
 } satisfies UserConfig & ViteUserConfig;
