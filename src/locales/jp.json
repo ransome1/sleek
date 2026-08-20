@@ -46,6 +46,7 @@
   "settings.days": " 日",
   "drawer.filters.showCompleted": "完了したタスク",
   "drawer.filters.showHidden": "非表示のタスク",
+  "drawer.filters.showAttributesFromHiddenTodosInDrawer": "ドロワーに非表示のTodoの属性を表示する",
   "drawer.filters.thresholdDateInTheFuture": "未来の期限日",
   "drawer.filters.dueDateInTheFuture": "未来の期日",
   "drawer.attributes.noAttributesAvailable": "現在利用可能な属性はありません",

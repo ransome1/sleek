@@ -22,6 +22,10 @@ const visibleSettings: VisibleSettings = {
     rerender: true,
     help: "https://github.com/ransome1/sleek/wiki/Hidden-todos-(h:)",
   },
+  showAttributesFromHiddenTodosInDrawer: {
+    style: "toggle",
+    rerender: true,
+  },
   thresholdDateInTheFuture: {
     style: "toggle",
     rerender: true,

@@ -46,6 +46,7 @@
   "settings.days": " Tage",
   "drawer.filters.showCompleted": "Abgeschlossene Aufgaben",
   "drawer.filters.showHidden": "Versteckte Aufgaben",
+  "drawer.filters.showAttributesFromHiddenTodosInDrawer": "Zeige Attribute aus versteckten Todos in der Seitenleiste",
   "drawer.filters.thresholdDateInTheFuture": "Schwellenwertdatum in der Zukunft",
   "drawer.filters.dueDateInTheFuture": "Fälligkeitsdatum in der Zukunft",
   "drawer.attributes.noAttributesAvailable": "Noch keine Attribute verfügbar",

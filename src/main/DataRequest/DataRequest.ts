@@ -73,6 +73,9 @@ function dataRequest(passedSearchString: string = ""): RequestedData | null {
   const sorting: Sorting[] = SettingsStore.get("sorting");
   const filters: Filters = FiltersStore.get("attributes") as Filters;
   const showHidden: boolean = SettingsStore.get("showHidden");
+  const showAttributesFromHiddenTodosInDrawer: boolean = SettingsStore.get(
+    "showAttributesFromHiddenTodosInDrawer",
+  );
   const fileSorting = SettingsStore.get("fileSorting");
 
   todoObjects = createTodoObjects(fileContent);
@@ -92,13 +95,25 @@ function dataRequest(passedSearchString: string = ""): RequestedData | null {
 
   todoObjects = handleCompletedTodoObjects(todoObjects);
 
-  updateAttributes(todoObjects, sorting, true);
+  updateAttributes(
+    todoObjects,
+    sorting,
+    true,
+    showHidden,
+    showAttributesFromHiddenTodosInDrawer,
+  );
 
   if (filters) todoObjects = applyAttributes(todoObjects, filters);
 
   if (searchString) todoObjects = applySearchString(searchString, todoObjects);
 
-  updateAttributes(todoObjects, sorting, false);
+  updateAttributes(
+    todoObjects,
+    sorting,
+    false,
+    showHidden,
+    showAttributesFromHiddenTodosInDrawer,
+  );
 
   if (showHidden) {
     headers.visibleObjects = todoObjects.length;

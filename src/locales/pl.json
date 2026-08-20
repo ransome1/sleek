@@ -46,6 +46,7 @@
   "settings.days": " dni",
   "drawer.filters.showCompleted": "Ukończone zadania",
   "drawer.filters.showHidden": "Ukryte zadania",
+  "drawer.filters.showAttributesFromHiddenTodosInDrawer": "Pokaż atrybuty ukrytych zadań w panelu bocznym",
   "drawer.filters.thresholdDateInTheFuture": "Data progowa w przyszłości",
   "drawer.filters.dueDateInTheFuture": "Termin w przyszłości",
   "drawer.attributes.noAttributesAvailable": "Brak dostępnych atrybutów",

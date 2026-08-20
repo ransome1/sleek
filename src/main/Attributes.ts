@@ -37,20 +37,34 @@ let attributes: Attributes = {
 // Only records a notification flag for due-date attributes.
 // Count is only incremented for visible todos (hidden !== 1).
 // hide starts as true and is set to false as soon as one visible todo is seen.
+// If showAttributesFromHiddenTodosInDrawer is OFF, h:1-only attributes are hidden.
 function incrementCount(
   group: AttributeGroup,
   value: string,
   notify: boolean,
   hidden: boolean,
+  showAttributesFromHiddenTodosInDrawer: boolean,
+  isHiddenTodo: boolean,
 ): void {
   const previous = group[value]?.count ?? 0;
   // Once a visible todo has been seen for this value, hide is locked to false.
   // A single visible todo is enough to show the attribute in the sidebar.
   const alreadyVisible = group[value]?.hide === false;
-  const hide = alreadyVisible ? false : hidden;
+
+  // hide=false when: a visible todo already exists, OR this todo is not h:1,
+  //                 OR the setting allows showing h:1 attributes in the drawer.
+  // hide=true only when: all todos so far are h:1 AND the setting is OFF.
+  const hide =
+    alreadyVisible || !isHiddenTodo || showAttributesFromHiddenTodosInDrawer
+      ? false
+      : (group[value]?.hide ?? true);
+
+  // notify flag should be OR'd across all todos with this attribute value
+  const previousNotify = group[value]?.notify ?? false;
+
   group[value] = {
     count: hidden ? previous : previous + 1,
-    notify,
+    notify: notify || previousNotify,
     hide,
     value: [],
   };
@@ -75,25 +89,44 @@ function tallyAttribute(
   group: AttributeGroup,
   attributeName: string,
   todoObjects: TodoObject[],
+  showHidden: boolean,
+  showAttributesFromHiddenTodosInDrawer: boolean,
 ): void {
   for (const todo of todoObjects) {
     const value = todo[attributeName as keyof TodoObject];
 
     // due is the only attribute whose notify flag is meaningful
     const notify = attributeName === "due" ? !!todo.notify : false;
-    const hidden = todo.hidden === true;
+    // Truly hidden = has h:1 AND the user has NOT enabled showHidden
+    const hidden = todo.hidden === true && !showHidden;
+    // Track if this is an h:1 todo (for the hide flag logic)
+    const isHiddenTodo = todo.hidden === true;
 
     if (Array.isArray(value)) {
       // multi-value attributes: projects, contexts
       for (const element of value) {
         if (element !== null) {
-          incrementCount(group, element as string, notify, hidden);
+          incrementCount(
+            group,
+            element as string,
+            notify,
+            hidden,
+            showAttributesFromHiddenTodosInDrawer,
+            isHiddenTodo,
+          );
         }
       }
     } else {
       // single-value attributes: priority, due, t, rec, pm, created, completed
       if (value !== null) {
-        incrementCount(group, value as string, notify, hidden);
+        incrementCount(
+          group,
+          value as string,
+          notify,
+          hidden,
+          showAttributesFromHiddenTodosInDrawer,
+          isHiddenTodo,
+        );
       }
     }
   }
@@ -132,10 +165,18 @@ function updateAttributes(
   todoObjects: TodoObject[],
   sorting: Sorting[],
   reset: boolean,
+  showHidden: boolean,
+  showAttributesFromHiddenTodosInDrawer: boolean,
 ): void {
   for (const attributeName of Object.keys(attributes)) {
     resetGroup(attributes[attributeName], reset);
-    tallyAttribute(attributes[attributeName], attributeName, todoObjects);
+    tallyAttribute(
+      attributes[attributeName],
+      attributeName,
+      todoObjects,
+      showHidden,
+      showAttributesFromHiddenTodosInDrawer,
+    );
     attributes[attributeName] = sortGroupKeys(
       attributes[attributeName],
       attributeName,

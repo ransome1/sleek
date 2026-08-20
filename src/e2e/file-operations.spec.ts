@@ -62,14 +62,20 @@ test.describe("File Operations - Open & Create (Full Workflow)", () => {
 
     // Add the file to the app
     await page.evaluate((filePath) => {
-      (window as Window & typeof globalThis).api.ipcRenderer.send("addFile", filePath);
+      (window as Window & typeof globalThis).api.ipcRenderer.send(
+        "addFile",
+        filePath,
+      );
     }, todoFile);
 
     await page.waitForTimeout(1000);
 
     // Get the app's file list via store
     const files = await page.evaluate(() => {
-      return (window as Window & typeof globalThis).api.store.getConfig("files") || [];
+      return (
+        (window as Window & typeof globalThis).api.store.getConfig("files") ||
+        []
+      );
     });
 
     // File should be in the list
@@ -93,9 +99,14 @@ test.describe("File Operations - Open & Create (Full Workflow)", () => {
     // Request data from the app to verify todos loaded
     const todosLoaded: boolean = await page.evaluate(() => {
       return new Promise<boolean>((resolve) => {
-        (window as Window & typeof globalThis).api.ipcRenderer.send("requestData", "");
+        (window as Window & typeof globalThis).api.ipcRenderer.send(
+          "requestData",
+          "",
+        );
 
-        const unsubscribe = (window as Window & typeof globalThis).api.ipcRenderer.on(
+        const unsubscribe = (
+          window as Window & typeof globalThis
+        ).api.ipcRenderer.on(
           "requestData",
           (data: { todoData: TodoData[] }) => {
             unsubscribe();
@@ -126,7 +137,10 @@ test.describe("File Operations - Open & Create (Full Workflow)", () => {
     // Create first file
     const file1: string = createTodoFile("file1.txt", "File 1 task");
     await page.evaluate((filePath) => {
-      (window as Window & typeof globalThis).api.ipcRenderer.send("addFile", filePath);
+      (window as Window & typeof globalThis).api.ipcRenderer.send(
+        "addFile",
+        filePath,
+      );
     }, file1);
 
     await page.waitForTimeout(500);
@@ -134,14 +148,20 @@ test.describe("File Operations - Open & Create (Full Workflow)", () => {
     // Create second file
     const file2: string = createTodoFile("file2.txt", "File 2 task");
     await page.evaluate((filePath) => {
-      (window as Window & typeof globalThis).api.ipcRenderer.send("addFile", filePath);
+      (window as Window & typeof globalThis).api.ipcRenderer.send(
+        "addFile",
+        filePath,
+      );
     }, file2);
 
     await page.waitForTimeout(500);
 
     // Check files in the app
     const files = await page.evaluate(() => {
-      return (window as Window & typeof globalThis).api.store.getConfig("files") || [];
+      return (
+        (window as Window & typeof globalThis).api.store.getConfig("files") ||
+        []
+      );
     });
 
     expect(files.length).toBeGreaterThanOrEqual(2);
@@ -170,9 +190,14 @@ Task with multiple +projects and @contexts`;
     // Request data to verify todos parsed correctly
     const todosLoaded: boolean = await page.evaluate(() => {
       return new Promise<boolean>((resolve) => {
-        (window as Window & typeof globalThis).api.ipcRenderer.send("requestData", "");
+        (window as Window & typeof globalThis).api.ipcRenderer.send(
+          "requestData",
+          "",
+        );
 
-        const unsubscribe = (window as Window & typeof globalThis).api.ipcRenderer.on(
+        const unsubscribe = (
+          window as Window & typeof globalThis
+        ).api.ipcRenderer.on(
           "requestData",
           (data: { todoData: TodoData[] }) => {
             unsubscribe();
@@ -198,14 +223,19 @@ Task with multiple +projects and @contexts`;
 
     // Add file
     await page.evaluate((filePath) => {
-      (window as Window & typeof globalThis).api.ipcRenderer.send("addFile", filePath);
+      (window as Window & typeof globalThis).api.ipcRenderer.send(
+        "addFile",
+        filePath,
+      );
     }, todoFile);
 
     await page.waitForTimeout(500);
 
     // Get files config
     const files: string[] = await page.evaluate(() => {
-      const config = (window as Window & typeof globalThis).api.store.getConfig("files");
+      const config = (window as Window & typeof globalThis).api.store.getConfig(
+        "files",
+      );
       return config || [];
     });
 
@@ -238,9 +268,14 @@ Task with URLs: https://github.com/ransome1/sleek`;
     // Verify file loaded without errors
     const todosLoaded: boolean = await page.evaluate(() => {
       return new Promise<boolean>((resolve) => {
-        (window as Window & typeof globalThis).api.ipcRenderer.send("requestData", "");
+        (window as Window & typeof globalThis).api.ipcRenderer.send(
+          "requestData",
+          "",
+        );
 
-        const unsubscribe = (window as Window & typeof globalThis).api.ipcRenderer.on(
+        const unsubscribe = (
+          window as Window & typeof globalThis
+        ).api.ipcRenderer.on(
           "requestData",
           (data: { todoData: TodoData[] }) => {
             unsubscribe();
@@ -267,7 +302,10 @@ Task with URLs: https://github.com/ransome1/sleek`;
     const todoFile: string = createTodoFile("nav-test.txt", "Test task");
 
     await page.evaluate((filePath) => {
-      (window as Window & typeof globalThis).api.ipcRenderer.send("addFile", filePath);
+      (window as Window & typeof globalThis).api.ipcRenderer.send(
+        "addFile",
+        filePath,
+      );
     }, todoFile);
 
     await page.waitForTimeout(500);

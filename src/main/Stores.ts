@@ -153,6 +153,10 @@ const migrations = {
     console.log("Migrating settings store from 2.0.26 → 2.0.27");
     config.set("enableSafeWrites", true);
   },
+  "2.0.28": (config) => {
+    console.log("Migrating settings store from 2.0.27 → 2.0.28");
+    config.set("showAttributesFromHiddenTodosInDrawer", false);
+  },
 };
 
 const rerenderDefinition = {
@@ -165,6 +169,7 @@ const rerenderDefinition = {
   dueDateInTheFuture: true,
   sortCompletedLast: true,
   notificationThreshold: true,
+  showAttributesFromHiddenTodosInDrawer: true,
 };
 
 function findChanges(oldValue, newValue) {

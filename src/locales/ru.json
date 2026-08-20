@@ -46,6 +46,7 @@
   "settings.days": " дней",
   "drawer.filters.showCompleted": "Завершенные задачи",
   "drawer.filters.showHidden": "Скрытые задачи",
+  "drawer.filters.showAttributesFromHiddenTodosInDrawer": "Показывать атрибуты скрытых задач на панели",
   "drawer.filters.thresholdDateInTheFuture": "Дата порога в будущем",
   "drawer.filters.dueDateInTheFuture": "Дата выполнения в будущем",
   "drawer.attributes.noAttributesAvailable": "Нет доступных атрибутов",

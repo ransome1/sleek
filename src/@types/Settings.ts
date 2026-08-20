@@ -30,6 +30,7 @@ export interface SettingStore {
 
   showCompleted: boolean;
   showHidden: boolean;
+  showAttributesFromHiddenTodosInDrawer: boolean;
   fileSorting: boolean;
   sortCompletedLast: boolean;
   dueDateInTheFuture: boolean;

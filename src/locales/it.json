@@ -46,6 +46,7 @@
   "settings.days": " giorni",
   "drawer.filters.showCompleted": "Compiti completati",
   "drawer.filters.showHidden": "Compiti nascosti",
+  "drawer.filters.showAttributesFromHiddenTodosInDrawer": "Mostra attributi delle attività nascoste nel pannello",
   "drawer.filters.thresholdDateInTheFuture": "Data soglia nel futuro",
   "drawer.filters.dueDateInTheFuture": "Data di scadenza nel futuro",
   "drawer.attributes.noAttributesAvailable": "Nessun attributo disponibile al momento",

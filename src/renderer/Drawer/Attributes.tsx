@@ -125,14 +125,25 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> =
 
     const { t } = useTranslation();
 
-    const isAttributesEmpty = useMemo(
-      () =>
-        !attributes ||
-        Object.values(attributes).every(
-          (group) => Object.keys(group).length === 0,
+    const isAttributesEmpty = useMemo(() => {
+      if (!attributes) return true;
+
+      // Check if all attribute groups are completely empty
+      const allGroupsEmpty = Object.values(attributes).every(
+        (group) => Object.keys(group).length === 0,
+      );
+      if (allGroupsEmpty) return true;
+
+      // Check if all attributes are hidden by the render guard
+      // An attribute is visible if: hide=false OR the setting allows showing h:1 attributes
+      const anyVisibleAttribute = Object.values(attributes).some((group) =>
+        Object.values(group).some(
+          (attribute) =>
+            !attribute.hide || settings.showAttributesFromHiddenTodosInDrawer,
         ),
-      [attributes],
-    );
+      );
+      return !anyVisibleAttribute;
+    }, [attributes, settings.showAttributesFromHiddenTodosInDrawer]);
 
     const handleAccordionToggle = (index: number): void => {
       // Spread to avoid mutating the settings object in place
@@ -153,7 +164,8 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> =
     ) => {
       return Object.entries(buckets).map(
         ([bucketName, attribute], childIndex) => {
-          if (attribute.hide) return null;
+          if (attribute.hide && !settings.showAttributesFromHiddenTodosInDrawer)
+            return null;
 
           const chipId = `${categoryKey}-${bucketName}-${childIndex}`;
           const isHovered = hovered === chipId;
@@ -256,10 +268,12 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> =
               t,
             );
             // Don't render the accordion if there are no entries at all,
-            // or if every entry is intentionally hidden via h:1.
+            // or if every entry is hidden (respects showAttributesFromHiddenTodosInDrawer setting).
             const hasEntries = Object.keys(buckets).length > 0;
             const hasVisibleEntries = Object.values(buckets).some(
-              (attribute) => !attribute.hide,
+              (attribute) =>
+                !attribute.hide ||
+                settings.showAttributesFromHiddenTodosInDrawer,
             );
             if (!hasEntries || !hasVisibleEntries) return null;
 

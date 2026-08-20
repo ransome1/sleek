@@ -46,6 +46,7 @@
   "settings.days": " 일",
   "drawer.filters.showCompleted": "완료된 작업",
   "drawer.filters.showHidden": "숨겨진 작업",
+  "drawer.filters.showAttributesFromHiddenTodosInDrawer": "사이드바에서 숨긴 할 일의 속성 표시",
   "drawer.filters.thresholdDateInTheFuture": "미래 임계 날짜",
   "drawer.filters.dueDateInTheFuture": "미래 마감일",
   "drawer.attributes.noAttributesAvailable": "현재 사용 가능한 속성 없음",

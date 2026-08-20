@@ -46,6 +46,7 @@
   "settings.days": " jours",
   "drawer.filters.showCompleted": "Tâches terminées",
   "drawer.filters.showHidden": "Tâches masquées",
+  "drawer.filters.showAttributesFromHiddenTodosInDrawer": "Afficher les attributs des tâches cachées dans le panneau",
   "drawer.filters.thresholdDateInTheFuture": "Date limite dans le futur",
   "drawer.filters.dueDateInTheFuture": "Date d'échéance dans le futur",
   "drawer.attributes.noAttributesAvailable": "Aucun attribut disponible pour le moment",

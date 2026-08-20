@@ -46,6 +46,7 @@
   "settings.days": " दिन",
   "drawer.filters.showCompleted": "पूर्ण किए गए कार्य",
   "drawer.filters.showHidden": "छिपे कार्य",
+  "drawer.filters.showAttributesFromHiddenTodosInDrawer": "ड्रॉअर में छुपे हुए टूडू के गुण दिखाएं",
   "drawer.filters.thresholdDateInTheFuture": "भविष्य की सीमा तिथि",
   "drawer.filters.dueDateInTheFuture": "भविष्य की समापन तिथि",
   "drawer.attributes.noAttributesAvailable": "वर्तमान में कोई गुण उपलब्ध नहीं हैं",

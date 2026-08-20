@@ -46,6 +46,7 @@
   "settings.days": " dny",
   "drawer.filters.showCompleted": "Dokončené úkoly",
   "drawer.filters.showHidden": "Skryté úkoly",
+  "drawer.filters.showAttributesFromHiddenTodosInDrawer": "Zobrazit atributy skrytých úkolů v panelu",
   "drawer.filters.thresholdDateInTheFuture": "Termín v budoucnosti",
   "drawer.filters.dueDateInTheFuture": "Termín splnění v budoucnosti",
   "drawer.attributes.noAttributesAvailable": "Zatím nejsou k dispozici žádné atributy",

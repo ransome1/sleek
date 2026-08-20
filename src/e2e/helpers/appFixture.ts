@@ -101,6 +101,7 @@ export const test = base.extend<AppFixtures>({
       invertTrayColor: false,
       startMinimized: false,
       weekStart: 1,
+      matomo: false, // DISABLE MATOMO FOR TESTS
       chokidarOptions: {
         awaitWriteFinish: {
           stabilityThreshold: 100,

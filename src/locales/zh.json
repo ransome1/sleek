@@ -46,6 +46,7 @@
   "settings.days": " 天",
   "drawer.filters.showCompleted": "已完成的待办",
   "drawer.filters.showHidden": "隐藏的待办",
+  "drawer.filters.showAttributesFromHiddenTodosInDrawer": "在侧边栏中显示隐藏待办事项的属性",
   "drawer.filters.thresholdDateInTheFuture": "未来的阈值日期",
   "drawer.filters.dueDateInTheFuture": "未来的截止日期",
   "drawer.attributes.noAttributesAvailable": "暂无可用属性",

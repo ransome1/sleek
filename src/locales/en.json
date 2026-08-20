@@ -46,6 +46,7 @@
   "settings.days": " days",
   "drawer.filters.showCompleted": "Completed todos",
   "drawer.filters.showHidden": "Hidden todos",
+  "drawer.filters.showAttributesFromHiddenTodosInDrawer": "Show attributes from hidden todos in drawer",
   "drawer.filters.thresholdDateInTheFuture": "Threshold date in the future",
   "drawer.filters.dueDateInTheFuture": "Due date in the future",
   "drawer.attributes.noAttributesAvailable": "No attributes available yet",

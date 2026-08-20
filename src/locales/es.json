@@ -46,6 +46,7 @@
   "settings.days": " días",
   "drawer.filters.showCompleted": "Tareas completadas",
   "drawer.filters.showHidden": "Tareas ocultas",
+  "drawer.filters.showAttributesFromHiddenTodosInDrawer": "Mostrar atributos de tareas ocultas en el panel",
   "drawer.filters.thresholdDateInTheFuture": "Fecha umbral en el futuro",
   "drawer.filters.dueDateInTheFuture": "Fecha de vencimiento en el futuro",
   "drawer.attributes.noAttributesAvailable": "No hay atributos disponibles aún",

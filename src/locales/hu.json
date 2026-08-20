@@ -46,6 +46,7 @@
   "settings.days": " nap",
   "drawer.filters.showCompleted": "Befejezett feladatok",
   "drawer.filters.showHidden": "Elrejtett feladatok",
+  "drawer.filters.showAttributesFromHiddenTodosInDrawer": "Rejtett teendők attribútumainak megjelenítése az oldalpanelen",
   "drawer.filters.thresholdDateInTheFuture": "Hátralévő dátum a jövőben",
   "drawer.filters.dueDateInTheFuture": "Határidő a jövőben",
   "drawer.attributes.noAttributesAvailable": "Nincs elérhető tulajdonság",
