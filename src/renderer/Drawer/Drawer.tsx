@@ -47,10 +47,19 @@ const DrawerComponent: React.FC<DrawerComponentProps> = memo(
     const [drawerWidth, setDrawerWidth] = useState<number>(
       store.getConfig("drawerWidth") || 500,
     );
+    const [hiddenCategories, setHiddenCategories] = useState<string[]>(
+      () => (store.getFilters("hiddenCategories") as string[]) ?? [],
+    );
     const containerRef = useRef<HTMLDivElement | null>(null);
     const startXRef = useRef<number>(0);
 
     const { t } = useTranslation();
+
+    // Sync hiddenCategories from store when filters change
+    useEffect(() => {
+      const updated = (store.getFilters("hiddenCategories") as string[]) ?? [];
+      setHiddenCategories(updated);
+    }, [filters]);
 
     const handleTabChange = (
       _event: React.ChangeEvent<unknown>,
@@ -119,9 +128,10 @@ const DrawerComponent: React.FC<DrawerComponentProps> = memo(
             label={
               <>
                 {t("attributes")}
-                {Object.values(filters).some(
+                {(Object.values(filters).some(
                   (array) => Array.isArray(array) && array.length > 0,
-                ) && (
+                ) ||
+                  hiddenCategories.length > 0) && (
                   <RemoveCircleIcon onClick={handleReset} className="reset" />
                 )}
               </>

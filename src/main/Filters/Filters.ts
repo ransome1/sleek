@@ -1,5 +1,5 @@
 import { Filters, TodoObject } from "@sleek-types";
-import { SettingsStore } from "../Stores";
+import { SettingsStore, FiltersStore } from "../Stores";
 import { DateTime } from "luxon";
 
 function applyAttributes(todoObjects: TodoObject[], filters: Filters) {
@@ -59,6 +59,27 @@ function handleTodoObjectsDates(todoObjects: TodoObject[]): TodoObject[] {
       !(thresholdDate && thresholdDate > now && !thresholdDateInTheFuture) &&
       !(dueDate && dueDate > now && !dueDateInTheFuture)
     );
+  });
+}
+
+export function applyHiddenCategories(todoObjects: TodoObject[]): TodoObject[] {
+  const hiddenCategories =
+    (FiltersStore.get("hiddenCategories") as string[] | undefined) ?? [];
+
+  if (hiddenCategories.length === 0) return todoObjects;
+
+  return todoObjects.filter((todoObject) => {
+    for (const category of hiddenCategories) {
+      const value = todoObject[category as keyof TodoObject];
+      // Exclude todos that HAVE a value for this category
+      // Arrays: exclude if non-empty; scalars: exclude if non-null/non-empty
+      if (Array.isArray(value)) {
+        if (value.length > 0) return false;
+      } else if (value !== null && value !== undefined && value !== "") {
+        return false;
+      }
+    }
+    return true;
   });
 }
 

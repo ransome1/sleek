@@ -23,8 +23,25 @@
       font-size: 1.25em;
       font-weight: bold;
       padding: 0;
+      .MuiBadge-root {
+        line-height: 1.5em;
+        &.hidden {
+          color: gray;
+        }
+      }
       .MuiBadge-badge {
         background: var(--semantic-notification);
+      }
+      .visibility-toggle {
+        margin-right: 8px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        padding: 4px;
+        color: var(--semantic-primary);
+        &.hidden {
+          color: gray;
+        }
       }
     }
     &:before {

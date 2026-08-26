@@ -190,6 +190,7 @@ const GetMenuTemplate = (
                 accelerator: "CmdOrCtrl+0",
                 click: async () => {
                   FiltersStore.set("attributes", {});
+                  FiltersStore.set("hiddenCategories", []);
                 },
               },
               {

@@ -4,6 +4,7 @@ import { SettingsStore, FiltersStore } from "../Stores";
 import { applySearchString } from "../Filters/Search";
 import {
   applyAttributes,
+  applyHiddenCategories,
   handleCompletedTodoObjects,
   handleTodoObjectsDates,
 } from "../Filters/Filters";
@@ -102,6 +103,8 @@ function dataRequest(passedSearchString: string = ""): RequestedData | null {
     showHidden,
     showAttributesFromHiddenTodosInDrawer,
   );
+
+  todoObjects = applyHiddenCategories(todoObjects);
 
   if (filters) todoObjects = applyAttributes(todoObjects, filters);
 

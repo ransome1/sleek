@@ -78,6 +78,7 @@ export const HandleFilterSelect = (
 
 export const handleReset = (): void => {
   store.setFilters("attributes", {});
+  store.setFilters("hiddenCategories", []);
 };
 
 export const handleLinkClick = (event: React.MouseEvent, url: string): void => {

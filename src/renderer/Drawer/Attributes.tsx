@@ -1,4 +1,4 @@
-import React, { useState, memo, useMemo } from "react";
+import React, { useState, memo, useMemo, useEffect } from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -9,6 +9,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { SnackbarAction } from "../../@types";
 import PomodoroIcon from "../../../resources/pomodoro.svg?asset";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import AirIcon from "@mui/icons-material/Air";
 import {
   HandleFilterSelect,
@@ -122,8 +123,18 @@ function buildDisplayBuckets(
 const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> =
   memo(({ settings, attributes, filters, setContextMenu, onNotification }) => {
     const [hovered, setHovered] = useState<string | null>(null);
+    const [hiddenCategories, setHiddenCategories] = useState<string[]>(
+      () => (store.getFilters("hiddenCategories") as string[]) ?? [],
+    );
 
     const { t } = useTranslation();
+
+    // Sync hiddenCategories from store when filters change OR when reset happens
+    // Use attributes as an additional dependency to catch state changes
+    useEffect(() => {
+      const updated = (store.getFilters("hiddenCategories") as string[]) ?? [];
+      setHiddenCategories(updated);
+    }, [filters, attributes]);
 
     const isAttributesEmpty = useMemo(() => {
       if (!attributes) return true;
@@ -152,6 +163,32 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> =
       store.setConfig("accordionOpenState", updated);
     };
 
+    const handleCategoryVisibilityToggle = (
+      categoryKey: AttributeKey,
+      event: React.MouseEvent,
+    ): void => {
+      event.stopPropagation();
+      const isHidden = hiddenCategories.includes(categoryKey);
+
+      if (!isHidden) {
+        // Hiding: clear active filters for this category
+        const currentAttributes =
+          (store.getFilters("attributes") as Filters) ?? {};
+        delete currentAttributes[categoryKey];
+        store.setFilters("attributes", currentAttributes);
+        // Add to hidden list
+        const updated = [...hiddenCategories, categoryKey];
+        store.setFilters("hiddenCategories", updated);
+        setHiddenCategories(updated);
+      } else {
+        // Showing: remove from hidden list
+        const updated = hiddenCategories.filter((k) => k !== categoryKey);
+        store.setFilters("hiddenCategories", updated);
+        setHiddenCategories(updated);
+      }
+      window.api.ipcRenderer.send("requestData", "");
+    };
+
     const { handleContextMenu } = useAttributeContextMenu({
       setContextMenu,
       settings,
@@ -171,7 +208,8 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> =
           const isHovered = hovered === chipId;
           const excluded = IsExcluded(attribute, filters);
           const selected = IsSelected(categoryKey, filters, attribute.value);
-          const disabled = attribute.count === 0;
+          const isCategoryHidden = hiddenCategories.includes(categoryKey);
+          const disabled = attribute.count === 0 || isCategoryHidden;
           // groupedName is only set when multiple raw dates collapsed into one bucket label
           const groupedName = attribute.value.length > 1 ? bucketName : null;
 
@@ -288,10 +326,32 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> =
                 onChange={() => handleAccordionToggle(index)}
               >
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCategoryVisibilityToggle(
+                        categoryKey,
+                        e as unknown as React.MouseEvent,
+                      );
+                    }}
+                    data-testid={`drawer-attributes-visibility-toggle-${categoryKey}`}
+                    className={`visibility-toggle ${
+                      hiddenCategories.includes(categoryKey) ? "hidden" : ""
+                    }`}
+                  >
+                    {hiddenCategories.includes(categoryKey) ? (
+                      <VisibilityOffIcon />
+                    ) : (
+                      <VisibilityIcon />
+                    )}
+                  </div>
                   <Badge
                     variant="dot"
                     invisible={!hasNotification}
                     data-testid={`drawer-attributes-accordion-${categoryKey}`}
+                    className={
+                      hiddenCategories.includes(categoryKey) ? "hidden" : ""
+                    }
                   >
                     {translatedAttributes(t)[categoryKey]}
                   </Badge>

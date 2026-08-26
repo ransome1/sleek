@@ -155,7 +155,7 @@ const migrations = {
   },
   "2.0.28": (config) => {
     console.log("Migrating settings store from 2.0.27 → 2.0.28");
-    config.set("showAttributesFromHiddenTodosInDrawer", false);
+    config.set("showAttributesFromHiddenTodosInDrawer", true);
   },
 };
 
@@ -209,7 +209,15 @@ function getFiltersStore(): Store {
           console.log("Migrating filter store → 2.0.19");
           filters.set("attributes", {});
         },
+        "2.0.28": (filters) => {
+          console.log("Migrating filter store → 2.0.28: hiddenCategories");
+          filters.set("hiddenCategories", []);
+        },
       },
+    });
+
+    _filtersStore.onDidAnyChange(() => {
+      dataRequest("");
     });
   }
   return _filtersStore;
