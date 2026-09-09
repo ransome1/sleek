@@ -36,6 +36,8 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   test-e2e:
+    # Disable it for now, needs special runner setup
+    if: false
     name: Run End-2-End tests
     runs-on: ubuntu-latest
     steps:
