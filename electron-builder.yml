@@ -64,22 +64,18 @@ win:
       arch:
         - arm64
         - x64
-        - ia32
     - target: portable
       arch:
         - arm64
         - x64
-        - ia32
     - target: nsis
       arch:
         - arm64
         - x64
-        - ia32
     - target: appx
       arch:
         - arm64
         - x64
-        - ia32
   icon: ./resources/icon.ico
   artifactName: ${productName}-${version}-win-${arch}.${ext}
 nsis:
