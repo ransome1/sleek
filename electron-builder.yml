@@ -1,7 +1,7 @@
 directories:
   output: dist
   buildResources: build
-buildVersion: "68"
+buildVersion: "69"
 asar: true
 asarUnpack:
   - "resources/icon.ico"
