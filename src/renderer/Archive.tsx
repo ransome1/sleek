@@ -67,7 +67,7 @@ const ArchiveComponent: React.FC<ArchiveComponentProps> = ({
 
       setPromptItem(
         doneFileAvailable
-          ? lineNumber
+          ? lineNumber !== undefined
             ? promptItemArchivingSingle
             : promptItemArchivingAll
           : promptItemChooseChangeFile,
