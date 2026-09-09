@@ -15,7 +15,7 @@
       "node",
       "electron-vite/node",
       "vitest/globals",
-      "@testing-library/jest-dom"
+      "@testing-library/jest-dom/vitest"
     ],
     "composite": true,
     "paths": {
