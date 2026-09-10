@@ -4,9 +4,15 @@ All notable changes to sleek will be documented in this file. The format is base
 
 ## [Unreleased]
 
-### Enhanced
+## [2.0.29] - 2026-09-10
+
+### Changed
 
 - Rework release build and publish GitHub workflow
+
+### Fixed
+
+- Fix an issue where the single archiving action would sometimes not remove a todo and add `undefined` to the done file
 
 ## [2.0.28] - 2026-09-09
 
