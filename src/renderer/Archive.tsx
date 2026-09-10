@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { PromptItem } from "@sleek-types";
 
@@ -14,30 +14,24 @@ const ArchiveComponent: React.FC<ArchiveComponentProps> = ({
   setPromptItem,
 }) => {
   const { t } = useTranslation();
-  const [archiveLineNumber, setArchiveLineNumber] = useState<
-    number | undefined
-  >(undefined);
-
   const handleArchiveAllConfirm = useCallback((): void => {
     ipcRenderer.send("archiveTodos");
   }, []);
 
-  const handleArchiveSingleConfirm = useCallback((): void => {
-    ipcRenderer.send("archiveSingleTodo", archiveLineNumber);
-  }, [archiveLineNumber]);
+  const handleArchiveSingleConfirm = useCallback((lineNumber: number): void => {
+    ipcRenderer.send("archiveSingleTodo", lineNumber);
+  }, []);
 
-  const handleOpenDoneFile = useCallback((): void => {
-    ipcRenderer.send("openFile", true, archiveLineNumber);
-  }, [archiveLineNumber]);
+  const handleOpenDoneFile = useCallback((lineNumber?: number): void => {
+    ipcRenderer.send("openFile", true, lineNumber);
+  }, []);
 
-  const handleCreateDoneFile = useCallback((): void => {
-    ipcRenderer.send("createFile", true, archiveLineNumber);
-  }, [archiveLineNumber]);
+  const handleCreateDoneFile = useCallback((lineNumber?: number): void => {
+    ipcRenderer.send("createFile", true, lineNumber);
+  }, []);
 
   const handleTriggerArchiving = useCallback(
     (doneFileAvailable: boolean, lineNumber?: number): void => {
-      setArchiveLineNumber(lineNumber);
-
       // Define prompt items here to get fresh translations every time
       const promptItemArchivingAll = {
         id: "archive",
@@ -52,7 +46,7 @@ const ArchiveComponent: React.FC<ArchiveComponentProps> = ({
         headline: t("prompt.archive.headline.single"),
         text: t("prompt.archive.text.single"),
         button1: t("archive"),
-        onButton1: handleArchiveSingleConfirm,
+        onButton1: () => handleArchiveSingleConfirm(lineNumber!),
       };
 
       const promptItemChooseChangeFile = {
@@ -60,9 +54,9 @@ const ArchiveComponent: React.FC<ArchiveComponentProps> = ({
         headline: t("prompt.archive.changeFile.headline"),
         text: t("prompt.archive.changeFile.text"),
         button1: t("openFile"),
-        onButton1: handleOpenDoneFile,
+        onButton1: () => handleOpenDoneFile(lineNumber),
         button2: t("createFile"),
-        onButton2: handleCreateDoneFile,
+        onButton2: () => handleCreateDoneFile(lineNumber),
       };
 
       setPromptItem(
