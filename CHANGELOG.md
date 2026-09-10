@@ -4,6 +4,10 @@ All notable changes to sleek will be documented in this file. The format is base
 
 ## [Unreleased]
 
+### Enhanced
+
+- Rework release build and publish GitHub workflow
+
 ## [2.0.28] - 2026-09-09
 
 ### Added

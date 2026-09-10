@@ -1,89 +1,68 @@
 name: Prepare releases
+
 on:
   push:
-    tags:
-      - "*"
+    tags: ['v*.*.*']
+
+permissions:
+  contents: write
+
 jobs:
-  macos:
-    name: macOS (Prepare release)
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [macos-latest]
+  build-mac:
+    runs-on: macos-latest
     steps:
-      - name: Checkout git repo
-        uses: actions/checkout@v6
-      - name: Install Node and NPM
-        uses: actions/setup-node@v6
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 26
-          cache: "npm"
-      - name: Install and build
-        run: |
-          npm install
-          npm run build
-      - name: Run Electron Builder
-        uses: Yan-Jobs/action-electron-builder@v1.7.0
+          cache: npm
+      - uses: actions/cache@v6
+        with:
+          path: ~/.cache/electron
+          key: mac-electron-${{ hashFiles('**/package-lock.json') }}
+      - run: npm ci
+      - run: npm run build
+      - run: npx electron-builder --mac --publish always
         env:
           CSC_LINK: ${{ secrets.CSC_LINK }}
           CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-          DEBUG: ${{ secrets.DEBUG }}
-        with:
-          max_attempts: 5
-          github_token: ${{ secrets.github_token }}
-          release: ${{ startsWith(github.ref, 'refs/tags/') }}
-  windows:
-    name: Windows (Prepare release)
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-latest]
+          GH_TOKEN: ${{ secrets.github_token }}
+
+  build-windows:
+    runs-on: windows-latest
     steps:
-      - name: Checkout git repo
-        uses: actions/checkout@v6
-      - name: Install Node and NPM
-        uses: actions/setup-node@v6
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 26
-          cache: "npm"
-      - name: Install and build
-        run: |
-          npm install
-          npm run build
-      - name: Run Electron Builder
-        uses: Yan-Jobs/action-electron-builder@v1.7.0
-        env:
-          DEBUG: ${{ secrets.DEBUG }}
+          cache: npm
+      - uses: actions/cache@v6
         with:
-          max_attempts: 5
-          github_token: ${{ secrets.github_token }}
-          release: ${{ startsWith(github.ref, 'refs/tags/') }}
-  linux:
-    name: Linux (Prepare release)
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
+          path: ~\AppData\Local\electron
+          key: win-electron-${{ hashFiles('**/package-lock.json') }}
+      - run: npm ci
+      - run: npm run build
+      - run: npx electron-builder --win --publish always
+        env:
+          GH_TOKEN: ${{ secrets.github_token }}
+
+  build-linux:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout git repo
-        uses: actions/checkout@v6
-      - name: Install Node and NPM
-        uses: actions/setup-node@v6
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 26
-          cache: "npm"
-      - name: Install and build
-        run: |
-          npm install
-          npm run build
-      - name: Run Electron Builder
-        uses: Yan-Jobs/action-electron-builder@v1.7.0
-        env:
-          DEBUG: ${{ secrets.DEBUG }}
+          cache: npm
+      - uses: actions/cache@v6
         with:
-          max_attempts: 5
-          github_token: ${{ secrets.github_token }}
-          release: ${{ startsWith(github.ref, 'refs/tags/') }}
+          path: ~/.cache/electron
+          key: linux-electron-${{ hashFiles('**/package-lock.json') }}
+      - run: npm ci
+      - run: npm run build
+      - run: npx electron-builder --linux --publish always
+        env:
+          GH_TOKEN: ${{ secrets.github_token }}

@@ -1,7 +1,10 @@
 directories:
   output: dist
   buildResources: build
-buildVersion: "69"
+buildVersion: "70"
+publish:
+  provider: github
+  releaseType: draft
 asar: true
 asarUnpack:
   - "resources/icon.ico"
