@@ -102,16 +102,28 @@ export const test = base.extend<AppFixtures>({
       startMinimized: false,
       weekStart: 1,
       matomo: false, // DISABLE MATOMO FOR TESTS
+      welcomeScreenShown: true, // SKIP WELCOME SCREEN FOR TESTS
       chokidarOptions: {
         awaitWriteFinish: {
           stabilityThreshold: 100,
           pollInterval: 100,
         },
       },
+      __internal__: {
+        migrations: {
+          version: "999.0.0",
+        },
+      },
     };
 
     // Write the fresh config to config.json
-    const configPath = resolve(sleekUserDataDir, "config.json");
+    const folderName =
+      process.env.NODE_ENV === "development"
+        ? "userData-Development"
+        : "userData";
+    const actualConfigDir = resolve(sleekUserDataDir, folderName);
+    mkdirSync(actualConfigDir, { recursive: true });
+    const configPath = resolve(actualConfigDir, "config.json");
     writeFileSync(configPath, JSON.stringify(freshConfig, null, 2), "utf-8");
     console.log(`Config written to: ${configPath}`);
 

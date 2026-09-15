@@ -83,7 +83,8 @@ const migrations = {
     config.set("zoom", 100);
     config.set("multilineTextField", false);
     config.set("useMultilineForBulkTodoCreation", false);
-    config.set("matomo", true);
+    config.set("matomo", false);
+    config.set("welcomeScreenShown", false);
   },
   "2.0.1": (config) => {
     console.log("Migrating settings store from 2.0.0 → 2.0.1");
@@ -145,10 +146,6 @@ const migrations = {
     console.log("Migrating settings store from 2.0.19 → 2.0.26");
     config.delete("customStylesPath");
   },
-  "2.0.27-rc.2": (config) => {
-    console.log("Migrating settings store from 2.0.26 → 2.0.27-rc.2");
-    config.set("enableSafeWrites", true);
-  },
   "2.0.27": (config) => {
     console.log("Migrating settings store from 2.0.26 → 2.0.27");
     config.set("enableSafeWrites", true);
@@ -156,6 +153,12 @@ const migrations = {
   "2.0.28": (config) => {
     console.log("Migrating settings store from 2.0.27 → 2.0.28");
     config.set("showAttributesFromHiddenTodosInDrawer", true);
+  },
+  "2.0.30": (config) => {
+    console.log("Migrating settings store from 2.0.28 → 2.0.30");
+    if (config.get("welcomeScreenShown") === undefined) {
+      config.set("welcomeScreenShown", false);
+    }
   },
 };
 

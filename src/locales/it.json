@@ -161,5 +161,13 @@
   "pomodoro.alt": "Pomodoro",
   "success.renameAttribute": "\"{{oldValue}}\" rinominato in \"{{newValue}}\" in {{count}} attività",
   "success.deleteAttribute": "\"{{value}}\" cancellato da {{count}} attività",
-  "success.notFound": "Nessuna attività trovata con \"{{value}}\""
+  "success.notFound": "Nessuna attività trovata con \"{{value}}\"",
+  "welcome.headline": "Benvenuto in sleek",
+  "welcome.description": "Inizia aprendo un file todo.txt esistente o creandone uno nuovo.",
+  "welcome.analyticsHeadline": "Aiuta a migliorare sleek",
+  "welcome.analyticsDescription": "Consenti l'analisi anonimizzata per aiutare a migliorare sleek. Questo raccoglie statistiche d'uso senza dati personali.",
+  "welcome.analyticsDetails": "I dati ci aiutano a capire quali funzionalità vengono utilizzate e quali no. Vedi la ",
+  "welcome.privacyPolicyLink": "politica sulla privacy",
+  "welcome.analyticsAllow": "Consenti analisi",
+  "welcome.skipAnalytics": "Salta analisi"
 }

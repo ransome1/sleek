@@ -1,0 +1,120 @@
+#welcomeScreen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  z-index: 10000;
+
+  .container {
+    padding: 2em;
+    border-radius: var(--radius);
+    background-color: var(--color-surface);
+    max-width: 500px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    text-align: left;
+
+    h1 {
+      font-weight: bold;
+      line-height: 1.2em;
+      margin-bottom: 1em;
+      text-align: center;
+      color: var(--color-onSurface);
+    }
+
+    .description {
+      text-align: center;
+      margin-bottom: 2em;
+      color: var(--color-onSurfaceVariant);
+    }
+
+    .analyticsSection {
+      margin-bottom: 2em;
+
+      h2 {
+        font-size: 1.1em;
+        margin-bottom: 0.5em;
+        color: var(--color-onSurface);
+      }
+
+      .analyticsDescription {
+        margin-bottom: 0.5em;
+        color: var(--color-onSurfaceVariant);
+      }
+
+      .analyticsDetails {
+        font-size: 0.9em;
+        margin-bottom: 1em;
+        color: var(--color-onSurfaceVariant);
+
+        a {
+          color: var(--semantic-primary);
+          text-decoration: none;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+
+      .analyticsCheckbox {
+        margin-left: 0.5em;
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    .buttons {
+      display: flex;
+      gap: 0.5em;
+      justify-content: center;
+      margin-top: 1em;
+
+      .continueButton {
+        padding: 0.5em 1.5em;
+        font-size: 1em;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.dark {
+  #welcomeScreen {
+    .container {
+      background-color: var(--color-surface);
+
+      h1 {
+        color: var(--color-onSurface);
+      }
+
+      .description {
+        color: var(--color-onSurfaceVariant);
+      }
+
+      .analyticsSection {
+        h2 {
+          color: var(--color-onSurface);
+        }
+
+        .analyticsDescription {
+          color: var(--color-onSurfaceVariant);
+        }
+
+        .analyticsDetails {
+          color: var(--color-onSurfaceVariant);
+
+          a {
+            color: var(--semantic-primary);
+          }
+        }
+      }
+    }
+  }
+}

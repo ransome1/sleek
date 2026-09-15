@@ -27,6 +27,7 @@ export interface SettingStore {
   compact: boolean;
   zoom: number;
   matomo: boolean;
+  welcomeScreenShown: boolean;
 
   showCompleted: boolean;
   showHidden: boolean;

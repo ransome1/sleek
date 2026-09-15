@@ -10,6 +10,7 @@ import { snackbarReducer, initialSnackbarState } from "./hooks/useAppState";
 import NavigationComponent from "./Navigation";
 import GridComponent from "./Grid/Grid";
 import SplashScreen from "./SplashScreen";
+import WelcomeScreen from "./WelcomeScreen";
 import FileTabs from "./Header/FileTabs";
 import { dark, light, BORDER_RADIUS } from "./Themes";
 import DrawerComponent from "./Drawer/Drawer";
@@ -59,6 +60,9 @@ const App = (): JSX.Element => {
   const [contextMenu, setContextMenu] = useState<ContextMenuType | null>(null);
   const [promptItem, setPromptItem] = useState<PromptItem | null>(null);
   const [triggerArchiving] = useState<boolean>(false);
+  const [welcomeScreenShown, setWelcomeScreenShown] = useState<boolean>(
+    settings.welcomeScreenShown ?? false,
+  );
   const [theme, setTheme] = useState<Theme>(
     createTheme({
       ...(settings?.shouldUseDarkColors ? dark : light),
@@ -84,6 +88,10 @@ const App = (): JSX.Element => {
     ipcRenderer.send("requestData");
   }, []);
 
+  useEffect(() => {
+    setWelcomeScreenShown(settings.welcomeScreenShown ?? false);
+  }, [settings.welcomeScreenShown]);
+
   return (
     <>
       <IpcComponent
@@ -98,6 +106,15 @@ const App = (): JSX.Element => {
         setIsSettingsOpen={setIsSettingsOpen}
       />
       {settings.matomo && <MatomoComponent settings={settings} />}
+      {!welcomeScreenShown && (
+        <WelcomeScreen
+          onComplete={(allowAnalytics: boolean) => {
+            store.setConfig("welcomeScreenShown", true);
+            store.setConfig("matomo", allowAnalytics);
+            setWelcomeScreenShown(true);
+          }}
+        />
+      )}
       <I18nextProvider i18n={i18n}>
         <ThemeProvider theme={theme}>
           <CssBaseline />

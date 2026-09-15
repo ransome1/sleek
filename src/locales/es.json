@@ -161,5 +161,13 @@
   "pomodoro.alt": "Pomodoro",
   "success.renameAttribute": "Renombrado \"{{oldValue}}\" a \"{{newValue}}\" en {{count}} tareas",
   "success.deleteAttribute": "Eliminado \"{{value}}\" de {{count}} tareas",
-  "success.notFound": "No se encontraron tareas con \"{{value}}\""
+  "success.notFound": "No se encontraron tareas con \"{{value}}\"",
+  "welcome.headline": "Bienvenido a sleek",
+  "welcome.description": "Comienza abriendo un archivo todo.txt existente o creando uno nuevo.",
+  "welcome.analyticsHeadline": "Ayuda a mejorar sleek",
+  "welcome.analyticsDescription": "Permite el análisis anónimo para ayudar a mejorar sleek. Esto recopila estadísticas de uso sin datos personales.",
+  "welcome.analyticsDetails": "Los datos nos ayudan a entender qué funciones se usan y cuáles no. Ver la ",
+  "welcome.privacyPolicyLink": "política de privacidad",
+  "welcome.analyticsAllow": "Permitir análisis",
+  "welcome.skipAnalytics": "Omitir análisis"
 }
