@@ -161,5 +161,12 @@
   "pomodoro.alt": "Pomodoro",
   "success.renameAttribute": "\"{{oldValue}}\" átnevezve \"{{newValue}}\" névre {{count}} feladatban",
   "success.deleteAttribute": "\"{{value}}\" eltávolítva {{count}} feladatból",
-  "success.notFound": "Nem találtunk feladatot \"{{value}}\" értékkel"
+  "success.notFound": "Nem találtunk feladatot \"{{value}}\" értékkel",
+
+  "welcome.analyticsHeadline": "Segíts fejleszteni a sleek-et",
+  "welcome.analyticsDescription": "Engedélyezze az anonim elemzéseket a sleek fejlesztéséhez. Ez személyes adatok nélkül gyűjt használati statisztikákat.",
+  "welcome.analyticsDetails": "Az adatok segítenek megérteni, mely funkciókat használják és melyeket nem. Lásd az ",
+  "welcome.privacyPolicyLink": "adatvédelmi irányelveket",
+  "welcome.analyticsAllow": "Elemzések engedélyezése",
+  "welcome.skipAnalytics": "Elemzések kihagyása"
 }

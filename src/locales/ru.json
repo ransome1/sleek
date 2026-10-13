@@ -161,5 +161,12 @@
   "pomodoro.alt": "Помодоро",
   "success.renameAttribute": "\"{{oldValue}}\" переименовано на \"{{newValue}}\" в {{count}} задачах",
   "success.deleteAttribute": "\"{{value}}\" удалено из {{count}} задач",
-  "success.notFound": "Не найдено задач с \"{{value}}\""
+  "success.notFound": "Не найдено задач с \"{{value}}\"",
+
+  "welcome.analyticsHeadline": "Помогите улучшить sleek",
+  "welcome.analyticsDescription": "Разрешите анонимную аналитику для улучшения sleek. Собираются только статистические данные использования без личной информации.",
+  "welcome.analyticsDetails": "Данные помогают нам понять, какие функции используются, а какие нет. См. ",
+  "welcome.privacyPolicyLink": "политику конфиденциальности",
+  "welcome.analyticsAllow": "Разрешить аналитику",
+  "welcome.skipAnalytics": "Пропустить аналитику"
 }

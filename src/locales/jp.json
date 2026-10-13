@@ -161,5 +161,12 @@
   "pomodoro.alt": "ポモドーロ",
   "success.renameAttribute": "{{count}}個のタスクで\"{{oldValue}}\"から\"{{newValue}}\"に名前が変更されました",
   "success.deleteAttribute": "{{count}}個のタスクから\"{{value}}\"が削除されました",
-  "success.notFound": "\"{{value}}\"を含むタスクが見つかりません"
+  "success.notFound": "\"{{value}}\"を含むタスクが見つかりません",
+
+  "welcome.analyticsHeadline": "sleekの改善にご協力ください",
+  "welcome.analyticsDescription": "sleekの改善のため、匿名の分析データの収集を許可してください。個人情報を含まない使用統計のみを収集します。",
+  "welcome.analyticsDetails": "このデータにより、どの機能が使用されているかを把握できます。詳しくは",
+  "welcome.privacyPolicyLink": "プライバシーポリシー",
+  "welcome.analyticsAllow": "分析を許可する",
+  "welcome.skipAnalytics": "分析をスキップする"
 }

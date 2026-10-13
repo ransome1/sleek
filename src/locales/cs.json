@@ -161,5 +161,12 @@
   "pomodoro.alt": "Pomodoro",
   "success.renameAttribute": "Přejmenováno \"{{oldValue}}\" na \"{{newValue}}\" v {{count}} úkolech",
   "success.deleteAttribute": "\"{{value}}\" odstraněno z {{count}} úkolů",
-  "success.notFound": "Nebyly nalezeny žádné úkoly s \"{{value}}\""
+  "success.notFound": "Nebyly nalezeny žádné úkoly s \"{{value}}\"",
+
+  "welcome.analyticsHeadline": "Pomozte vylepšit sleek",
+  "welcome.analyticsDescription": "Povolte anonymní analýzy, které pomohou vylepšit sleek. Sbírají se statistiky použití bez jakýchkoli osobních údajů.",
+  "welcome.analyticsDetails": "Data nám pomáhají pochopit, které funkce jsou používány a které ne. Viz ",
+  "welcome.privacyPolicyLink": "zásady ochrany soukromí",
+  "welcome.analyticsAllow": "Povolit analýzy",
+  "welcome.skipAnalytics": "Přeskočit analýzy"
 }

@@ -161,5 +161,12 @@
   "pomodoro.alt": "पोमोडोरो",
   "success.renameAttribute": "{{count}} कार्यों में \"{{oldValue}}\" को \"{{newValue}}\" में नाम बदला गया",
   "success.deleteAttribute": "{{count}} कार्यों से \"{{value}}\" हटाया गया",
-  "success.notFound": "\"{{value}}\" के साथ कोई कार्य नहीं मिला"
+  "success.notFound": "\"{{value}}\" के साथ कोई कार्य नहीं मिला",
+
+  "welcome.analyticsHeadline": "sleek को बेहतर बनाने में मदद करें",
+  "welcome.analyticsDescription": "sleek को बेहतर बनाने के लिए अनाम विश्लेषण की अनुमति दें। यह बिना किसी व्यक्तिगत डेटा के उपयोग के आँकड़े एकत्र करता है।",
+  "welcome.analyticsDetails": "यह डेटा हमें यह समझने में मदद करता है कि कौन सी सुविधाएँ उपयोग की जाती हैं और कौन सी नहीं। देखें ",
+  "welcome.privacyPolicyLink": "गोपनीयता नीति",
+  "welcome.analyticsAllow": "विश्लेषण की अनुमति दें",
+  "welcome.skipAnalytics": "विश्लेषण छोड़ें"
 }

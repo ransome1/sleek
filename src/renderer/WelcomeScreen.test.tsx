@@ -22,21 +22,18 @@ describe("WelcomeScreen", () => {
     vi.clearAllMocks();
   });
 
-  it("should render welcome headline and description", () => {
-    render(<WelcomeScreen onComplete={onComplete} />);
-
-    expect(screen.getByText("welcome.headline")).toBeInTheDocument();
-    expect(screen.getByText("welcome.description")).toBeInTheDocument();
-  });
-
   it("should render analytics section", () => {
     render(<WelcomeScreen onComplete={onComplete} />);
 
     expect(screen.getByText("welcome.analyticsHeadline")).toBeInTheDocument();
-    expect(
-      screen.getByText("welcome.analyticsDescription"),
-    ).toBeInTheDocument();
-    expect(screen.getByText("welcome.analyticsDetails")).toBeInTheDocument();
+    const analyticsSection = screen
+      .getByText("welcome.analyticsHeadline")
+      .closest(".analyticsSection");
+    expect(analyticsSection).toHaveTextContent("welcome.analyticsDescription");
+    const analyticsDetails = screen
+      .getByText("welcome.analyticsHeadline")
+      .closest(".analyticsSection");
+    expect(analyticsDetails).toHaveTextContent("welcome.analyticsDetails");
     expect(screen.getByText("welcome.privacyPolicyLink")).toBeInTheDocument();
   });
 

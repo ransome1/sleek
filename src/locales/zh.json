@@ -161,5 +161,12 @@
   "pomodoro.alt": "番茄钟",
   "success.renameAttribute": "在{{count}}个任务中将\"{{oldValue}}\"重命名为\"{{newValue}}\"",
   "success.deleteAttribute": "从{{count}}个任务中删除\"{{value}}\"",
-  "success.notFound": "找不到包含\"{{value}}\"的任务"
+  "success.notFound": "找不到包含\"{{value}}\"的任务",
+
+  "welcome.analyticsHeadline": "帮助改善 sleek",
+  "welcome.analyticsDescription": "允许匿名分析以帮助改善 sleek。这仅收集使用统计数据，不包含任何个人信息。",
+  "welcome.analyticsDetails": "这些数据帮助我们了解哪些功能被使用、哪些未被使用。请参阅",
+  "welcome.privacyPolicyLink": "隐私政策",
+  "welcome.analyticsAllow": "允许分析",
+  "welcome.skipAnalytics": "跳过分析"
 }

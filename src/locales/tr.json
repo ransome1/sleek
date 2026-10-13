@@ -161,5 +161,12 @@
   "pomodoro.alt": "Pomodoro",
   "success.renameAttribute": "\"{{oldValue}}\" ile \"{{newValue}}\" olarak {{count}} görevde yeniden adlandırıldı",
   "success.deleteAttribute": "\"{{value}}\" {{count}} görevden silindi",
-  "success.notFound": "\"{{value}}\" ile görev bulunamadı"
+  "success.notFound": "\"{{value}}\" ile görev bulunamadı",
+
+  "welcome.analyticsHeadline": "sleek'i geliştirmeye yardımcı olun",
+  "welcome.analyticsDescription": "sleek'i geliştirmek için anonim analizlere izin verin. Bu, kişisel veri içermeden kullanım istatistiklerini toplar.",
+  "welcome.analyticsDetails": "Veriler, hangi özelliklerin kullanıldığını ve hangilerinin kullanılmadığını anlamamıza yardımcı olur. Bkz. ",
+  "welcome.privacyPolicyLink": "gizlilik politikası",
+  "welcome.analyticsAllow": "Analizlere izin ver",
+  "welcome.skipAnalytics": "Analizleri atla"
 }

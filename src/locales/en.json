@@ -164,8 +164,7 @@
   "success.renameAttribute": "Renamed \"{{oldValue}}\" to \"{{newValue}}\" in {{count}} todos",
   "success.deleteAttribute": "Deleted \"{{value}}\" from {{count}} todos",
   "success.notFound": "No todos found with \"{{value}}\"",
-  "welcome.headline": "Welcome to sleek",
-  "welcome.description": "Get started by opening an existing todo.txt file or creating a new one.",
+
   "welcome.analyticsHeadline": "Help improve sleek",
   "welcome.analyticsDescription": "Allow anonymous analytics to help improve sleek. This collects usage statistics without any personal data.",
   "welcome.analyticsDetails": "The data helps us understand which features are used and which ones are not. See the ",

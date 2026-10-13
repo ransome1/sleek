@@ -161,5 +161,12 @@
   "pomodoro.alt": "포모도로",
   "success.renameAttribute": "\"{{oldValue}}\"을(를) \"{{newValue}}\"(으)로 {{count}}개 작업에서 이름 변경됨",
   "success.deleteAttribute": "{{count}}개 작업에서 \"{{value}}\" 삭제됨",
-  "success.notFound": "\"{{value}}\"이(가) 있는 작업을 찾을 수 없음"
+  "success.notFound": "\"{{value}}\"이(가) 있는 작업을 찾을 수 없음",
+
+  "welcome.analyticsHeadline": "sleek 개선에 도움을 주세요",
+  "welcome.analyticsDescription": "sleek 개선을 위해 익명 분석을 허용해 주세요. 개인 데이터 없이 사용 통계만 수집합니다.",
+  "welcome.analyticsDetails": "이 데이터는 어떤 기능이 사용되고 어떤 기능이 사용되지 않는지 파악하는 데 도움이 됩니다. ",
+  "welcome.privacyPolicyLink": "개인정보 처리방침",
+  "welcome.analyticsAllow": "분석 허용",
+  "welcome.skipAnalytics": "분석 건너뛰기"
 }
