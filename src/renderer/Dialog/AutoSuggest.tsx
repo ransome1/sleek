@@ -88,15 +88,16 @@ const AutoSuggestComponent: React.FC<AutoSuggestComponentProps> = ({
   };
 
   const getSuggestions = (trigger: string, match: string): string[] => {
+    const lowerCaseMatch = match.toLowerCase();
     if (trigger === "@") {
       setPrefix("@");
       return Object.keys(attributes?.contexts || {}).filter((key) =>
-        key.includes(match),
+        key.toLowerCase().includes(lowerCaseMatch),
       );
     } else if (trigger === "+") {
       setPrefix("+");
       return Object.keys(attributes?.projects || {}).filter((key) =>
-        key.includes(match),
+        key.toLowerCase().includes(lowerCaseMatch),
       );
     } else {
       return [];
