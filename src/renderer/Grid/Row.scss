@@ -30,7 +30,7 @@
   &[data-hidden="true"] {
     filter: opacity(50%) grayscale(100%);
   }
-  &[data-inprogress="true"] {
+  &[data-inprogress="1"] {
     border-left-color: var(--semantic-warning);
   }
   &:last-child {

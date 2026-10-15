@@ -53,7 +53,7 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
       { pattern: /(?:^|\s)\+(\S+)/, type: "projects", key: "+" },
       { pattern: /(?:^|\s)h:1\b/, type: "hidden", key: "h:1" },
       {
-        pattern: /(?:^|\s)inprogress:1/,
+        pattern: /(?:^|\s)inprogress:1\b/,
         type: "inprogress",
         key: "inprogress:1",
       },

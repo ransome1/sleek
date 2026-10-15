@@ -1,7 +1,12 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import Row from "./Row";
-import { TodoObject, Filters, SettingStore } from "@sleek-types";
+import {
+  TodoObject,
+  Filters,
+  SettingStore,
+  ContextMenuItem,
+} from "@sleek-types";
 
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({
@@ -24,7 +29,7 @@ const baseTodo: TodoObject = {
   projects: null,
   priority: null,
   hidden: false,
-  inprogress: false,
+  inprogress: null,
   due: null,
   dueString: null,
   t: null,
@@ -96,7 +101,10 @@ const baseFilters: Filters = {
   completed: [],
 };
 
-const renderRow = (todo: Partial<TodoObject> = {}) => {
+const renderRow = (
+  todo: Partial<TodoObject> = {},
+  setContextMenu: () => void = () => {},
+) => {
   const todoObject = { ...baseTodo, ...todo };
   return render(
     <Row
@@ -104,12 +112,19 @@ const renderRow = (todo: Partial<TodoObject> = {}) => {
       filters={baseFilters}
       setDialogOpen={() => {}}
       setTodoObject={() => {}}
-      setContextMenu={() => {}}
+      setContextMenu={setContextMenu}
       setPromptItem={() => {}}
       settings={baseSettings}
       onNotification={vi.fn()}
     />,
   );
+};
+
+const openRowContextMenu = (todo: Partial<TodoObject>): ContextMenuItem[] => {
+  const setContextMenu = vi.fn();
+  renderRow(todo, setContextMenu);
+  fireEvent.contextMenu(screen.getByTestId("datagrid-row"));
+  return setContextMenu.mock.calls[0][0].items;
 };
 
 describe("Row", () => {
@@ -134,11 +149,9 @@ describe("Row", () => {
     );
   });
 
-  it("should send inprogress toggle and NOT complete toggle on ctrl+click", () => {
+  it("should send inprogress toggle on middle-click", () => {
     renderRow();
-    const checkbox = screen.getByRole("checkbox");
-    fireEvent.mouseDown(checkbox, { ctrlKey: true, button: 0 });
-    fireEvent.click(checkbox, { ctrlKey: true, button: 0 });
+    fireEvent.mouseDown(screen.getByRole("checkbox"), { button: 1 });
 
     expect(mockIpcRendererSend).toHaveBeenCalledTimes(1);
     expect(mockIpcRendererSend).toHaveBeenCalledWith(
@@ -151,28 +164,9 @@ describe("Row", () => {
     );
   });
 
-  it("should send inprogress toggle and NOT complete toggle on middle-click", () => {
-    renderRow();
-    const checkbox = screen.getByRole("checkbox");
-    fireEvent.mouseDown(checkbox, { button: 1 });
-    fireEvent.click(checkbox, { button: 1 });
-
-    expect(mockIpcRendererSend).toHaveBeenCalledTimes(1);
-    expect(mockIpcRendererSend).toHaveBeenCalledWith(
-      "updateTodoObject",
-      1,
-      "Test todo",
-      "inprogress",
-      "1",
-      true,
-    );
-  });
-
-  it("should toggle off inprogress when todo is already inprogress", () => {
-    renderRow({ inprogress: true });
-    const checkbox = screen.getByRole("checkbox");
-    fireEvent.mouseDown(checkbox, { ctrlKey: true, button: 0 });
-    fireEvent.click(checkbox, { ctrlKey: true, button: 0 });
+  it("should toggle off inprogress on middle-click when todo is already inprogress", () => {
+    renderRow({ inprogress: "1" });
+    fireEvent.mouseDown(screen.getByRole("checkbox"), { button: 1 });
 
     expect(mockIpcRendererSend).toHaveBeenCalledTimes(1);
     expect(mockIpcRendererSend).toHaveBeenCalledWith(
@@ -185,23 +179,30 @@ describe("Row", () => {
     );
   });
 
-  it("should not toggle inprogress when todo is already complete", () => {
+  it("should not toggle inprogress on middle-click when todo is already complete", () => {
     renderRow({ complete: true });
-    const checkbox = screen.getByRole("checkbox");
-    fireEvent.mouseDown(checkbox, { ctrlKey: true, button: 0 });
-    fireEvent.click(checkbox, { ctrlKey: true, button: 0 });
+    fireEvent.mouseDown(screen.getByRole("checkbox"), { button: 1 });
 
     expect(mockIpcRendererSend).not.toHaveBeenCalled();
   });
 
-  it("should never mark as done on repeated ctrl+clicks", () => {
-    const { rerender } = renderRow();
-    const checkbox = screen.getByRole("checkbox");
+  it("should label the checkbox as in progress when todo is inprogress", () => {
+    renderRow({ inprogress: "1" });
 
-    fireEvent.mouseDown(checkbox, { ctrlKey: true, button: 0 });
-    fireEvent.click(checkbox, { ctrlKey: true, button: 0 });
-    expect(mockIpcRendererSend).toHaveBeenCalledTimes(1);
-    expect(mockIpcRendererSend).toHaveBeenLastCalledWith(
+    expect(screen.getByRole("checkbox")).toHaveAccessibleName(
+      "shared.attributeMapping.inprogress",
+    );
+    expect(screen.getByRole("checkbox")).not.toBeChecked();
+  });
+
+  it("should offer mark in progress with a middle-click hint in the context menu", () => {
+    const item = openRowContextMenu({}).find((i) => i.id === "inprogress");
+
+    expect(item?.label).toBe("markInProgress");
+    expect(item?.hint).toBe("middleClick");
+
+    item?.function?.();
+    expect(mockIpcRendererSend).toHaveBeenCalledWith(
       "updateTodoObject",
       1,
       "Test todo",
@@ -209,26 +210,17 @@ describe("Row", () => {
       "1",
       true,
     );
+  });
 
-    mockIpcRendererSend.mockClear();
-
-    rerender(
-      <Row
-        todoObject={{ ...baseTodo, inprogress: true }}
-        filters={baseFilters}
-        setDialogOpen={() => {}}
-        setTodoObject={() => {}}
-        setContextMenu={() => {}}
-        setPromptItem={() => {}}
-        settings={baseSettings}
-        onNotification={vi.fn()}
-      />,
+  it("should offer remove in progress in the context menu when todo is inprogress", () => {
+    const item = openRowContextMenu({ inprogress: "1" }).find(
+      (i) => i.id === "inprogress",
     );
 
-    fireEvent.mouseDown(checkbox, { ctrlKey: true, button: 0 });
-    fireEvent.click(checkbox, { ctrlKey: true, button: 0 });
-    expect(mockIpcRendererSend).toHaveBeenCalledTimes(1);
-    expect(mockIpcRendererSend).toHaveBeenLastCalledWith(
+    expect(item?.label).toBe("removeInProgress");
+
+    item?.function?.();
+    expect(mockIpcRendererSend).toHaveBeenCalledWith(
       "updateTodoObject",
       1,
       "Test todo",
@@ -236,36 +228,11 @@ describe("Row", () => {
       "",
       true,
     );
+  });
 
-    mockIpcRendererSend.mockClear();
+  it("should not offer in progress in the context menu when todo is complete", () => {
+    const items = openRowContextMenu({ complete: true });
 
-    rerender(
-      <Row
-        todoObject={{ ...baseTodo, inprogress: false }}
-        filters={baseFilters}
-        setDialogOpen={() => {}}
-        setTodoObject={() => {}}
-        setContextMenu={() => {}}
-        setPromptItem={() => {}}
-        settings={baseSettings}
-        onNotification={vi.fn()}
-      />,
-    );
-
-    fireEvent.mouseDown(checkbox, { ctrlKey: true, button: 0 });
-    fireEvent.click(checkbox, { ctrlKey: true, button: 0 });
-    expect(mockIpcRendererSend).toHaveBeenCalledTimes(1);
-    expect(mockIpcRendererSend).toHaveBeenLastCalledWith(
-      "updateTodoObject",
-      1,
-      "Test todo",
-      "inprogress",
-      "1",
-      true,
-    );
-
-    for (const call of mockIpcRendererSend.mock.calls) {
-      expect(call[0]).not.toBe("toggleTodoComplete");
-    }
+    expect(items.some((i) => i.id === "inprogress")).toBe(false);
   });
 });

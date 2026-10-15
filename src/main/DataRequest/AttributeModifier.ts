@@ -162,6 +162,16 @@ export function deleteAttributeValue(
         }
         break;
       }
+      case "inprogress": {
+        // A flag, removed regardless of the value, which the sidebar passes as its label.
+        const item = new Item(newLine);
+        if (item.extensions().some((e) => e.key === "inprogress")) {
+          item.removeExtension("inprogress");
+          newLine = item.toString();
+          modified = true;
+        }
+        break;
+      }
       case "created":
       case "completed": {
         const item = new Item(newLine);

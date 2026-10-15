@@ -1,6 +1,7 @@
 import { DateTime, Settings as LuxonSettings, WeekdayNumbers } from "luxon";
 import { Filter, Filters, AttributeKey, SettingStore } from "@sleek-types";
 import { i18n } from "./Settings/LanguageSelector";
+import { useTranslation } from "react-i18next";
 
 const { store, ipcRenderer } = window.api;
 
@@ -19,6 +20,12 @@ export const attributeDisplayValue = (
   value: string,
   attributeKey: AttributeKey,
 ): string => {
+  const { t } = useTranslation();
+
+  if (attributeKey === "inprogress") {
+    return t("shared.attributeMapping.inprogress");
+  }
+
   if (attributeKey !== "projects" && attributeKey !== "contexts") {
     return value;
   }
@@ -116,6 +123,7 @@ export const translatedAttributes = (
     pm: t("shared.attributeMapping.pm"),
     created: t("shared.attributeMapping.created"),
     completed: t("shared.attributeMapping.completed"),
+    inprogress: t("shared.attributeMapping.inprogress"),
   };
 };
 

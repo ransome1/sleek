@@ -3,7 +3,7 @@ import Checkbox from "@mui/material/Checkbox";
 import Tooltip from "@mui/material/Tooltip";
 import CircleChecked from "@mui/icons-material/CheckCircle";
 import CircleUnchecked from "@mui/icons-material/RadioButtonUnchecked";
-import IndeterminateCheckBox from "@mui/icons-material/IndeterminateCheckBox";
+import IncompleteCircle from "@mui/icons-material/IncompleteCircle";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventNoteIcon from "@mui/icons-material/EventNote";
@@ -55,13 +55,12 @@ const Row: React.FC<RowProps> = memo(
         settings,
         onNotification,
       });
-    const { handleRowContextMenu } = useRowContextMenu({
+    const { handleRowContextMenu, handleToggleInProgress } = useRowContextMenu({
       setContextMenu,
       setPromptItem,
       t,
       ipcRenderer,
     });
-    const skipNextOnChange = React.useRef(false);
 
     const handleConfirmDelete = (): void => {
       if (todoObject)
@@ -75,28 +74,11 @@ const Row: React.FC<RowProps> = memo(
     const handleCheckboxChange = (
       event: React.ChangeEvent<HTMLInputElement>,
     ): void => {
-      if (skipNextOnChange.current) {
-        skipNextOnChange.current = false;
-        return;
-      }
       ipcRenderer.send(
         "toggleTodoComplete",
         todoObject.lineNumber,
         todoObject.string,
         event.target.checked,
-      );
-    };
-
-    const handleInprogressToggle = (): void => {
-      if (todoObject.complete) return;
-      const attributeValue = todoObject.inprogress ? "" : "1";
-      ipcRenderer.send(
-        "updateTodoObject",
-        todoObject.lineNumber,
-        todoObject.string,
-        "inprogress",
-        attributeValue,
-        true,
       );
     };
 
@@ -175,6 +157,10 @@ const Row: React.FC<RowProps> = memo(
       }
     };
 
+    const inProgressLabel = todoObject.inprogress
+      ? t("shared.attributeMapping.inprogress")
+      : undefined;
+
     return (
       <>
         <li
@@ -186,45 +172,36 @@ const Row: React.FC<RowProps> = memo(
           data-inprogress={todoObject.inprogress}
           onClick={(event) => handleRowClick(event)}
           onKeyDown={(event) => handleRowClick(event)}
-          onContextMenu={(event) =>
-            handleRowContextMenu(
-              event,
-              todoObject.string,
-              todoObject.lineNumber,
-            )
-          }
+          onContextMenu={(event) => handleRowContextMenu(event, todoObject)}
           data-testid={`datagrid-row`}
           data-todotxt-attribute="priority"
           data-todotxt-value={todoObject.priority}
         >
-          <Checkbox
-            icon={<CircleUnchecked />}
-            checkedIcon={<CircleChecked />}
-            indeterminateIcon={<IndeterminateCheckBox />}
-            tabIndex={0}
-            checked={todoObject.complete}
-            indeterminate={todoObject.inprogress}
-            onChange={handleCheckboxChange}
-            slotProps={{
-              input: {
-                onClick: (event: React.MouseEvent<HTMLInputElement>) => {
-                  if (event.ctrlKey) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                  }
-                },
-              },
-            }}
-            onMouseDown={(event) => {
-              if (event.button === 1 || event.ctrlKey) {
-                event.preventDefault();
-                skipNextOnChange.current = true;
-                handleInprogressToggle();
-              } else {
-                skipNextOnChange.current = false;
+          <Tooltip title={inProgressLabel ?? ""} arrow>
+            <Checkbox
+              icon={
+                todoObject.inprogress ? (
+                  <IncompleteCircle />
+                ) : (
+                  <CircleUnchecked />
+                )
               }
-            }}
-          />
+              checkedIcon={<CircleChecked />}
+              tabIndex={0}
+              checked={todoObject.complete}
+              onChange={handleCheckboxChange}
+              slotProps={{
+                input: { "aria-label": inProgressLabel },
+              }}
+              onMouseDown={(event) => {
+                // middle-click fires auxclick, not click/change
+                if (event.button === 1 && !todoObject.complete) {
+                  event.preventDefault();
+                  handleToggleInProgress(todoObject);
+                }
+              }}
+            />
+          </Tooltip>
 
           {(settings.sorting[0].value != "priority" || settings.fileSorting) &&
             todoObject.priority && (
