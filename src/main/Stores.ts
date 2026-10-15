@@ -159,6 +159,16 @@ const migrations = {
     if (config.get("welcomeScreenShown") === undefined) {
       config.set("welcomeScreenShown", false);
     }
+
+    const sorting = config.get("sorting");
+    config.set("sorting", [
+      ...sorting,
+      { id: String(sorting.length + 1), value: "inprogress", invert: false },
+    ]);
+    config.set("accordionOpenState", [
+      ...config.get("accordionOpenState"),
+      false,
+    ]);
   },
 };
 

@@ -63,7 +63,9 @@ function createTodoObject(
   );
   const inprogress = extensions.some(
     (extension) => extension.key === "inprogress" && extension.value === "1",
-  );
+  )
+    ? "1"
+    : null;
   const stringPm: string | null =
     extensions.find((extension) => extension.key === "pm")?.value || null;
   const rec =

@@ -41,7 +41,7 @@ function todo(overrides: Partial<TodoObject> = {}): TodoObject {
     notify: false,
     hidden: false,
     complete: false,
-    inprogress: false,
+    inprogress: null,
     lineNumber: 1,
     body: "",
     string: "",

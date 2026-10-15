@@ -102,6 +102,7 @@ export const translatedAttributes = (
     pm: t("shared.attributeMapping.pm"),
     created: t("shared.attributeMapping.created"),
     completed: t("shared.attributeMapping.completed"),
+    inprogress: t("shared.attributeMapping.inprogress"),
   };
 };
 

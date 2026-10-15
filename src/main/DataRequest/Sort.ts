@@ -1,4 +1,4 @@
-import { TodoData, TodoObject } from "@sleek-types";
+import { TodoObject } from "@sleek-types";
 import { Sorting } from "../../@types/Settings";
 import { RecurrenceInterval, intervalDayWeight } from "./RecurrenceInterval";
 
@@ -95,6 +95,10 @@ const sortTodoObjects = (
       } else {
         compareResult = invert ? keyB - keyA : keyA - keyB;
       }
+    } else if (value === "inprogress") {
+      // A flag has only one value to order by, so invert moves in-progress todos last instead
+      compareResult =
+        compareValues(a.inprogress, b.inprogress, false) * (invert ? -1 : 1);
     } else {
       compareResult = compareValues(a[value], b[value], invert);
     }
@@ -106,29 +110,4 @@ const sortTodoObjects = (
   return 0;
 };
 
-const sortInProgressFirst = (todoData: TodoData): void => {
-  for (const group of todoData) {
-    group.todoObjects.sort((a, b) => {
-      if (a.inprogress && !b.inprogress) return -1;
-      if (!a.inprogress && b.inprogress) return 1;
-      return 0;
-    });
-  }
-};
-
-const sortCompletedLast = (todoData: TodoData): void => {
-  for (const group of todoData) {
-    group.todoObjects.sort((a, b) => {
-      if (a.complete && !b.complete) return 1;
-      if (!a.complete && b.complete) return -1;
-      return 0;
-    });
-  }
-};
-
-export {
-  sortTodoObjects,
-  parseRecurrenceSortKey,
-  sortInProgressFirst,
-  sortCompletedLast,
-};
+export { sortTodoObjects, parseRecurrenceSortKey };

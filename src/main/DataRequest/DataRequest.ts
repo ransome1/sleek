@@ -10,11 +10,7 @@ import {
 } from "../Filters/Filters";
 import { updateAttributes, attributes } from "../Attributes";
 import { createTodoObjects } from "./CreateTodoObjects";
-import {
-  sortTodoObjects,
-  sortInProgressFirst,
-  sortCompletedLast,
-} from "./Sort";
+import { sortTodoObjects } from "./Sort";
 import { groupTodoObjects } from "./Group";
 import {
   RequestedData,
@@ -148,9 +144,16 @@ function dataRequest(passedSearchString: string = ""): RequestedData | null {
     todoObjects.sort((a, b) => sortTodoObjects(a, b, sorting));
     todoData = groupTodoObjects(todoObjects, sorting[0].value);
 
-    if (SettingsStore.get("sortCompletedLast")) sortCompletedLast(todoData);
-
-    sortInProgressFirst(todoData);
+    const sortCompletedLast = SettingsStore.get("sortCompletedLast");
+    if (sortCompletedLast) {
+      for (const group of todoData) {
+        group.todoObjects.sort((a, b) => {
+          if (a.complete && !b.complete) return 1;
+          if (!a.complete && b.complete) return -1;
+          return 0;
+        });
+      }
+    }
   }
 
   const requestedData: RequestedData = {
