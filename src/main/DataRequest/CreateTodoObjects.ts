@@ -61,6 +61,11 @@ function createTodoObject(
   const hidden = extensions.some(
     (extension) => extension.key === "h" && extension.value === "1",
   );
+  const inprogress = extensions.some(
+    (extension) => extension.key === "inprogress" && extension.value === "1",
+  )
+    ? "1"
+    : null;
   const stringPm: string | null =
     extensions.find((extension) => extension.key === "pm")?.value || null;
   const rec =
@@ -111,6 +116,7 @@ function createTodoObject(
     tString,
     rec,
     hidden,
+    inprogress,
     pm,
     string: content,
   };

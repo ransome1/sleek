@@ -1,6 +1,6 @@
 import React from "react";
 import { IpcRenderer } from "electron";
-import { AttributeKey, ContextMenuItem, PromptItem } from "@sleek-types";
+import { ContextMenuItem, PromptItem, TodoObject } from "@sleek-types";
 
 type ContextMenuProps = {
   event: React.MouseEvent;
@@ -17,10 +17,9 @@ type UseRowContextMenuProps = {
 type UseRowContextMenuReturn = {
   handleRowContextMenu: (
     event: React.MouseEvent,
-    todoString: string,
-    lineNumber: number,
-    attributeType?: AttributeKey,
+    todoObject: TodoObject,
   ) => void;
+  handleToggleInProgress: (todoObject: TodoObject) => void;
 };
 
 export const useRowContextMenu = (
@@ -40,11 +39,22 @@ export const useRowContextMenu = (
     ipcRenderer.send("removeLineFromFile", lineNumber);
   };
 
+  const handleToggleInProgress = (todoObject: TodoObject) => {
+    ipcRenderer.send(
+      "updateTodoObject",
+      todoObject.lineNumber,
+      todoObject.string,
+      "inprogress",
+      todoObject.inprogress ? "" : "1",
+      true,
+    );
+  };
+
   const handleRowContextMenu = (
     event: React.MouseEvent,
-    todoString: string,
-    lineNumber: number,
+    todoObject: TodoObject,
   ): void => {
+    const { string: todoString, lineNumber } = todoObject;
     // Check if the right-click target is an attribute button
     const target = event.target as HTMLElement;
     const isAttributeButton = target.closest(
@@ -57,6 +67,18 @@ export const useRowContextMenu = (
     }
 
     const items: ContextMenuItem[] = [
+      ...(todoObject.complete
+        ? []
+        : [
+            {
+              id: "inprogress",
+              label: todoObject.inprogress
+                ? t("removeInProgress")
+                : t("markInProgress"),
+              hint: t("middleClick"),
+              function: () => handleToggleInProgress(todoObject),
+            },
+          ]),
       {
         id: "copy",
         label: t("copy"),
@@ -86,5 +108,5 @@ export const useRowContextMenu = (
     });
   };
 
-  return { handleRowContextMenu };
+  return { handleRowContextMenu, handleToggleInProgress };
 };

@@ -66,6 +66,17 @@ describe("createTodoObject", () => {
     });
   });
 
+  describe("create in-progress todo", () => {
+    it("sets inprogress to 1", () => {
+      const todo = createTodoObject(1, "I am in progress inprogress:1");
+      expect(todo.inprogress).toBe("1");
+    });
+    it("sets inprogress to null for other values", () => {
+      const todo = createTodoObject(1, "I am in progress inprogress:2");
+      expect(todo.inprogress).toBeNull();
+    });
+  });
+
   describe("create todo with updates", () => {
     it("updates priority", () => {
       const todo = createTodoObject(1, "(B) todo", "priority", "A");

@@ -14,6 +14,7 @@ export interface TodoObject {
 
   priority: string | null;
   hidden: boolean;
+  inprogress: string | null;
   due: string | null;
   dueString: string | null;
   t: string | null;
@@ -50,6 +51,7 @@ export type AttributeKey =
   | "rec"
   | "pm"
   | "hidden"
+  | "inprogress"
   | "created"
   | "completed";
 

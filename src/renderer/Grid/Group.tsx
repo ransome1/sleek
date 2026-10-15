@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 import ListItem from "@mui/material/ListItem";
 import Divider from "@mui/material/Divider";
+import { useTranslation } from "react-i18next";
 import { HandleFilterSelect, IsSelected } from "../Shared";
 import { AttributeKey, Filters, SnackbarAction } from "@sleek-types";
 import { useAttributeContextMenu } from "../Shared/useAttributeContextMenu";
@@ -24,6 +25,7 @@ const Group: React.FC<GroupProps> = memo(
     settings,
     onNotification,
   }) => {
+    const { t } = useTranslation();
     const { handleContextMenu } = useAttributeContextMenu({
       setContextMenu,
       settings,
@@ -68,7 +70,9 @@ const Group: React.FC<GroupProps> = memo(
                 onContextMenu={(e) => handleContextMenu(e, value, attributeKey)}
                 data-testid={`datagrid-group-button-${attributeKey}`}
               >
-                {value}
+                {attributeKey === "inprogress"
+                  ? t("shared.attributeMapping.inprogress")
+                  : value}
               </button>
             </div>
           );

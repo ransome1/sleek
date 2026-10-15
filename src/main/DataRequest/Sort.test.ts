@@ -268,3 +268,16 @@ describe("rec sorting", () => {
     });
   });
 });
+
+describe("inprogress sorting", () => {
+  it("sorts in-progress todos last when inverted", () => {
+    const todos = [
+      createTodoObject(1, "Todo 1 inprogress:1"),
+      createTodoObject(2, "Todo 2"),
+    ];
+    todos.sort((a, b) =>
+      sortTodoObjects(a, b, [{ value: "inprogress", invert: true }]),
+    );
+    expect(todos.map((todo) => todo.lineNumber)).toEqual([2, 1]);
+  });
+});
