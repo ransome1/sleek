@@ -38,6 +38,15 @@ describe("attributeDisplayValue", () => {
     expect(attributeDisplayValue("Roadmap", "projects")).toBe("Roadmap");
     expect(attributeDisplayValue("[Roadmap](", "contexts")).toBe("[Roadmap](");
   });
+
+  it("preserves nested brackets in a Markdown link label", () => {
+    expect(
+      attributeDisplayValue(
+        "[Team[Ops]](https://example.com/team-ops)",
+        "projects",
+      ),
+    ).toBe("Team[Ops]");
+  });
 });
 
 describe("friendlyDate", () => {
