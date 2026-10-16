@@ -1,7 +1,11 @@
 import React, { memo } from "react";
 import ListItem from "@mui/material/ListItem";
 import Divider from "@mui/material/Divider";
-import { HandleFilterSelect, IsSelected } from "../Shared";
+import {
+  attributeDisplayValue,
+  HandleFilterSelect,
+  IsSelected,
+} from "../Shared";
 import { AttributeKey, Filters, SnackbarAction } from "@sleek-types";
 import { useAttributeContextMenu } from "../Shared/useAttributeContextMenu";
 import { ContextMenu, SettingStore } from "@sleek-types";
@@ -68,7 +72,7 @@ const Group: React.FC<GroupProps> = memo(
                 onContextMenu={(e) => handleContextMenu(e, value, attributeKey)}
                 data-testid={`datagrid-group-button-${attributeKey}`}
               >
-                {value}
+                {attributeDisplayValue(value, attributeKey)}
               </button>
             </div>
           );

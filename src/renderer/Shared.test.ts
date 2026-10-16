@@ -1,6 +1,6 @@
 import { expect, describe, it } from "vitest";
 import { DateTime, Settings as LuxonSettings, WeekdayNumbers } from "luxon";
-import { friendlyDate } from "./Shared";
+import { attributeDisplayValue, friendlyDate } from "./Shared";
 import { SettingStore } from "@sleek-types";
 import { i18n } from "./Settings/LanguageSelector";
 
@@ -15,6 +15,30 @@ const mockSettings: SettingStore = {
   language: "en",
   weekStart: 1, // Monday
 };
+
+describe("attributeDisplayValue", () => {
+  it.each(["projects", "contexts"] as const)(
+    "shows only the Markdown label for %s values",
+    (attributeKey) => {
+      expect(
+        attributeDisplayValue(
+          "[Roadmap](https://example.com/roadmap)",
+          attributeKey,
+        ),
+      ).toBe("Roadmap");
+    },
+  );
+
+  it("leaves other attribute values unchanged", () => {
+    const value = "[2026-10-16](https://example.com/date)";
+    expect(attributeDisplayValue(value, "due")).toBe(value);
+  });
+
+  it("leaves plain and malformed values unchanged", () => {
+    expect(attributeDisplayValue("Roadmap", "projects")).toBe("Roadmap");
+    expect(attributeDisplayValue("[Roadmap](", "contexts")).toBe("[Roadmap](");
+  });
+});
 
 describe("friendlyDate", () => {
   // Helper to get dates relative to today
