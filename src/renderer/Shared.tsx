@@ -15,6 +15,20 @@ export function IsSelected(key, filters, value) {
   return false;
 }
 
+export const attributeDisplayValue = (
+  value: string,
+  attributeKey: AttributeKey,
+): string => {
+  if (attributeKey !== "projects" && attributeKey !== "contexts") {
+    return value;
+  }
+
+  if (!value.startsWith("[")) return value;
+
+  const markdownLink = value.match(/^\[((?:[^\]]|](?!\())+)\]\((.*)\)$/);
+  return markdownLink ? markdownLink[1] : value;
+};
+
 export function IsExcluded(attribute, filters: Filters | null) {
   if (!filters) return false;
   const attributeValues = attribute.value;

@@ -13,6 +13,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import AirIcon from "@mui/icons-material/Air";
 import {
   HandleFilterSelect,
+  attributeDisplayValue,
   friendlyDate,
   translatedAttributes,
   IsSelected,
@@ -266,7 +267,7 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> =
                   {categoryKey === "pm" && (
                     <img src={PomodoroIcon} alt="Pomodoro" />
                   )}
-                  {bucketName}
+                  {attributeDisplayValue(bucketName, categoryKey)}
                 </button>
               </Badge>
               {excluded && (
