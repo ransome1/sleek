@@ -47,6 +47,15 @@ describe("attributeDisplayValue", () => {
       ),
     ).toBe("Team[Ops]");
   });
+
+  it("preserves parentheses in a Markdown link destination", () => {
+    expect(
+      attributeDisplayValue(
+        "[Roadmap](https://example.com/roadmap_(2026))",
+        "projects",
+      ),
+    ).toBe("Roadmap");
+  });
 });
 
 describe("friendlyDate", () => {

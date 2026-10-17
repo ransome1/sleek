@@ -25,39 +25,8 @@ export const attributeDisplayValue = (
 
   if (!value.startsWith("[")) return value;
 
-  let labelDepth = 0;
-  let labelEnd = -1;
-  for (let index = 1; index < value.length; index += 1) {
-    if (value[index] === "\\") {
-      index += 1;
-    } else if (value[index] === "[") {
-      labelDepth += 1;
-    } else if (value[index] === "]") {
-      if (labelDepth === 0) {
-        labelEnd = index;
-        break;
-      }
-      labelDepth -= 1;
-    }
-  }
-
-  if (labelEnd < 0 || value[labelEnd + 1] !== "(") return value;
-
-  let destinationDepth = 1;
-  for (let index = labelEnd + 2; index < value.length; index += 1) {
-    if (value[index] === "\\") {
-      index += 1;
-    } else if (value[index] === "(") {
-      destinationDepth += 1;
-    } else if (value[index] === ")") {
-      destinationDepth -= 1;
-      if (destinationDepth === 0) {
-        return index === value.length - 1 ? value.slice(1, labelEnd) : value;
-      }
-    }
-  }
-
-  return value;
+  const markdownLink = value.match(/^\[((?:[^\]]|](?!\())+)\]\((.*)\)$/);
+  return markdownLink ? markdownLink[1] : value;
 };
 
 export function IsExcluded(attribute, filters: Filters | null) {
