@@ -4,6 +4,8 @@ All notable changes to sleek will be documented in this file. The format is base
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-10-17
+
 ### Added
 
 - A screen for analytics consent is now shown on first start for new users (https://github.com/ransome1/sleek/issues/809).
@@ -11,6 +13,7 @@ All notable changes to sleek will be documented in this file. The format is base
 ### Changed
 
 - Suggestions for contexts and projects in the todo dialog are now case insensitive (https://github.com/ransome1/sleek/issues/922).
+- Markdown links now only show their label in the drawer and groups when used as a context or project (by @SomSamantray in https://github.com/ransome1/sleek/pull/924, fixes https://github.com/ransome1/sleek/issues/804).
 
 ## [2.0.29] - 2026-09-10
 
