@@ -1,7 +1,7 @@
 directories:
   output: dist
   buildResources: build
-buildVersion: "70"
+buildVersion: "71"
 publish:
   provider: github
   releaseType: draft
@@ -110,3 +110,9 @@ linux:
       arch:
         - arm64
         - x64
+# RPM symlinks are conflicting with other Electron apps using the same Electron version
+# https://github.com/ferdium/ferdium-app/issues/416
+rpm:
+  fpm:
+    - "--rpm-rpmbuild-define"
+    - "_build_id_links none"
