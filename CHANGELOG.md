@@ -4,6 +4,12 @@ All notable changes to sleek will be documented in this file. The format is base
 
 ## [Unreleased]
 
+## [2.1.1] - 2026-10-18
+
+### Fixed
+
+- Fixed a conflict with other installed Electron apps in the RPM package (https://github.com/ransome1/sleek/issues/925).
+
 ## [2.1.0] - 2026-10-17
 
 ### Added
