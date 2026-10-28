@@ -88,7 +88,7 @@
     "@typescript/native": "npm:typescript@^7.0.2",
     "@vitejs/plugin-react": "^6.0.1",
     "@vitest/coverage-v8": "^5.0.0",
-    "electron": "^44.3.0",
+    "electron": "^44.9.1",
     "electron-builder": "^26.16.1",
     "electron-vite": "^6.0.0-beta.1",
     "eslint": "^9.39.4",
