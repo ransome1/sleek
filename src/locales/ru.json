@@ -42,6 +42,7 @@
   "settings.6": "Суббота",
   "settings.menuBarVisibility": "Показать строку меню",
   "settings.compact": "Компактный вид",
+  "settings.multiLineView": "Двухстрочный вид",
   "settings.enableSafeWrites": "Защитить задачи от потери данных, если sleek падает во время сохранения",
   "settings.days": " дней",
   "drawer.filters.showCompleted": "Завершенные задачи",

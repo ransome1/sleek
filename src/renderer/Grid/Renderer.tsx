@@ -246,6 +246,9 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
 
     const options: Components = {
       p: ({ children }): JSX.Element | null => {
+        // In multiLineView, matched attributes move from the text into a badge row below it
+        const badges: React.ReactNode[] = [];
+        let elementIndex = 0;
         const mappedChildren = React.Children.map(children, (child) => {
           if (typeof child !== "string") return child;
           let modifiedChild: React.ReactNode = child;
@@ -292,7 +295,6 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
           // Step 3: Build result array with interleaved text and React elements
           const result: React.ReactNode[] = [];
           let lastEnd = 0;
-          let elementIndex = 0;
 
           filteredMatches.forEach((matchInfo) => {
             // Add text before the match
@@ -304,7 +306,7 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
 
             // Add the match as a React element
             elementIndex++;
-            result.push(
+            const element = (
               <span
                 key={`${matchInfo.type}-${matchInfo.value}-${elementIndex}`}
                 className={
@@ -315,8 +317,13 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
                 data-todotxt-attribute={matchInfo.type}
               >
                 {replacements[matchInfo.type](matchInfo.value, matchInfo.type)}
-              </span>,
+              </span>
             );
+            if (settings.multiLineView && matchInfo.type !== "url") {
+              badges.push(element);
+            } else {
+              result.push(element);
+            }
 
             lastEnd = matchInfo.end;
           });
@@ -329,6 +336,16 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
           modifiedChild = result;
           return modifiedChild;
         });
+        if (settings.multiLineView) {
+          return (
+            <>
+              <span className="row-text">{mappedChildren}</span>
+              {badges.length > 0 && (
+                <span className="row-badges">{badges}</span>
+              )}
+            </>
+          );
+        }
         return mappedChildren ? <>{mappedChildren}</> : null;
       },
       a: (props: JSX.IntrinsicElements["a"]): JSX.Element | null => {

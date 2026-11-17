@@ -42,6 +42,7 @@
   "settings.6": "Szombat",
   "settings.menuBarVisibility": "Menüsor megjelenítése",
   "settings.compact": "Komplett nézet",
+  "settings.multiLineView": "Kétsoros nézet",
   "settings.enableSafeWrites": "Védeje a feladatokat az adatok elvesztése ellen, ha a sleek összeomlik mentés közben",
   "settings.days": " nap",
   "drawer.filters.showCompleted": "Befejezett feladatok",

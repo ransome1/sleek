@@ -42,6 +42,7 @@
   "settings.6": "Sobota",
   "settings.menuBarVisibility": "Zobrazit menu v panelu",
   "settings.compact": "Kompaktní zobrazení",
+  "settings.multiLineView": "Dvouřádkové zobrazení",
   "settings.enableSafeWrites": "Chrání úkoly před ztrátou dat, pokud sleek havaruje během ukládání",
   "settings.days": " dny",
   "drawer.filters.showCompleted": "Dokončené úkoly",

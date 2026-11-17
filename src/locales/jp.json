@@ -42,6 +42,7 @@
   "settings.6": "土曜日",
   "settings.menuBarVisibility": "メニューバーを表示する",
   "settings.compact": "コンパクトビュー",
+  "settings.multiLineView": "2行ビュー",
   "settings.enableSafeWrites": "sleekが保存中にクラッシュした場合、タスクのデータ損失を防ぎます",
   "settings.days": " 日",
   "drawer.filters.showCompleted": "完了したタスク",

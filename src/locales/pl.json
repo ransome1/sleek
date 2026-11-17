@@ -42,6 +42,7 @@
   "settings.6": "Sobota",
   "settings.menuBarVisibility": "Pokaż pasek menu",
   "settings.compact": "Widok kompaktowy",
+  "settings.multiLineView": "Widok dwuwierszowy",
   "settings.enableSafeWrites": "Ochrona zadań przed utratą danych, jeśli sleek ulegnie awarii podczas zapisywania",
   "settings.days": " dni",
   "drawer.filters.showCompleted": "Ukończone zadania",

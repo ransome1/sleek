@@ -42,6 +42,7 @@
   "settings.6": "Saturday",
   "settings.menuBarVisibility": "Show menu bar",
   "settings.compact": "Compact view",
+  "settings.multiLineView": "Two-row view",
   "settings.enableSafeWrites": "Protect todos from data loss if sleek crashes during a save",
   "settings.days": " days",
   "drawer.filters.showCompleted": "Completed todos",

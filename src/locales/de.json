@@ -42,6 +42,7 @@
   "settings.6": "Samstag",
   "settings.menuBarVisibility": "Menüleiste anzeigen",
   "settings.compact": "Kompakte Ansicht",
+  "settings.multiLineView": "Zweizeilige Ansicht",
   "settings.enableSafeWrites": "Schützt Todos vor Datenverlust, falls sleek während eines Speichervorgangs abstürzt",
   "settings.days": " Tage",
   "drawer.filters.showCompleted": "Abgeschlossene Aufgaben",
