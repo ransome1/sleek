@@ -14,16 +14,6 @@ import {
 
 const { ipcRenderer } = window.api;
 
-const buildTodoHashes = (data: TodoData): Set<string> => {
-  const hashes = new Set<string>();
-  for (const group of data) {
-    for (const obj of group.todoObjects) {
-      hashes.add(`${obj.lineNumber}:${obj.string}`);
-    }
-  }
-  return hashes;
-};
-
 interface IpcComponentProps {
   setHeaders: React.Dispatch<React.SetStateAction<HeadersObject | null>>;
   setAttributes: React.Dispatch<React.SetStateAction<Attributes | null>>;
@@ -59,45 +49,7 @@ const IpcComponent: React.FC<IpcComponentProps> = ({
       if (requestedData?.headers) setHeaders(requestedData.headers);
       if (requestedData?.attributes) setAttributes(requestedData.attributes);
       if (requestedData?.filters) setFilters(requestedData.filters);
-      if (requestedData?.todoData) {
-        setTodoData((prevTodoData) => {
-          if (!prevTodoData) {
-            return requestedData.todoData;
-          }
-
-          const incoming = requestedData.todoData;
-
-          // Check if this is a reorder-only update by comparing structure
-          if (prevTodoData.length !== incoming.length) {
-            return incoming;
-          }
-
-          const prevHashes = buildTodoHashes(prevTodoData);
-          const incomingHashes = buildTodoHashes(incoming);
-
-          // If hashes differ, it's not a reorder-only update
-          if (prevHashes.size !== incomingHashes.size) {
-            return incoming;
-          }
-
-          for (const hash of prevHashes) {
-            if (!incomingHashes.has(hash)) {
-              return incoming;
-            }
-          }
-
-          // This is a reorder-only update: match by string and update lineNumbers
-          return prevTodoData.map((group, i) => ({
-            ...group,
-            todoObjects: group.todoObjects.map((obj) => {
-              const match = incoming[i].todoObjects.find(
-                (o) => o.string === obj.string,
-              );
-              return match ? { ...obj, lineNumber: match.lineNumber } : obj;
-            }),
-          }));
-        });
-      }
+      if (requestedData?.todoData) setTodoData(requestedData.todoData);
     },
     [setHeaders, setAttributes, setFilters, setTodoData],
   );

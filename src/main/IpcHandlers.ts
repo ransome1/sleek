@@ -257,7 +257,7 @@ function handleMoveTodoLine(
   fromLineNumber: number,
   toLineNumber: number,
   attributeType: string,
-  attributeValue: string,
+  attributeValue: string | string[],
 ): void {
   try {
     moveTodoLine(fromLineNumber, toLineNumber, attributeType, attributeValue);

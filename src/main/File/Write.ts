@@ -1,6 +1,9 @@
 import fs from "fs";
 import { Item } from "jstodotxt";
-import { linesInFile, createTodoObject } from "../DataRequest/CreateTodoObjects";
+import {
+  linesInFile,
+  createTodoObject,
+} from "../DataRequest/CreateTodoObjects";
 import { getActiveFile } from "./Active";
 import { SettingsStore } from "../Stores";
 import { replaceSpeakingDatesWithAbsoluteDates } from "../Date";
@@ -124,24 +127,24 @@ const writeSingleTodoToFile = (
   writeToFile(linesInFile.join("\n"), activeFile.todoFilePath);
 };
 
-const replaceAttributeTag = (
+// Adds each missing tag (e.g. "+work") before the first date-like extension, keeping the todo's other tags.
+const addAttributeTags = (
   str: string,
-  pattern: RegExp,
   symbol: string,
-  value: string,
+  values: string[],
 ): string => {
-  const existing = str.match(pattern) || [];
-  if (existing.some((tag) => tag.trim() === `${symbol}${value}`)) return str;
-  const result = str.replace(pattern, "");
-  const dateAttrMatch = result.match(/\s+(due:|t:|rec:|pm:)/);
+  const existing = str.split(/\s+/);
+  const added = values
+    .filter((value) => !existing.includes(`${symbol}${value}`))
+    .map((value) => ` ${symbol}${value}`)
+    .join("");
+  const dateAttrMatch = str.match(/\s+(due:|t:|rec:|pm:)/);
   if (dateAttrMatch && dateAttrMatch.index !== undefined) {
     return (
-      result.slice(0, dateAttrMatch.index) +
-      ` ${symbol}${value}` +
-      result.slice(dateAttrMatch.index)
+      str.slice(0, dateAttrMatch.index) + added + str.slice(dateAttrMatch.index)
     );
   }
-  return `${result} ${symbol}${value}`;
+  return `${str}${added}`;
 };
 
 const reorderTodoLines = (fromLineNumber: number, toLineNumber: number) => {
@@ -152,7 +155,10 @@ const reorderTodoLines = (fromLineNumber: number, toLineNumber: number) => {
     throw new Error("No file data available");
   } else if (fromLineNumber < 0 || toLineNumber < 0) {
     throw new Error("Invalid line numbers");
-  } else if (fromLineNumber >= linesInFile.length || toLineNumber >= linesInFile.length) {
+  } else if (
+    fromLineNumber >= linesInFile.length ||
+    toLineNumber >= linesInFile.length
+  ) {
     throw new Error("Line number out of range");
   } else if (fromLineNumber === toLineNumber) {
     return;
@@ -167,23 +173,28 @@ const moveTodoLine = (
   fromLineNumber: number,
   toLineNumber: number,
   attributeType: string,
-  attributeValue: string,
+  attributeValue: string | string[],
 ) => {
   const activeFile = getActiveFile();
   if (!activeFile) {
     throw new Error("No active file found");
   } else if (fromLineNumber < 0 || toLineNumber < 0) {
     throw new Error("Invalid line numbers");
-  } else if (fromLineNumber >= linesInFile.length || toLineNumber >= linesInFile.length) {
+  } else if (
+    fromLineNumber >= linesInFile.length ||
+    toLineNumber >= linesInFile.length
+  ) {
     throw new Error("Line number out of range");
   }
 
   let updatedString = linesInFile[fromLineNumber];
 
-  if (attributeType === "projects") {
-    updatedString = replaceAttributeTag(updatedString, /(?:^|\s)\+\S+/g, "+", attributeValue);
-  } else if (attributeType === "contexts") {
-    updatedString = replaceAttributeTag(updatedString, /(?:^|\s)@\S+/g, "@", attributeValue);
+  if (Array.isArray(attributeValue)) {
+    updatedString = addAttributeTags(
+      updatedString,
+      attributeType === "projects" ? "+" : "@",
+      attributeValue,
+    );
   } else {
     const todoObject = createTodoObject(
       fromLineNumber,
@@ -204,4 +215,10 @@ const moveTodoLine = (
   writeToFile(linesInFile.join("\n"), activeFile.todoFilePath);
 };
 
-export { writeSingleTodoToFile, removeLineFromFile, writeToFile, reorderTodoLines, moveTodoLine };
+export {
+  writeSingleTodoToFile,
+  removeLineFromFile,
+  writeToFile,
+  reorderTodoLines,
+  moveTodoLine,
+};

@@ -1,4 +1,11 @@
-import React, { memo, ReactElement, ReactNode, useState, useCallback, useRef } from "react";
+import React, {
+  memo,
+  ReactElement,
+  ReactNode,
+  useState,
+  useCallback,
+  useRef,
+} from "react";
 import List from "@mui/material/List";
 import {
   DndContext,
@@ -17,10 +24,15 @@ import {
 import {
   SortableContext,
   verticalListSortingStrategy,
-  arrayMove,
 } from "@dnd-kit/sortable";
 import { SnackbarAction } from "../../@types";
 import Row from "./Row";
+import {
+  findItemLocation,
+  applyDragOver,
+  computeToLineNumber,
+  getAttributeChange,
+} from "./dragAndDrop";
 import Group from "./Group";
 import "./Grid.scss";
 import {
@@ -37,7 +49,7 @@ const { ipcRenderer } = window.api;
 
 const keyboardCoordinatesGetter: KeyboardCoordinateGetter = (
   event,
-  { context }
+  { context },
 ) => {
   const { active, over } = context;
   if (!active || !over) return;
@@ -51,44 +63,6 @@ const keyboardCoordinatesGetter: KeyboardCoordinateGetter = (
     default:
       return undefined;
   }
-};
-
-const getAttributeChangeForGroup = (
-  active: TodoObject,
-  over: TodoObject,
-  sortKey: string,
-): { type: string; value: string } | null => {
-  if (sortKey === "priority") {
-    return { type: "priority", value: over.priority ?? "-" };
-  }
-
-  if (sortKey === "due") {
-    return { type: "due", value: over.due ?? "" };
-  }
-
-  if (sortKey === "projects" && over.projects && over.projects.length > 0) {
-    const targetProject = over.projects[0];
-    if (active.projects?.includes(targetProject)) return null;
-    return { type: "projects", value: targetProject };
-  }
-
-  if (sortKey === "contexts" && over.contexts && over.contexts.length > 0) {
-    const targetContext = over.contexts[0];
-    if (active.contexts?.includes(targetContext)) return null;
-    return { type: "contexts", value: targetContext };
-  }
-
-  return null;
-};
-
-const findItemLocation = (data: TodoData, lineNumber: number) => {
-  for (let i = 0; i < data.length; i++) {
-    const idx = data[i].todoObjects.findIndex((obj) => obj.lineNumber === lineNumber);
-    if (idx !== -1) {
-      return { groupIndex: i, itemIndex: idx, todoObject: data[i].todoObjects[idx] };
-    }
-  }
-  return null;
 };
 
 interface GridComponentProps {
@@ -122,7 +96,10 @@ const GridComponent: React.FC<GridComponentProps> = memo(
     const renderedRowsRef = useRef<number[]>([]);
     const listRef = useRef<HTMLUListElement>(null);
     const sortKeyValueRef = useRef(settings.sorting[0].value);
+    sortKeyValueRef.current = settings.sorting[0].value;
     const fileSortingRef = useRef(settings.fileSorting);
+    fileSortingRef.current = settings.fileSorting;
+    const [loadMoreRows, setLoadMoreRows] = useState(false);
     const [maxRows, setMaxRows] = useState(
       Math.floor(window.innerHeight / 35) * 2,
     );
@@ -134,13 +111,6 @@ const GridComponent: React.FC<GridComponentProps> = memo(
     const originalTodoDataRef = useRef<TodoData | null>(null);
     const originalGroupRef = useRef<string | null>(null);
     const activeTodoObjectRef = useRef<TodoObject | null>(null);
-
-    if (sortKeyValueRef.current !== settings.sorting[0].value) {
-      sortKeyValueRef.current = settings.sorting[0].value;
-    }
-    if (fileSortingRef.current !== settings.fileSorting) {
-      fileSortingRef.current = settings.fileSorting;
-    }
 
     const sensors = useSensors(
       useSensor(PointerSensor, {
@@ -173,57 +143,23 @@ const GridComponent: React.FC<GridComponentProps> = memo(
       const { active, over } = event;
       if (!over || active.id === over.id) return;
 
-      const activeId = active.id as number;
-      const overId = over.id as number;
+      const activeRect = active.rect.current.translated;
+      const overRect = over.rect;
+      const insertAfter =
+        !!activeRect &&
+        activeRect.top + activeRect.height / 2 >
+          overRect.top + overRect.height / 2 + 2;
 
-      setTodoData((prev) => {
-        if (!prev) return prev;
-
-        const activeLoc = findItemLocation(prev, activeId);
-        const overLoc = findItemLocation(prev, overId);
-
-        if (!activeLoc || !overLoc) return prev;
-
-        if (activeLoc.groupIndex === overLoc.groupIndex) {
-          const group = prev[activeLoc.groupIndex];
-          if (activeLoc.itemIndex === overLoc.itemIndex) return prev;
-
-          const newTodoData = [...prev];
-          newTodoData[activeLoc.groupIndex] = {
-            ...group,
-            todoObjects: arrayMove(
-              group.todoObjects,
-              activeLoc.itemIndex,
-              overLoc.itemIndex,
-            ),
-          };
-          return newTodoData;
-        }
-
-        const newData = prev.map((g) => ({ ...g, todoObjects: [...g.todoObjects] }));
-
-        const [movedItem] = newData[activeLoc.groupIndex].todoObjects.splice(
-          activeLoc.itemIndex,
-          1,
-        );
-
-        let insertIndex = overLoc.itemIndex;
-
-        const activeRect = active.rect.current.translated;
-        const overRect = over.rect;
-
-        if (activeRect && overRect) {
-          const activeCenter = activeRect.top + activeRect.height / 2;
-          const overCenter = overRect.top + overRect.height / 2;
-          if (activeCenter > overCenter + 2) {
-            insertIndex = overLoc.itemIndex + 1;
-          }
-        }
-
-        newData[overLoc.groupIndex].todoObjects.splice(insertIndex, 0, movedItem);
-
-        return newData;
-      });
+      setTodoData(
+        (prev) =>
+          prev &&
+          applyDragOver(
+            prev,
+            active.id as number,
+            over.id as number,
+            insertAfter,
+          ),
+      );
     }, []);
 
     const handleDragCancel = useCallback(() => {
@@ -236,142 +172,76 @@ const GridComponent: React.FC<GridComponentProps> = memo(
       activeTodoObjectRef.current = null;
     }, []);
 
-    const handleDragEnd = useCallback(
-      (event: DragEndEvent) => {
-        const activeId = event.active.id as number;
-        setActiveId(null);
+    const handleDragEnd = useCallback((event: DragEndEvent) => {
+      const activeId = event.active.id as number;
+      setActiveId(null);
 
-        setJustDragged(true);
-        setTimeout(() => {
-          setJustDragged(false);
-        }, 100);
+      setJustDragged(true);
+      setTimeout(() => {
+        setJustDragged(false);
+      }, 100);
 
-        const currentTodoData = todoDataRef.current;
-        if (!currentTodoData) {
-          originalTodoDataRef.current = null;
-          originalGroupRef.current = null;
-          return;
-        }
-
-        const activeLoc = findItemLocation(currentTodoData, activeId);
-        if (!activeLoc) {
-          originalTodoDataRef.current = null;
-          originalGroupRef.current = null;
-          return;
-        }
-
-        const currentGroupTitle = JSON.stringify(
-          currentTodoData[activeLoc.groupIndex].title,
-        );
-
-        if (originalGroupRef.current !== currentGroupTitle) {
-          const targetGroup = currentTodoData[activeLoc.groupIndex];
-          const sortKey = sortKeyValueRef.current;
-          let attributeChange: { type: string; value: string } | null = null;
-
-          if (targetGroup.todoObjects.length > 1) {
-            const overTodoObject = targetGroup.todoObjects.find(
-              (obj) => obj.lineNumber !== activeId,
-            );
-            if (overTodoObject) {
-              attributeChange = getAttributeChangeForGroup(
-                activeLoc.todoObject,
-                overTodoObject,
-                sortKey,
-              );
-            }
-          } else if (targetGroup.todoObjects.length === 1) {
-            const title = targetGroup.title;
-            if (sortKey === "priority") {
-              const value = title ?? "-";
-              if (activeLoc.todoObject.priority !== value) {
-                attributeChange = { type: "priority", value: String(value) };
-              }
-            } else if (sortKey === "due") {
-              const value = title ?? "";
-              if (activeLoc.todoObject.due !== value) {
-                attributeChange = { type: "due", value: String(value) };
-              }
-            } else if (sortKey === "projects" && title) {
-              const value = String(title);
-              if (!activeLoc.todoObject.projects?.includes(value)) {
-                attributeChange = { type: "projects", value };
-              }
-            } else if (sortKey === "contexts" && title) {
-              const value = String(title);
-              if (!activeLoc.todoObject.contexts?.includes(value)) {
-                attributeChange = { type: "contexts", value };
-              }
-            }
-          }
-
-          if (attributeChange) {
-            let toLineNumber: number;
-
-            if (targetGroup.todoObjects.length === 1) {
-              toLineNumber = activeId;
-            } else if (activeLoc.itemIndex < targetGroup.todoObjects.length - 1) {
-              const targetLine = targetGroup.todoObjects[activeLoc.itemIndex + 1].lineNumber;
-              toLineNumber = targetLine > activeId ? targetLine - 1 : targetLine;
-            } else {
-              const beforeLine = targetGroup.todoObjects[activeLoc.itemIndex - 1].lineNumber;
-              toLineNumber = beforeLine >= activeId ? beforeLine : beforeLine + 1;
-            }
-
-            ipcRenderer.send(
-              "moveTodoLine",
-              activeId,
-              toLineNumber,
-              attributeChange.type,
-              attributeChange.value,
-            );
-          }
-
-          originalTodoDataRef.current = null;
-          originalGroupRef.current = null;
-          activeTodoObjectRef.current = null;
-          return;
-        }
-
-        const { over } = event;
-        if (!over || activeId === over.id) {
-          originalTodoDataRef.current = null;
-          originalGroupRef.current = null;
-          activeTodoObjectRef.current = null;
-          return;
-        }
-
-        const overLineNumber = over.id as number;
-
-        setTodoData((prev) => {
-          if (!prev) return prev;
-
-          const group = prev[activeLoc.groupIndex];
-          const oldIndex = activeLoc.itemIndex;
-          const newIndex = group.todoObjects.findIndex(
-            (obj) => obj.lineNumber === overLineNumber,
-          );
-
-          if (oldIndex !== -1 && newIndex !== -1 && oldIndex !== newIndex) {
-            const newTodoData = [...prev];
-            newTodoData[activeLoc.groupIndex] = {
-              ...group,
-              todoObjects: arrayMove(group.todoObjects, oldIndex, newIndex),
-            };
-            return newTodoData;
-          }
-          return prev;
-        });
-
-        const toLineNumber = overLineNumber > activeId ? overLineNumber - 1 : overLineNumber;
-        ipcRenderer.send("reorderTodoLines", activeId, toLineNumber);
-
+      const currentTodoData = todoDataRef.current;
+      if (!currentTodoData) {
         originalTodoDataRef.current = null;
         originalGroupRef.current = null;
-        activeTodoObjectRef.current = null;
-      },
-      [],
-    );
+        return;
+      }
+
+      const activeLoc = findItemLocation(currentTodoData, activeId);
+      if (!activeLoc) {
+        originalTodoDataRef.current = null;
+        originalGroupRef.current = null;
+        return;
+      }
+
+      const currentGroupTitle = JSON.stringify(
+        currentTodoData[activeLoc.groupIndex].title,
+      );
+
+      // handleDragOver has already moved the row, so its current position is the drop position.
+      const targetGroup = currentTodoData[activeLoc.groupIndex];
+      const toLineNumber = computeToLineNumber(
+        targetGroup.todoObjects,
+        activeLoc.itemIndex,
+        activeId,
+      );
+
+      if (originalGroupRef.current !== currentGroupTitle) {
+        const attributeChange = getAttributeChange(
+          activeLoc.todoObject,
+          targetGroup.title,
+          sortKeyValueRef.current,
+        );
+        if (attributeChange) {
+          ipcRenderer.send(
+            "moveTodoLine",
+            activeId,
+            toLineNumber,
+            attributeChange.type,
+            attributeChange.value,
+          );
+        } else if (originalTodoDataRef.current) {
+          setTodoData(originalTodoDataRef.current);
+        }
+      } else if (!fileSortingRef.current) {
+        // Grouped views sort within groups by the sorting settings, so a reorder there would not stick.
+        if (originalTodoDataRef.current) {
+          setTodoData(originalTodoDataRef.current);
+        }
+      } else {
+        const originalLoc = originalTodoDataRef.current
+          ? findItemLocation(originalTodoDataRef.current, activeId)
+          : null;
+        if (originalLoc?.itemIndex !== activeLoc.itemIndex) {
+          ipcRenderer.send("reorderTodoLines", activeId, toLineNumber);
+        }
+      }
+
+      originalTodoDataRef.current = null;
+      originalGroupRef.current = null;
+      activeTodoObjectRef.current = null;
+    }, []);
 
     const handleKeyUp: React.KeyboardEventHandler = (event): void => {
       if (event.key === "ArrowDown") {
@@ -421,8 +291,16 @@ const GridComponent: React.FC<GridComponentProps> = memo(
         const b: number = list.scrollHeight - list.clientHeight;
         const c: number = a / b;
 
-        if (c >= 0.85 && renderedRowsRef.current.length < headers.availableObjects) {
-          setMaxRows((prev) => prev + 30);
+        if (
+          c >= 0.85 &&
+          renderedRowsRef.current.length < headers.availableObjects
+        ) {
+          setLoadMoreRows(true);
+        }
+
+        if (loadMoreRows) {
+          setLoadMoreRows(false);
+          setMaxRows((maxRows) => maxRows + 30);
           ipcRenderer.send("requestData", searchString);
         }
       }
@@ -441,7 +319,12 @@ const GridComponent: React.FC<GridComponentProps> = memo(
         onDragEnd={handleDragEnd}
         onDragCancel={handleDragCancel}
       >
-        <List ref={listRef} id="grid" onScroll={handleScroll} onKeyUp={handleKeyUp}>
+        <List
+          ref={listRef}
+          id="grid"
+          onScroll={handleScroll}
+          onKeyUp={handleKeyUp}
+        >
           {todoData &&
             todoData.map((group, groupIndex) => {
               if (!group.visible) {
@@ -460,7 +343,9 @@ const GridComponent: React.FC<GridComponentProps> = memo(
                     settings={settings}
                     onNotification={onNotification}
                   />
-                  <div className={`group-spacer${activeId != null ? " active" : ""}`} />
+                  <div
+                    className={`group-spacer${activeId != null ? " active" : ""}`}
+                  />
                   <SortableContext
                     items={group.todoObjects.map((obj) => obj.lineNumber)}
                     strategy={verticalListSortingStrategy}
@@ -472,7 +357,11 @@ const GridComponent: React.FC<GridComponentProps> = memo(
 
                         if (renderedRowsRef.current.length >= maxRows) {
                           break;
-                        } else if (renderedRowsRef.current.includes(todoObject.lineNumber)) {
+                        } else if (
+                          renderedRowsRef.current.includes(
+                            todoObject.lineNumber,
+                          )
+                        ) {
                           continue;
                         }
 
@@ -497,7 +386,9 @@ const GridComponent: React.FC<GridComponentProps> = memo(
                       return rows;
                     })()}
                   </SortableContext>
-                  <div className={`group-spacer${activeId != null ? " active" : ""}`} />
+                  <div
+                    className={`group-spacer${activeId != null ? " active" : ""}`}
+                  />
                 </React.Fragment>
               );
             })}
@@ -530,41 +421,45 @@ interface DragOverlayWrapperProps {
   onNotification: React.Dispatch<SnackbarAction>;
 }
 
-const DragOverlayWrapper: React.FC<DragOverlayWrapperProps> = memo(({ activeTodoObject, todoData, filters, setTodoObject, setDialogOpen, setContextMenu, setPromptItem, settings, onNotification }) => {
-  const { active } = useDndContext();
-  const activeId = active?.id as number | undefined;
+const DragOverlayWrapper: React.FC<DragOverlayWrapperProps> = memo(
+  ({
+    activeTodoObject,
+    todoData,
+    filters,
+    setTodoObject,
+    setDialogOpen,
+    setContextMenu,
+    setPromptItem,
+    settings,
+    onNotification,
+  }) => {
+    const { active } = useDndContext();
+    const activeId = active?.id as number | undefined;
 
-  if (activeId == null || !todoData) return null;
+    if (activeId == null || !todoData) return null;
 
-  let resolvedTodoObject = activeTodoObject;
-  if (!resolvedTodoObject) {
-    for (const group of todoData) {
-      const found = group.todoObjects.find(obj => obj.lineNumber === activeId);
-      if (found) {
-        resolvedTodoObject = found;
-        break;
-      }
-    }
-  }
+    const resolvedTodoObject =
+      activeTodoObject ?? findItemLocation(todoData, activeId)?.todoObject;
 
-  if (!resolvedTodoObject) return null;
+    if (!resolvedTodoObject) return null;
 
-  return (
-    <DragOverlay dropAnimation={null}>
-      <Row
-        todoObject={resolvedTodoObject}
-        filters={filters}
-        setTodoObject={setTodoObject}
-        setDialogOpen={setDialogOpen}
-        setContextMenu={setContextMenu}
-        setPromptItem={setPromptItem}
-        settings={settings}
-        onNotification={onNotification}
-        justDragged={false}
-      />
-    </DragOverlay>
-  );
-});
+    return (
+      <DragOverlay dropAnimation={null}>
+        <Row
+          todoObject={resolvedTodoObject}
+          filters={filters}
+          setTodoObject={setTodoObject}
+          setDialogOpen={setDialogOpen}
+          setContextMenu={setContextMenu}
+          setPromptItem={setPromptItem}
+          settings={settings}
+          onNotification={onNotification}
+          justDragged={false}
+        />
+      </DragOverlay>
+    );
+  },
+);
 
 DragOverlayWrapper.displayName = "DragOverlayWrapper";
 

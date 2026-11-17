@@ -113,7 +113,6 @@ const Row: React.FC<RowProps> = memo(
 
       // Check direct element
       if (clickedElement.classList.contains("MuiChip-label")) match = true;
-      if (clickedElement.classList.contains("drag-handle")) match = true;
       if (clickedElement.closest(".drag-handle")) match = true;
       if (
         clickedElement.getAttribute("data-testid") === "datagrid-picker-date-t"
