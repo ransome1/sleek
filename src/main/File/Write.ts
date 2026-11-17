@@ -132,7 +132,7 @@ const replaceAttributeTag = (
 ): string => {
   const existing = str.match(pattern) || [];
   if (existing.some((tag) => tag.trim() === `${symbol}${value}`)) return str;
-  let result = str.replace(pattern, "");
+  const result = str.replace(pattern, "");
   const dateAttrMatch = result.match(/\s+(due:|t:|rec:|pm:)/);
   if (dateAttrMatch && dateAttrMatch.index !== undefined) {
     return (

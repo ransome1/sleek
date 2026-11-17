@@ -120,7 +120,7 @@ const GridComponent: React.FC<GridComponentProps> = memo(
     setTodoData,
   }) => {
     const renderedRowsRef = useRef<number[]>([]);
-    const listRef = useRef<HTMLElement>(null);
+    const listRef = useRef<HTMLUListElement>(null);
     const sortKeyValueRef = useRef(settings.sorting[0].value);
     const fileSortingRef = useRef(settings.fileSorting);
     const [maxRows, setMaxRows] = useState(
@@ -209,9 +209,8 @@ const GridComponent: React.FC<GridComponentProps> = memo(
 
         let insertIndex = overLoc.itemIndex;
 
-        const activeRect =
-          (active as any).rect?.current?.translated || (active as any).rect;
-        const overRect = (over as any).rect?.current?.translated || (over as any).rect;
+        const activeRect = active.rect.current.translated;
+        const overRect = over.rect;
 
         if (activeRect && overRect) {
           const activeCenter = activeRect.top + activeRect.height / 2;
@@ -442,7 +441,7 @@ const GridComponent: React.FC<GridComponentProps> = memo(
         onDragEnd={handleDragEnd}
         onDragCancel={handleDragCancel}
       >
-        <List ref={listRef as any} id="grid" onScroll={handleScroll} onKeyUp={handleKeyUp}>
+        <List ref={listRef} id="grid" onScroll={handleScroll} onKeyUp={handleKeyUp}>
           {todoData &&
             todoData.map((group, groupIndex) => {
               if (!group.visible) {

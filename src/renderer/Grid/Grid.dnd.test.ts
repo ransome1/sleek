@@ -164,10 +164,13 @@ describe("Drag and drop state transitions", () => {
       { title: "A", visible: true, todoObjects: [createObj(1, "A"), createObj(2, "B"), createObj(3, "C"), createObj(4, "D")] },
     ];
 
-    const state = simulateHandleDragOver(data, 1, 4);
+    const activeId = 1;
+    const overLineNumber = 4;
+    const state = simulateHandleDragOver(data, activeId, overLineNumber);
     expect(state[0].todoObjects.map((o) => o.lineNumber)).toEqual([2, 3, 4, 1]);
 
-    const toLine = 4 > 1 ? 4 - 1 : 4;
+    const toLine =
+      overLineNumber > activeId ? overLineNumber - 1 : overLineNumber;
     expect(toLine).toBe(3);
 
     const file = [0, 1, 2, 3, 4];
