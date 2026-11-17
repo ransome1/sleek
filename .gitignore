@@ -88,6 +88,9 @@ typings/
 # Vite
 .vite/
 
+# Backup files
+*.bak
+
 # Electron-Forge
 out/
 
@@ -116,6 +119,7 @@ AGENTS.md
 ARCHITECTURE.md
 
 wiki/
+openwiki/
 
 test-results/
 

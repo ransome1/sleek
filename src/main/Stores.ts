@@ -160,6 +160,15 @@ const migrations = {
       config.set("welcomeScreenShown", false);
     }
   },
+  "2.1.2": (colors) => {
+    console.log("Repairing priority A selected color → 2.1.2");
+    const selectedBackground = colors.get(
+      "colors.attributes.priority.A.selected.background",
+    );
+    if (selectedBackground === "##B70025") {
+      colors.set("colors.attributes.priority.A.selected.background", "#B70025");
+    }
+  },
 };
 
 const rerenderDefinition = {

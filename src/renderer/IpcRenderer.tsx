@@ -141,31 +141,37 @@ const IpcComponent: React.FC<IpcComponentProps> = ({
   );
 
   useEffect(() => {
-    ipcRenderer.on("requestData", handleRequestedData);
-    ipcRenderer.on("updateAttributeFields", handleUpdateAttributeFields);
-    ipcRenderer.on("updateTodoObject", (todoObject: TodoObject) =>
-      setTodoObject(todoObject),
+    const unsubscribeRequestData = ipcRenderer.on(
+      "requestData",
+      handleRequestedData,
     );
-    ipcRenderer.on("responseFromMainProcess", handleResponse);
-    ipcRenderer.on("settingsChanged", (settings: SettingStore) =>
-      setSettings(settings),
+    const unsubscribeUpdateAttributeFields = ipcRenderer.on(
+      "updateAttributeFields",
+      handleUpdateAttributeFields,
     );
-    ipcRenderer.on("isSettingsOpen", (isSettingsOpen: boolean) =>
-      setIsSettingsOpen(isSettingsOpen),
+    const unsubscribeUpdateTodoObject = ipcRenderer.on(
+      "updateTodoObject",
+      (todoObject: TodoObject) => setTodoObject(todoObject),
+    );
+    const unsubscribeResponse = ipcRenderer.on(
+      "responseFromMainProcess",
+      handleResponse,
+    );
+    const unsubscribeSettingsChanged = ipcRenderer.on(
+      "settingsChanged",
+      (settings: SettingStore) => setSettings(settings),
+    );
+    const unsubscribeIsSettingsOpen = ipcRenderer.on(
+      "isSettingsOpen",
+      (isSettingsOpen: boolean) => setIsSettingsOpen(isSettingsOpen),
     );
     return (): void => {
-      ipcRenderer.off("requestData", handleRequestedData);
-      ipcRenderer.off("updateAttributeFields", handleUpdateAttributeFields);
-      ipcRenderer.off("updateTodoObject", (todoObject: TodoObject) =>
-        setTodoObject(todoObject),
-      );
-      ipcRenderer.off("responseFromMainProcess", handleResponse);
-      ipcRenderer.off("settingsChanged", (settings: SettingStore) =>
-        setSettings(settings),
-      );
-      ipcRenderer.off("isSettingsOpen", (isSettingsOpen: boolean) =>
-        setIsSettingsOpen(isSettingsOpen),
-      );
+      unsubscribeRequestData();
+      unsubscribeUpdateAttributeFields();
+      unsubscribeUpdateTodoObject();
+      unsubscribeResponse();
+      unsubscribeSettingsChanged();
+      unsubscribeIsSettingsOpen();
     };
   }, [
     handleResponse,

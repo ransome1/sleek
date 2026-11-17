@@ -4,6 +4,12 @@ All notable changes to sleek will be documented in this file. The format is base
 
 ## [Unreleased]
 
+## [2.1.2] - 2026-11-17
+
+### Fixed
+
+- Fixed a memory leak where IPC event listeners piled up in the renderer, which caused a `MaxListenersExceededWarning` and repeated handler calls after changing filters or settings many times.
+
 ## [2.1.1] - 2026-10-18
 
 ### Fixed

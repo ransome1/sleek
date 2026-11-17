@@ -18,7 +18,7 @@ Pushing sleek to the Apple and Microsoft app stores creates annual costs. You ca
 
 ### 👩🏾‍💻 This project needs your support
 
-sleek's backlog is becoming increasingly populated, yet our capacity is limited. If you are skilled in `React`, `TypeScript`, `Electron`, or `vitest` you can support this project. We need to continue refactoring the code, build reliable test coverage, and reduce bugs. Here you'll find our backlog: https://github.com/users/ransome1/projects/3. For those interested, all necessary information about contributing to the project is kept and updated in the [CONTRIBUTING.md](https://github.com/ransome1/sleek/blob/main/CONTRIBUTING.md).
+sleek's backlog is becoming increasingly populated, yet our capacity is limited. If you are skilled in `React`, `TypeScript`, `Electron`, `vitest` or `Playwright` you can support this project. We need to continue refactoring the code, build reliable test coverage, and reduce bugs. Here you'll find our backlog: https://github.com/users/ransome1/projects/3. For those interested, all necessary information about contributing to the project is kept and updated in the [CONTRIBUTING.md](https://github.com/ransome1/sleek/blob/main/CONTRIBUTING.md).
 
 ### Get sleek from Apple Mac App Store
 

@@ -38,10 +38,10 @@ const NavigationComponent: React.FC<NavigationComponentProps> = memo(
         }
       };
 
-      ipcRenderer.on("isDialogOpen", handleOpen);
+      const unsubscribe = ipcRenderer.on("isDialogOpen", handleOpen);
       document.addEventListener("keydown", handleKeyDown);
       return (): void => {
-        ipcRenderer.off("isDialogOpen", handleOpen);
+        unsubscribe();
         document.removeEventListener("keydown", handleKeyDown);
       };
     }, [setDialogOpen, settings]);

@@ -56,9 +56,5 @@ contextBridge.exposeInMainWorld("api", {
         ipcRenderer.removeListener(channel, subscription);
       };
     },
-    off(channel, func) {
-      const subscription = (_event, ...args) => func(...args);
-      ipcRenderer.removeListener(channel, subscription);
-    },
   },
 });

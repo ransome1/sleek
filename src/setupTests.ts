@@ -13,8 +13,7 @@ Object.defineProperty(window, "api", {
     },
     ipcRenderer: {
       send: vi.fn(),
-      on: vi.fn(),
-      off: vi.fn(),
+      on: vi.fn(() => vi.fn()),
       invoke: vi.fn(),
     },
   },

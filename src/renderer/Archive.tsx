@@ -83,9 +83,12 @@ const ArchiveComponent: React.FC<ArchiveComponentProps> = ({
   }, [triggerArchiving]);
 
   useEffect(() => {
-    ipcRenderer.on("triggerArchiving", handleTriggerArchiving);
+    const unsubscribe = ipcRenderer.on(
+      "triggerArchiving",
+      handleTriggerArchiving,
+    );
     return (): void => {
-      ipcRenderer.off("triggerArchiving", handleTriggerArchiving);
+      unsubscribe();
     };
   }, [handleTriggerArchiving]);
 

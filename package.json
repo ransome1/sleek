@@ -2,7 +2,7 @@
   "name": "sleek",
   "productName": "sleek",
   "desktopName": "com.github.ransome1.sleek",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "todo.txt manager for Linux, Windows and macOS, free and open-source (FOSS)",
   "synopsis": "todo.txt manager for Linux, Windows and macOS, free and open-source (FOSS)",
   "keywords": [
@@ -102,11 +102,5 @@
     "typescript": "npm:@typescript/typescript6@^6.0.2",
     "typescript-eslint": "^8.55.0",
     "vitest": "^5.0.0"
-  },
-  "allowScripts": {
-    "electron-winstaller@5.4.0": true,
-    "@parcel/watcher@2.6.0": true,
-    "esbuild@0.25.12": true,
-    "fsevents@2.3.3": true
   }
 }
