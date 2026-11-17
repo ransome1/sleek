@@ -38,6 +38,23 @@
     border: none;
     cursor: auto;
   }
+  .drag-handle {
+    cursor: grab;
+    display: inline-flex;
+    align-items: center;
+    color: var(--color-outline);
+    padding: 0 0.15em;
+    &:active {
+      cursor: grabbing;
+    }
+    svg {
+      font-size: 1.1em;
+    }
+  }
+  &.dragging {
+    opacity: 0.5;
+    border-left-style: dashed;
+  }
 }
 
 .compact {
@@ -69,6 +86,22 @@
         padding: 0.2em 0.4em;
       }
     }
+  }
+}
+
+.group-spacer {
+  height: 4px;
+  transition:
+    height 0.2s ease,
+    background-color 0.2s ease;
+
+  &.active {
+    height: 12px;
+    background-color: color-mix(
+      in srgb,
+      var(--semantic-primary) 5%,
+      transparent
+    );
   }
 }
 
