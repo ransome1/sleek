@@ -5,6 +5,7 @@ const keyMap: Record<string, string> = {
   t: "t",
   rec: "rec",
   pm: "pm",
+  inprogress: "inprogress",
 };
 
 export function renameAttributeValue(
@@ -151,7 +152,8 @@ export function deleteAttributeValue(
       case "due":
       case "t":
       case "rec":
-      case "pm": {
+      case "pm":
+      case "inprogress": {
         const item = new Item(newLine);
         const key = keyMap[attrType];
         const extValue = item.extensions().find((e) => e.key === key)?.value;

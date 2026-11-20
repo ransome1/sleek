@@ -14,6 +14,7 @@ export interface TodoObject {
 
   priority: string | null;
   hidden: boolean;
+  inprogress: string | null;
   due: string | null;
   dueString: string | null;
   t: string | null;
@@ -32,8 +33,6 @@ export interface TodoGroup {
   todoObjects: TodoObject[];
 }
 
-export type TodoGroups = Record<string, TodoGroup>;
-
 export type TodoData = TodoGroup[];
 
 export type Attributes = {
@@ -50,6 +49,7 @@ export type AttributeKey =
   | "rec"
   | "pm"
   | "hidden"
+  | "inprogress"
   | "created"
   | "completed";
 

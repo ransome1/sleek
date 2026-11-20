@@ -20,6 +20,7 @@ export interface PromptItem {
 export interface ContextMenuItem {
   id: string;
   label: string;
+  hint?: string;
   promptItem?: PromptItem;
   function?: () => void;
 }

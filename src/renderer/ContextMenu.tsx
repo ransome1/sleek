@@ -1,6 +1,8 @@
 import React, { memo, useRef, useEffect } from "react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import ListItemText from "@mui/material/ListItemText";
+import Typography from "@mui/material/Typography";
 import "./ContextMenu.scss";
 import { ContextMenu, ContextMenuItem, PromptItem } from "@sleek-types";
 
@@ -58,7 +60,16 @@ const ContextMenuComponent: React.FC<ContextMenuComponentProps> = memo(
               data-testid={`contextMenu-item-${contextMenuItem.id}`}
               onClick={() => onClick(contextMenuItem)}
             >
-              {contextMenuItem.label}
+              <ListItemText>{contextMenuItem.label}</ListItemText>
+              {contextMenuItem.hint && (
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ ml: 3 }}
+                >
+                  {contextMenuItem.hint}
+                </Typography>
+              )}
             </MenuItem>
           ))}
       </Menu>

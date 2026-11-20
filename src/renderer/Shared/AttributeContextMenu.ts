@@ -19,6 +19,7 @@ export function createAttributeContextMenuItems(
   // Date and system-managed attributes should only show delete (no rename)
   // Recurrences support rename (they don't have fuzzy parsing issues)
   const disableRenameForAttributes = [
+    "inprogress",
     ...(settings?.useHumanFriendlyDates ? ["due", "t"] : []),
   ];
   const shouldDisableRename =
