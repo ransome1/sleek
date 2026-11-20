@@ -84,6 +84,17 @@ describe("groupTodoObjects", () => {
     expect(r[3].todoObjects[0].body).toBe("Project AC +A +C");
   });
 
+  it("keeps the input order for integer-like group keys", () => {
+    const input: TodoObject[] = [
+      createTodoObject(1, "Todo"),
+      createTodoObject(2, "Todo inprogress:1"),
+    ];
+
+    const r = groupTodoObjects(input, "inprogress");
+
+    expect(r.map((group) => group.title)).toEqual([null, "1"]);
+  });
+
   it("hides group with hidden items (showHidden = false)", () => {
     const input: TodoObject[] = [
       createTodoObject(1, "visible"),

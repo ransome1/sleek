@@ -96,7 +96,7 @@ const sortTodoObjects = (
         compareResult = invert ? keyB - keyA : keyA - keyB;
       }
     } else if (value === "inprogress") {
-      // A flag has only one value to order by, so invert moves in-progress todos last instead
+      // A flag has one value, so invert puts in-progress todos last.
       compareResult =
         compareValues(a.inprogress, b.inprogress, false) * (invert ? -1 : 1);
     } else {

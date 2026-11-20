@@ -85,6 +85,7 @@ const baseSettings: SettingStore = {
   },
   channel: "",
   anonymousUserId: "",
+  welcomeScreenShown: true,
 };
 
 const baseFilters: Filters = {

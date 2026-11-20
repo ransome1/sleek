@@ -69,11 +69,9 @@ function buildDisplayBuckets(
 
   for (const [rawKey, entry] of Object.entries(rawGroup)) {
     const bucketNames =
-      attributeKey === "inprogress"
-        ? [t("shared.attributeMapping.inprogress")]
-        : settings.useHumanFriendlyDates && isDate
-          ? friendlyDate(rawKey, attributeKey, settings, t)
-          : [rawKey];
+      settings.useHumanFriendlyDates && isDate
+        ? friendlyDate(rawKey, attributeKey, settings, t)
+        : [rawKey];
 
     for (const bucketName of bucketNames) {
       if (!buckets[bucketName]) {

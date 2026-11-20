@@ -33,8 +33,6 @@ export interface TodoGroup {
   todoObjects: TodoObject[];
 }
 
-export type TodoGroups = Record<string, TodoGroup>;
-
 export type TodoData = TodoGroup[];
 
 export type Attributes = {

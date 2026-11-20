@@ -159,16 +159,6 @@ const migrations = {
     if (config.get("welcomeScreenShown") === undefined) {
       config.set("welcomeScreenShown", false);
     }
-
-    const sorting = config.get("sorting");
-    config.set("sorting", [
-      ...sorting,
-      { id: String(sorting.length + 1), value: "inprogress", invert: false },
-    ]);
-    config.set("accordionOpenState", [
-      ...config.get("accordionOpenState"),
-      false,
-    ]);
   },
   "2.1.2": (colors) => {
     console.log("Repairing priority A selected color → 2.1.2");
@@ -178,6 +168,19 @@ const migrations = {
     if (selectedBackground === "##B70025") {
       colors.set("colors.attributes.priority.A.selected.background", "#B70025");
     }
+  },
+  "2.1.3": (config) => {
+    console.log("Migrating settings store from 2.1.2 → 2.1.3");
+    const sorting = config.get("sorting");
+    if (sorting.some((item) => item.value === "inprogress")) return;
+    config.set("sorting", [
+      ...sorting,
+      { id: String(sorting.length + 1), value: "inprogress", invert: false },
+    ]);
+    config.set("accordionOpenState", [
+      ...config.get("accordionOpenState"),
+      false,
+    ]);
   },
 };
 

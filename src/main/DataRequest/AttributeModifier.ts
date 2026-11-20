@@ -5,6 +5,7 @@ const keyMap: Record<string, string> = {
   t: "t",
   rec: "rec",
   pm: "pm",
+  inprogress: "inprogress",
 };
 
 export function renameAttributeValue(
@@ -151,22 +152,13 @@ export function deleteAttributeValue(
       case "due":
       case "t":
       case "rec":
-      case "pm": {
+      case "pm":
+      case "inprogress": {
         const item = new Item(newLine);
         const key = keyMap[attrType];
         const extValue = item.extensions().find((e) => e.key === key)?.value;
         if (extValue === valueClean) {
           item.removeExtension(key);
-          newLine = item.toString();
-          modified = true;
-        }
-        break;
-      }
-      case "inprogress": {
-        // A flag, removed regardless of the value, which the sidebar passes as its label.
-        const item = new Item(newLine);
-        if (item.extensions().some((e) => e.key === "inprogress")) {
-          item.removeExtension("inprogress");
           newLine = item.toString();
           modified = true;
         }
